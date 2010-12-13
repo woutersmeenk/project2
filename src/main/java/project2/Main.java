@@ -20,6 +20,8 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  */
 package project2;
 
+import project2.util.JavaLoggingToCommonLoggingRedirector;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -37,6 +39,7 @@ import com.jme3.scene.shape.Box;
 public class Main extends SimpleApplication {
 
     public static void main(String[] args) {
+        JavaLoggingToCommonLoggingRedirector.activate();
         Main app = new Main();
         app.start();
     }
