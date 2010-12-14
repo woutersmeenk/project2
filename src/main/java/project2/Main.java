@@ -38,9 +38,9 @@ import com.jme3.scene.shape.Box;
  */
 public class Main extends SimpleApplication {
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         JavaLoggingToCommonLoggingRedirector.activate();
-        Main app = new Main();
+        final Main app = new Main();
         app.start();
     }
 
@@ -48,23 +48,23 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
 
         // create a blue box at coordinates (1,-1,1)
-        Box box1 = new Box(new Vector3f(1, -1, 1), 1, 1, 1);
-        Geometry blue = new Geometry("Box", box1);
-        Material mat1 = new Material(assetManager,
+        final Box box1 = new Box(new Vector3f(1, -1, 1), 1, 1, 1);
+        final Geometry blue = new Geometry("Box", box1);
+        final Material mat1 = new Material(assetManager,
                 "Common/MatDefs/Misc/SolidColor.j3md");
         mat1.setColor("m_Color", ColorRGBA.Blue);
         blue.setMaterial(mat1);
 
         // create a red box straight above the blue one at (1,3,1)
-        Box box2 = new Box(new Vector3f(1, 3, 1), 1, 1, 1);
-        Geometry red = new Geometry("Box", box2);
-        Material mat2 = new Material(assetManager,
+        final Box box2 = new Box(new Vector3f(1, 3, 1), 1, 1, 1);
+        final Geometry red = new Geometry("Box", box2);
+        final Material mat2 = new Material(assetManager,
                 "Common/MatDefs/Misc/SolidColor.j3md");
         mat2.setColor("m_Color", ColorRGBA.Red);
         red.setMaterial(mat2);
 
         // create a pivot node at (0,0,0) and attach it to root
-        Node pivot = new Node("pivot");
+        final Node pivot = new Node("pivot");
         rootNode.attachChild(pivot);
 
         // attach the two boxes to the *pivot* node!

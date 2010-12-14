@@ -28,7 +28,9 @@
     <module name="LocalVariableName"/>
     <module name="MemberName"/>
     <module name="MethodName"/>
-    <module name="PackageName"/>
+    <module name="PackageName">
+      <property name="format" value="^[a-zA-Z_][a-zA-Z0-9_]*+(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"/>
+    </module>
     <module name="ParameterName"/>
     <module name="StaticVariableName"/>
     <module name="TypeName"/>
@@ -113,6 +115,11 @@
     <module name="ParenPad"/>
     <module name="TypecastParenPad">
       <property name="tokens" value="RPAREN,TYPECAST"/>
+    </module>
+    <module name="RegexpSinglelineJava">
+      <property name="format" value="^import.*log4j.*$"/>
+      <property name="message" value="Use commons logging"/>
+      <property name="ignoreComments" value="true"/>
     </module>
   </module>
   <module name="NewlineAtEndOfFile"/>
