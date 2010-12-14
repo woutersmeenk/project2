@@ -36,6 +36,8 @@ import org.apache.commons.logging.LogFactory;
  * http://wiki.apache.org/myfaces/Trinidad_and_Common_Logging
  */
 public final class JavaLoggingToCommonLoggingRedirector {
+    private static final Log LOG = LogFactory
+            .getLog(JavaLoggingToCommonLoggingRedirector.class);
     private static final JDKLogHandler ACTIVE_HANDLER = new JDKLogHandler();
 
     /** private constructor */
@@ -59,12 +61,9 @@ public final class JavaLoggingToCommonLoggingRedirector {
             rootLogger.setLevel(Level.ALL);
             // done, let's check it right away!!!
 
-            Logger.getLogger(
-                    JavaLoggingToCommonLoggingRedirector.class.getName()).info(
-                    "activated: sending JDK log messages to Commons Logging");
+            LOG.info("activated: sending JDK log messages to Commons Logging");
         } catch (final Exception exc) {
-            LogFactory.getLog(JavaLoggingToCommonLoggingRedirector.class)
-                    .error("activation failed", exc);
+            LOG.error("activation failed", exc);
         }
     }
 
@@ -75,8 +74,7 @@ public final class JavaLoggingToCommonLoggingRedirector {
         final Logger rootLogger = LogManager.getLogManager().getLogger("");
         rootLogger.removeHandler(ACTIVE_HANDLER);
 
-        Logger.getLogger(JavaLoggingToCommonLoggingRedirector.class.getName())
-                .info("dactivated");
+        LOG.info("dactivated");
     }
 
     /**
