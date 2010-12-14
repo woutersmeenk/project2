@@ -96,13 +96,13 @@ public class Main extends SimpleApplication {
 
 	// create a custom condition
 	Condition condition = new ConditionAnd(
-		new CameraCondition(getCamera()) {
+		new Condition() {
 
 		    @Override
 		    public boolean isTrue() {
 			return getCamera().getDirection().x > 0;
 		    }
-		}, new CameraCondition(getCamera()) {
+		}, new Condition() {
 
 		    @Override
 		    public boolean isTrue() {
