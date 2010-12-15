@@ -48,7 +48,7 @@ public class Main extends SimpleApplication {
     public static void main(final String[] args) {
         JavaLoggingToCommonLoggingRedirector.activate();
         XMLLevelLoader loader = new XMLLevelLoader();
-        Level level = loader.loadLevel(ClassLoader.getSystemResource("simpel.xml"));
+        Level level = loader.loadLevel(ClassLoader.getSystemResource("simple.xml"));
         final Main app = new Main();
         app.start();
     }

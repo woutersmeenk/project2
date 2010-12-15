@@ -1,0 +1,11 @@
+<level>
+	<boxes>
+		<box x="1" y="1" z="0" size="1" />
+		<box x="2" y="2" z="0" size="1" />
+	</boxes>
+	<checkpoints>
+		<checkpoint x="1" y="1" z="1" />
+		<checkpoint x="2" y="2" z="2" />
+	</checkpoints>
+	<start x="0" y="0" z="0" />
+</level>
