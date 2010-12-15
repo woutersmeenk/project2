@@ -71,9 +71,11 @@ public class XMLUtils {
     public static double parseNumber(String expression, Node node,
             double defaultValue) throws XMLException {
         try {
+            final Object test = path.evaluate(expression, node,
+                    XPathConstants.NODE);
             Double result = (Double) path.evaluate(expression, node,
                     XPathConstants.NUMBER);
-            if (result == null) {
+            if (test == null) {
                 result = defaultValue;
             }
             return result;
@@ -85,9 +87,11 @@ public class XMLUtils {
     public static boolean parseBoolean(String expression, Node node,
             boolean defaultValue) throws XMLException {
         try {
+            final Object test = path.evaluate(expression, node,
+                    XPathConstants.NODE);
             Boolean result = (Boolean) path.evaluate(expression, node,
                     XPathConstants.BOOLEAN);
-            if (result == null) {
+            if (test == null) {
                 result = defaultValue;
             }
             return result;
