@@ -64,8 +64,10 @@ public class XMLLevelLoader {
         return new Box(location, size, switchBox);
     }
 
-    private SwitchBox parseSwitchBox(Node switchNode) throws XMLException {
-        // TODO Auto-generated method stub
+    private SwitchBox parseSwitchBox(Node node) throws XMLException {
+        if (node == null) {
+            return null;
+        }
         return null;
     }
 
