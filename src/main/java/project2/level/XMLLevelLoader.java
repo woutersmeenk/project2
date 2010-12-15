@@ -16,15 +16,16 @@ import project2.util.XMLUtils;
 
 import com.jme3.math.Vector3f;
 
-public class XMLLevelLoader {
+public class XMLLevelLoader implements LevelLoader {
     private static final Log LOG = LogFactory.getLog(XMLLevelLoader.class);
 
-    public Level loadLevel(URL file) {
+    @Override
+    public Level loadLevel(URL url) {
         try {
-            Node node = XMLUtils.load(file);
+            Node node = XMLUtils.load(url);
             return parseLevel(node);
         } catch (XMLException e) {
-            LOG.warn("Could not load level: " + file, e);
+            LOG.warn("Could not load level: " + url, e);
         }
         return null;
     }
@@ -57,8 +58,12 @@ public class XMLLevelLoader {
     }
 
     private Box parseBox(Node node) throws XMLException {
+        boolean isNull = XMLUtils.parseBoolean("@null", node, false);
+        if (isNull) {
+            return null;
+        }
         Vector3f location = parseVector3f(node);
-        int size = (int) XMLUtils.parseNumber("@size", node);
+        int size = (int) XMLUtils.parseNumber("@size", node, 1);
         final Node switchNode = XMLUtils.findNode("switch", node);
         final SwitchBox switchBox = parseSwitchBox(switchNode);
         return new Box(location, size, switchBox);
@@ -68,7 +73,17 @@ public class XMLLevelLoader {
         if (node == null) {
             return null;
         }
-        return null;
+        // Checkpoints
+        List<List<Box>> states = new ArrayList<List<Box>>();
+        for (Node stateNode : XMLUtils.findNodes("state", node)) {
+            List<Box> state = new ArrayList<Box>();
+            for (Node boxNode : XMLUtils.findNodes("box", node)) {
+                state.add(parseBox(boxNode));
+            }
+            states.add(state);
+        }
+
+        return new SwitchBox(states);
     }
 
 }

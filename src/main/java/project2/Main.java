@@ -84,9 +84,12 @@ public class Main extends SimpleApplication {
 		.getSystemResource("simple.xml"));
 
 	// add boxes to scene graph
-	for (project2.model.level.Box box : level.getBoxes()) {
-	    final Box box2 = new Box(box.getLocation(), 0.5f, 0.5f, 0.5f);
-	    final Geometry geom = new Geometry("Box", box2);
+        for (project2.model.level.Box box : level.getBoxes()) {
+            int size = box.getSize();
+            size = 1;
+            final Box box2 = new Box(box.getLocation(), 0.5f * size,
+                    0.5f * size, 0.5f * size);
+            final Geometry geom = new Geometry("Box", box2);
 	    final Material mat2 = new Material(assetManager,
 		    "Common/MatDefs/Misc/SolidColor.j3md");
 

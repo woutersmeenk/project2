@@ -63,19 +63,32 @@ public class XMLUtils {
 
     public static double parseNumber(String expression, Node node)
             throws XMLException {
+        return parseNumber(expression, node, Double.NaN);
+    }
+
+    public static double parseNumber(String expression, Node node,
+            double defaultValue) throws XMLException {
         try {
-            return (Double) path.evaluate(expression, node,
+            Double result = (Double) path.evaluate(expression, node,
                     XPathConstants.NUMBER);
+            if (result == null) {
+                result = defaultValue;
+            }
+            return result;
         } catch (XPathExpressionException e) {
             throw new XMLException(e);
         }
     }
 
-    public static boolean parseBoolean(String expression, Node node)
-            throws XMLException {
+    public static boolean parseBoolean(String expression, Node node,
+            boolean defaultValue) throws XMLException {
         try {
-            return (Boolean) path.evaluate(expression, node,
+            Boolean result = (Boolean) path.evaluate(expression, node,
                     XPathConstants.BOOLEAN);
+            if (result == null) {
+                result = defaultValue;
+            }
+            return result;
         } catch (XPathExpressionException e) {
             throw new XMLException(e);
         }
