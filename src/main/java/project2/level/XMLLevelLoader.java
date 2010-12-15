@@ -77,11 +77,10 @@ public class XMLLevelLoader implements LevelLoader {
         if (node == null) {
             return null;
         }
-        // Checkpoints
         List<List<Box>> states = new ArrayList<List<Box>>();
         for (Node stateNode : XMLUtils.findNodes("state", node)) {
             List<Box> state = new ArrayList<Box>();
-            for (Node boxNode : XMLUtils.findNodes("box", node)) {
+            for (Node boxNode : XMLUtils.findNodes("box", stateNode)) {
                 state.add(parseBox(boxNode, switches));
             }
             states.add(state);
