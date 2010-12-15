@@ -28,16 +28,12 @@ import project2.model.level.Level;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 import triggers.Condition;
 import triggers.ConditionAnd;
-import triggers.DebugResponse;
-import triggers.Trigger;
 import triggers.TriggerManager;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 
 public class Main extends SimpleApplication {
@@ -93,7 +89,14 @@ public class Main extends SimpleApplication {
 	    final Geometry geom = new Geometry("Box", box2);
 	    final Material mat2 = new Material(assetManager,
 		    "Common/MatDefs/Misc/SolidColor.j3md");
-	    mat2.setColor("m_Color", ColorRGBA.Red);
+
+	    // give switch a different color
+	    if (box.getSwitchBox() == null) {
+		mat2.setColor("m_Color", ColorRGBA.Blue);
+	    } else {
+		mat2.setColor("m_Color", ColorRGBA.Red);
+	    }
+
 	    geom.setMaterial(mat2);
 
 	    rootNode.attachChild(geom);

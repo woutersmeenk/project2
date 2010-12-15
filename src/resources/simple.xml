@@ -1,18 +1,22 @@
 <level>
 	<boxes>
-		<box x="1" y="1" z="0" size="1" />
+		<box x="0" y="1" z="0" size="1" />
+		<box x="2" y="1" z="0" size="1" />
+		<box x="0" y="2" z="0" size="1" />
+		<box x="1" y="0" z="0" size="1" />
+		<box x="1" y="3" z="0" size="1" />
 		<box x="2" y="2" z="0" size="1">
 			<switch>
 				<boxStates>
-					<box x="1" y="0" z="0" size="1" />
-					<box x="1" y="-1" z="0" size="1" />
+					<box x="1" y="1" z="0" size="1" />
+					<box x="1" y="2" z="0" size="1" />
 				</boxStates>
 			</switch>
 		</box>
 	</boxes>
 	<checkpoints>
-		<checkpoint x="1" y="1" z="1" />
-		<checkpoint x="1" y="2" z="2" />
+		<checkpoint x="1" y="0" z="0" />
+		<checkpoint x="1" y="2" z="0" />
 	</checkpoints>
-	<start x="0" y="0" z="0" />
+	<start x="1" y="0" z="0" />
 </level>
