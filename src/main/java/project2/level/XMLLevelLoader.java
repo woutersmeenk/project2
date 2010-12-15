@@ -31,10 +31,12 @@ public class XMLLevelLoader implements LevelLoader {
     }
 
     private Level parseLevel(Node node) throws XMLException {
+        List<SwitchBox> switches = new ArrayList<SwitchBox>();
+
         // Boxes
         List<Box> boxes = new ArrayList<Box>();
         for (Node boxNode : XMLUtils.findNodes("level/boxes/box", node)) {
-            boxes.add(parseBox(boxNode));
+            boxes.add(parseBox(boxNode, switches));
         }
 
         // Checkpoints
@@ -47,7 +49,7 @@ public class XMLLevelLoader implements LevelLoader {
         // Start
         final Node startNode = XMLUtils.findNode("level/start", node);
         final Vector3f start = parseVector3f(startNode);
-        return new Level(boxes, start, checkpoints);
+        return new Level(boxes, switches, start, checkpoints);
     }
 
     private Vector3f parseVector3f(Node node) throws XMLException {
@@ -57,7 +59,8 @@ public class XMLLevelLoader implements LevelLoader {
         return new Vector3f(x, y, z);
     }
 
-    private Box parseBox(Node node) throws XMLException {
+    private Box parseBox(Node node, List<SwitchBox> switches)
+            throws XMLException {
         boolean isNull = XMLUtils.parseBoolean("@null", node, false);
         if (isNull) {
             return null;
@@ -65,11 +68,12 @@ public class XMLLevelLoader implements LevelLoader {
         Vector3f location = parseVector3f(node);
         int size = (int) XMLUtils.parseNumber("@size", node, 1);
         final Node switchNode = XMLUtils.findNode("switch", node);
-        final SwitchBox switchBox = parseSwitchBox(switchNode);
+        final SwitchBox switchBox = parseSwitchBox(switchNode, switches);
         return new Box(location, size, switchBox);
     }
 
-    private SwitchBox parseSwitchBox(Node node) throws XMLException {
+    private SwitchBox parseSwitchBox(Node node, List<SwitchBox> switches)
+            throws XMLException {
         if (node == null) {
             return null;
         }
@@ -78,12 +82,13 @@ public class XMLLevelLoader implements LevelLoader {
         for (Node stateNode : XMLUtils.findNodes("state", node)) {
             List<Box> state = new ArrayList<Box>();
             for (Node boxNode : XMLUtils.findNodes("box", node)) {
-                state.add(parseBox(boxNode));
+                state.add(parseBox(boxNode, switches));
             }
             states.add(state);
         }
-
-        return new SwitchBox(states);
+        SwitchBox result = new SwitchBox(states);
+        switches.add(result);
+        return result;
     }
 
 }
