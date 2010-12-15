@@ -46,71 +46,57 @@ public class Main extends SimpleApplication {
     TriggerManager triggerManager;
 
     public static void main(final String[] args) {
-        JavaLoggingToCommonLoggingRedirector.activate();
-        XMLLevelLoader loader = new XMLLevelLoader();
-        Level level = loader.loadLevel(ClassLoader.getSystemResource("simple.xml"));
-        final Main app = new Main();
-        app.start();
+	JavaLoggingToCommonLoggingRedirector.activate();
+	final Main app = new Main();
+	app.start();
     }
 
     public Main() {
-        triggerManager = new TriggerManager();
+	triggerManager = new TriggerManager();
     }
 
     @Override
     public void update() {
-        // update game logic
-        triggerManager.update();
+	// update game logic
+	triggerManager.update();
 
-        super.update();
+	super.update();
     }
 
     @Override
     public void simpleInitApp() {
+	// create a custom condition
+	Condition condition = new ConditionAnd(new Condition() {
 
-        // create a blue box at coordinates (1,-1,1)
-        final Box box1 = new Box(new Vector3f(1, -1, 1), 1, 1, 1);
-        final Geometry blue = new Geometry("Box", box1);
-        final Material mat1 = new Material(assetManager,
-                "Common/MatDefs/Misc/SolidColor.j3md");
-        mat1.setColor("m_Color", ColorRGBA.Blue);
-        blue.setMaterial(mat1);
+	    @Override
+	    public boolean isTrue() {
+		return getCamera().getDirection().x > 0;
+	    }
+	}, new Condition() {
 
-        // create a red box straight above the blue one at (1,3,1)
-        final Box box2 = new Box(new Vector3f(1, 3, 1), 1, 1, 1);
-        final Geometry red = new Geometry("Box", box2);
-        final Material mat2 = new Material(assetManager,
-                "Common/MatDefs/Misc/SolidColor.j3md");
-        mat2.setColor("m_Color", ColorRGBA.Red);
-        red.setMaterial(mat2);
+	    @Override
+	    public boolean isTrue() {
+		return getCamera().getDirection().y > 0;
+	    }
+	});
 
-        // create a pivot node at (0,0,0) and attach it to root
-        final Node pivot = new Node("pivot");
-        rootNode.attachChild(pivot);
+	// triggerManager.addTrigger(new Trigger(condition, new DebugResponse(
+	// "You are looking the the positive x and y direction!")));
 
-        // attach the two boxes to the *pivot* node!
-        pivot.attachChild(blue);
-        pivot.attachChild(red);
-        // rotate pivot node: Both boxes have rotated!
-        pivot.rotate(0.4f, 0.4f, 0.0f);
+	XMLLevelLoader loader = new XMLLevelLoader();
+	final Level level = loader.loadLevel(ClassLoader
+		.getSystemResource("simple.xml"));
 
-        // create a custom condition
-        Condition condition = new ConditionAnd(new Condition() {
+	// add boxes to scene graph
+	for (project2.model.level.Box box : level.getBoxes()) {
+	    final Box box2 = new Box(box.getLocation(), 0.5f, 0.5f, 0.5f);
+	    final Geometry geom = new Geometry("Box", box2);
+	    final Material mat2 = new Material(assetManager,
+		    "Common/MatDefs/Misc/SolidColor.j3md");
+	    mat2.setColor("m_Color", ColorRGBA.Red);
+	    geom.setMaterial(mat2);
 
-            @Override
-            public boolean isTrue() {
-                return getCamera().getDirection().x > 0;
-            }
-        }, new Condition() {
-
-            @Override
-            public boolean isTrue() {
-                return getCamera().getDirection().y > 0;
-            }
-        });
-
-        triggerManager.addTrigger(new Trigger(condition, new DebugResponse(
-                "You are lookin the the positive x and y direction!")));
-
+	    rootNode.attachChild(geom);
+	}
     }
 }
