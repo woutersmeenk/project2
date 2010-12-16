@@ -31,10 +31,15 @@ import triggers.ConditionAnd;
 import triggers.TriggerManager;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import com.jme3.util.TangentBinormalGenerator;
 
 public class Main extends SimpleApplication {
     private static final Log LOG = LogFactory.getLog(Main.class);
@@ -84,24 +89,39 @@ public class Main extends SimpleApplication {
 		.getSystemResource("simple.xml"));
 
 	// add boxes to scene graph
-        for (project2.model.level.Box box : level.getBoxes()) {
-            int size = box.getSize();
-            final Box box2 = new Box(box.getLocation(), 0.5f * size,
-                    0.5f * size, 0.5f * size);
-            final Geometry geom = new Geometry("Box", box2);
+	for (project2.model.level.Box box : level.getBoxes()) {
+	    int size = box.getSize();
+	    final Box box2 = new Box(box.getLocation(), 0.5f * size,
+		    0.5f * size, 0.5f * size);
+	    final Geometry geom = new Geometry("Box", box2);
 	    final Material mat2 = new Material(assetManager,
-		    "Common/MatDefs/Misc/SolidColor.j3md");
+		    "Common/MatDefs/Light/Lighting.j3md");
+
+	    mat2.setFloat("m_Shininess", 12);
+	    mat2.setBoolean("m_UseMaterialColors", true);
+
+	    mat2.setColor("m_Specular", ColorRGBA.Gray);
 
 	    // give switch a different color
 	    if (box.getSwitchBox() == null) {
-		mat2.setColor("m_Color", ColorRGBA.Blue);
+		mat2.setColor("m_Ambient", ColorRGBA.Blue);
+		mat2.setColor("m_Diffuse", ColorRGBA.Blue);
+
 	    } else {
-		mat2.setColor("m_Color", ColorRGBA.Red);
+		mat2.setColor("m_Ambient", ColorRGBA.Red);
+		mat2.setColor("m_Diffuse", ColorRGBA.Red);
 	    }
 
 	    geom.setMaterial(mat2);
 
 	    rootNode.attachChild(geom);
 	}
+
+	// add a light
+	PointLight pl = new PointLight();
+	pl.setPosition(new Vector3f(2, 2, 10));
+	pl.setColor(ColorRGBA.White);
+	pl.setRadius(30f);
+	rootNode.addLight(pl);
     }
 }
