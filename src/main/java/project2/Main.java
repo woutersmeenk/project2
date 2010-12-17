@@ -84,44 +84,11 @@ public class Main extends SimpleApplication {
 	// triggerManager.addTrigger(new Trigger(condition, new DebugResponse(
 	// "You are looking the the positive x and y direction!")));
 
-	XMLLevelLoader loader = new XMLLevelLoader();
-	final Level level = loader.loadLevel(ClassLoader
-		.getSystemResource("simple.xml"));
+	GameStateManager gameStateManager = new GameStateManager();
+	gameStateManager.buildGameState("simple.xml");
 
-	// add boxes to scene graph
-	for (project2.model.level.Box box : level.getBoxes()) {
-	    int size = box.getSize();
-	    final Box box2 = new Box(box.getLocation(), 0.5f * size,
-		    0.5f * size, 0.5f * size);
-	    final Geometry geom = new Geometry("Box", box2);
-	    final Material mat2 = new Material(assetManager,
-		    "Common/MatDefs/Light/Lighting.j3md");
-
-	    mat2.setFloat("m_Shininess", 12);
-	    mat2.setBoolean("m_UseMaterialColors", true);
-
-	    mat2.setColor("m_Specular", ColorRGBA.Gray);
-
-	    // give switch a different color
-	    if (box.getSwitchBox() == null) {
-		mat2.setColor("m_Ambient", ColorRGBA.Blue);
-		mat2.setColor("m_Diffuse", ColorRGBA.Blue);
-
-	    } else {
-		mat2.setColor("m_Ambient", ColorRGBA.Red);
-		mat2.setColor("m_Diffuse", ColorRGBA.Red);
-	    }
-
-	    geom.setMaterial(mat2);
-
-	    rootNode.attachChild(geom);
-	}
-
-	// add a light
-	PointLight pl = new PointLight();
-	pl.setPosition(new Vector3f(2, 2, 10));
-	pl.setColor(ColorRGBA.White);
-	pl.setRadius(30f);
-	rootNode.addLight(pl);
+	ViewManager viewManager = new ViewManager(rootNode, assetManager);
+	viewManager.initialize();
+	viewManager.createViewFromGameState(gameStateManager.getCurrentState());
     }
 }
