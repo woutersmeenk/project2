@@ -55,24 +55,6 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        // create a custom condition
-        final Condition condition = new ConditionAnd(new Condition() {
-
-            @Override
-            public boolean isTrue() {
-                return getCamera().getDirection().x > 0;
-            }
-        }, new Condition() {
-
-            @Override
-            public boolean isTrue() {
-                return getCamera().getDirection().y > 0;
-            }
-        });
-
-        // triggerManager.addTrigger(new Trigger(condition, new DebugResponse(
-        // "You are looking the the positive x and y direction!")));
-
         final GameStateManager gameStateManager = new GameStateManager();
         gameStateManager.buildGameState("simple.xml");
 
