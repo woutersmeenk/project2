@@ -24,18 +24,18 @@ public class Trigger {
     private final Condition condition;
     private final Response response;
 
-    public Trigger(Condition condition, Response response) {
-	super();
-	this.condition = condition;
-	this.response = response;
+    public Trigger(final Condition condition, final Response response) {
+        super();
+        this.condition = condition;
+        this.response = response;
     }
 
     public Condition getCondition() {
-	return condition;
+        return condition;
     }
 
     public Response getResponse() {
-	return response;
+        return response;
     }
 
 }

@@ -27,20 +27,20 @@ public class TriggerManager {
     private final List<Trigger> triggers;
 
     public TriggerManager() {
-	triggers = new ArrayList<Trigger>();
+        triggers = new ArrayList<Trigger>();
     }
 
-    public void addTrigger(Trigger trigger) {
-	triggers.add(trigger);
+    public void addTrigger(final Trigger trigger) {
+        triggers.add(trigger);
     }
 
     public void update() {
-	for (Trigger trigger : triggers) {
-	    // if the condition is met, execute
-	    if (trigger.getCondition().isTrue()) {
-		trigger.getResponse().execute();
-	    }
-	}
+        for (final Trigger trigger : triggers) {
+            // if the condition is met, execute
+            if (trigger.getCondition().isTrue()) {
+                trigger.getResponse().execute();
+            }
+        }
     }
 
 }

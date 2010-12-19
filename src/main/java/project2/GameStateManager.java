@@ -10,17 +10,17 @@ public class GameStateManager {
     GameState currentState;
     List<GameState> history;
 
-    public void buildGameState(String levelFile) {
-	XMLLevelLoader loader = new XMLLevelLoader();
+    public void buildGameState(final String levelFile) {
+        final XMLLevelLoader loader = new XMLLevelLoader();
 
-	final Level level = loader.loadLevel(ClassLoader
-		.getSystemResource(levelFile));
-	final Box player = new Box(level.getStart(), 1);
+        final Level level = loader.loadLevel(ClassLoader
+                .getSystemResource(levelFile));
+        final Box player = new Box(level.getStart(), 1);
 
-	currentState = new GameState(level, player);
+        currentState = new GameState(level, player);
     }
 
     public GameState getCurrentState() {
-	return currentState;
+        return currentState;
     }
 }

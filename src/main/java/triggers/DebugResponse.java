@@ -7,14 +7,14 @@ public class DebugResponse implements Response {
     private static final Log LOG = LogFactory.getLog(DebugResponse.class);
     private final String text;
 
-    public DebugResponse(String text) {
-	super();
-	this.text = text;
+    public DebugResponse(final String text) {
+        super();
+        this.text = text;
     }
 
     @Override
     public void execute() {
-	LOG.info(text);
+        LOG.info(text);
     }
 
 }

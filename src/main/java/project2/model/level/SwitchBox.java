@@ -4,9 +4,9 @@ import java.util.List;
 
 public class SwitchBox {
     private final List<List<Box>> states;
-    private int currentState;
+    private final int currentState;
 
-    public SwitchBox(List<List<Box>> states) {
+    public SwitchBox(final List<List<Box>> states) {
         currentState = 0;
         this.states = states;
     }

@@ -9,18 +9,18 @@ public class GameState {
     /** Player. */
     private final Box player;
 
-    public GameState(Level level, Box player) {
-	super();
-	this.level = level;
-	this.player = player;
+    public GameState(final Level level, final Box player) {
+        super();
+        this.level = level;
+        this.player = player;
     }
 
     public Level getLevel() {
-	return level;
+        return level;
     }
 
     public Box getPlayer() {
-	return player;
+        return player;
     }
 
 }

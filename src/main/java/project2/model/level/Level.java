@@ -11,27 +11,28 @@ public class Level {
     private final Vector3f start;
     private final List<Vector3f> checkpoints;
 
-    public Level(Map<Vector3f, Box> boxes, List<SwitchBox> switches, Vector3f start,
-	    List<Vector3f> checkpoints) {
-	this.boxes = boxes;
-	this.switches = switches;
-	this.start = start;
-	this.checkpoints = checkpoints;
+    public Level(final Map<Vector3f, Box> boxes,
+            final List<SwitchBox> switches, final Vector3f start,
+            final List<Vector3f> checkpoints) {
+        this.boxes = boxes;
+        this.switches = switches;
+        this.start = start;
+        this.checkpoints = checkpoints;
     }
 
     public Map<Vector3f, Box> getBoxes() {
-	return boxes;
+        return boxes;
     }
 
     public List<SwitchBox> getSwitches() {
-	return switches;
+        return switches;
     }
 
     public Vector3f getStart() {
-	return start;
+        return start;
     }
 
     public List<Vector3f> getCheckpoints() {
-	return checkpoints;
+        return checkpoints;
     }
 }
