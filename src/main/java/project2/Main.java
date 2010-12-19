@@ -20,20 +20,27 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  */
 package project2;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import project2.model.level.Box;
+import project2.triggers.TriggerManager;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
-import triggers.Condition;
-import triggers.ConditionAnd;
-import triggers.TriggerManager;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.Vector3f;
 
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication implements AnalogListener {
     private static final Log LOG = LogFactory.getLog(Main.class);
 
-    TriggerManager triggerManager;
+    private final TriggerManager triggerManager;
+    private final GameStateManager gameStateManager;
+    private final ViewManager viewManager;
 
     public static void main(final String[] args) {
         JavaLoggingToCommonLoggingRedirector.activate();
@@ -43,6 +50,8 @@ public class Main extends SimpleApplication {
 
     public Main() {
         triggerManager = new TriggerManager();
+        gameStateManager = new GameStateManager();
+        viewManager = new ViewManager(rootNode, assetManager);
     }
 
     @Override
@@ -55,11 +64,34 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        final GameStateManager gameStateManager = new GameStateManager();
         gameStateManager.buildGameState("simple.xml");
 
-        final ViewManager viewManager = new ViewManager(rootNode, assetManager);
         viewManager.initialize();
         viewManager.createViewFromGameState(gameStateManager.getCurrentState());
+
+        inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
+        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
+        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT));
+        inputManager.addListener(this, "Action", "Left", "Right");
+    }
+
+    @Override
+    public void onAnalog(String name, float isPressed, float tpf) {
+        Vector3f playerPos = gameStateManager.getCurrentState().getPlayer()
+                .getLocation();
+        Map<Vector3f, Box> levelMap = gameStateManager.getCurrentState()
+                .getLevel().getBoxes();
+
+        if (name.equals("Left")) {
+            Box beside = levelMap.get(playerPos
+                    .subtract(new Vector3f(-1, 0, 0)));
+            Box below = levelMap.get(playerPos
+                    .subtract(new Vector3f(-1, 0, -1)));
+
+            if (below != null && beside == null) {
+                LOG.info("Player moving left...");
+                // TODO: update player position
+            }
+        }
     }
 }

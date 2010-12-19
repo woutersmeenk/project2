@@ -1,4 +1,4 @@
-package triggers;
+package project2.triggers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

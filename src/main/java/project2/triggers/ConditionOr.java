@@ -1,4 +1,4 @@
-package triggers;
+package project2.triggers;
 
 public class ConditionOr implements Condition {
     private final Condition first, second;

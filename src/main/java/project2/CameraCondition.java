@@ -1,6 +1,6 @@
 package project2;
 
-import triggers.Condition;
+import project2.triggers.Condition;
 
 import com.jme3.renderer.Camera;
 
