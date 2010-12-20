@@ -10,16 +10,16 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 
 public class ViewManager {
-    private final AssetManager assetManager;
+    private AssetManager assetManager;
     private final Node rootNode;
 
-    public ViewManager(final Node root, final AssetManager assetManager) {
+    public ViewManager(final Node root) {
         super();
         rootNode = root;
-        this.assetManager = assetManager;
     }
 
-    public void initialize() {
+    public void initialize(AssetManager assetManager) {
+        this.assetManager = assetManager;
         /* Create a light. */
         final PointLight pl = new PointLight();
         pl.setPosition(new Vector3f(2, 2, 10));

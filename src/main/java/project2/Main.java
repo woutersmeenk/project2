@@ -51,7 +51,7 @@ public class Main extends SimpleApplication implements AnalogListener {
     public Main() {
         triggerManager = new TriggerManager();
         gameStateManager = new GameStateManager();
-        viewManager = new ViewManager(rootNode, assetManager);
+        viewManager = new ViewManager(rootNode);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Main extends SimpleApplication implements AnalogListener {
     public void simpleInitApp() {
         gameStateManager.buildGameState("simple.xml");
 
-        viewManager.initialize();
+        viewManager.initialize(assetManager);
         viewManager.createViewFromGameState(gameStateManager.getCurrentState());
 
         inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
