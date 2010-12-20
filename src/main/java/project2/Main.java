@@ -31,16 +31,16 @@ import project2.util.JavaLoggingToCommonLoggingRedirector;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
-import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 
-public class Main extends SimpleApplication implements AnalogListener {
+public class Main extends SimpleApplication implements ActionListener {
     private static final Log LOG = LogFactory.getLog(Main.class);
 
     private final TriggerManager triggerManager;
     private final GameStateManager gameStateManager;
-    private final ViewManager viewManager;
+    private ViewManager viewManager;
 
     public static void main(final String[] args) {
         JavaLoggingToCommonLoggingRedirector.activate();
@@ -49,7 +49,7 @@ public class Main extends SimpleApplication implements AnalogListener {
     }
 
     public Main() {
-        triggerManager = new TriggerManager();
+        triggerManager = TriggerManager.getInstance();
         gameStateManager = new GameStateManager();
         viewManager = new ViewManager(rootNode);
     }
@@ -72,26 +72,57 @@ public class Main extends SimpleApplication implements AnalogListener {
         inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT));
-        inputManager.addListener(this, "Action", "Left", "Right");
+        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP));
+        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN));
+        inputManager.addListener(this, "Action", "Left", "Right", "Up", "Down");
     }
 
     @Override
-    public void onAnalog(String name, float isPressed, float tpf) {
+    public void onAction(String name, boolean isPressed, float tpf) {
         Vector3f playerPos = gameStateManager.getCurrentState().getPlayer()
                 .getLocation();
         Map<Vector3f, Box> levelMap = gameStateManager.getCurrentState()
                 .getLevel().getBoxes();
 
-        if (name.equals("Left")) {
-            Box beside = levelMap.get(playerPos
-                    .subtract(new Vector3f(-1, 0, 0)));
-            Box below = levelMap.get(playerPos
-                    .subtract(new Vector3f(-1, 0, -1)));
+        if (name.equals("Left") && !isPressed) {
+            Box beside = levelMap.get(playerPos.add(-1, 0, 0));
+            Box below = levelMap.get(playerPos.add(-1, 0, -1));
 
             if (below != null && beside == null) {
-                LOG.info("Player moving left...");
-                // TODO: update player position
+                gameStateManager.getCurrentState().getPlayer()
+                        .setLocation(playerPos.add(-1, 0, 0));
             }
         }
+
+        if (name.equals("Up") && !isPressed) {
+            Box beside = levelMap.get(playerPos.add(0, 1, 0));
+            Box below = levelMap.get(playerPos.add(0, 1, -1));
+
+            if (below != null && beside == null) {
+                gameStateManager.getCurrentState().getPlayer()
+                        .setLocation(playerPos.add(0, 1, 0));
+            }
+        }
+
+        if (name.equals("Right") && !isPressed) {
+            Box beside = levelMap.get(playerPos.add(1, 0, 0));
+            Box below = levelMap.get(playerPos.add(1, 0, -1));
+
+            if (below != null && beside == null) {
+                gameStateManager.getCurrentState().getPlayer()
+                        .setLocation(playerPos.add(1, 0, 0));
+            }
+        }
+
+        if (name.equals("Down") && !isPressed) {
+            Box beside = levelMap.get(playerPos.add(0, -1, 0));
+            Box below = levelMap.get(playerPos.add(0, -1, -1));
+
+            if (below != null && beside == null) {
+                gameStateManager.getCurrentState().getPlayer()
+                        .setLocation(playerPos.add(0, -1, 0));
+            }
+        }
+
     }
 }

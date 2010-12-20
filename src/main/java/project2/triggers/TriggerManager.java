@@ -24,11 +24,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TriggerManager {
-    private final List<Trigger> triggers;
 
-    public TriggerManager() {
+    private TriggerManager() {
         triggers = new ArrayList<Trigger>();
     }
+
+    public static TriggerManager getInstance() {
+        if (ref == null)
+            ref = new TriggerManager();
+        return ref;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
+    }
+
+    private static TriggerManager ref;
+
+    private final List<Trigger> triggers;
 
     public void addTrigger(final Trigger trigger) {
         triggers.add(trigger);

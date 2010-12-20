@@ -1,5 +1,8 @@
 package project2;
 
+import project2.triggers.Trigger;
+import project2.triggers.TriggerManager;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
@@ -33,9 +36,10 @@ public class ViewManager {
         for (final project2.model.level.Box box : gameState.getLevel()
                 .getBoxes().values()) {
             final int size = box.getSize();
-            final Box box2 = new Box(box.getLocation(), 0.5f * size,
-                    0.5f * size, 0.5f * size);
+            final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+                    0.5f * size);
             final Geometry geom = new Geometry("Box", box2);
+            geom.setLocalTranslation(box.getLocation());
             final Material mat2 = new Material(assetManager,
                     "Common/MatDefs/Light/Lighting.j3md");
 
@@ -61,9 +65,11 @@ public class ViewManager {
 
         /* Add player. */
         final int size = gameState.getPlayer().getSize();
-        final Box box2 = new Box(gameState.getPlayer().getLocation(),
-                0.5f * size, 0.5f * size, 0.5f * size);
+        final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+                0.5f * size);
         final Geometry geom = new Geometry("Box", box2);
+        geom.setLocalTranslation(gameState.getPlayer().getLocation());
+
         final Material mat2 = new Material(assetManager,
                 "Common/MatDefs/Light/Lighting.j3md");
 
@@ -75,6 +81,12 @@ public class ViewManager {
         mat2.setColor("m_Diffuse", ColorRGBA.Yellow);
         geom.setMaterial(mat2);
         rootNode.attachChild(geom);
+
+        /* Register a move trigger */
+        final project2.model.level.Box player = gameState.getPlayer();
+        Trigger trigger = new Trigger(new PlayerMovedCondition(player),
+                new ChangePositionResponse(geom, player));
+        TriggerManager.getInstance().addTrigger(trigger);
 
     }
 }
