@@ -4,6 +4,7 @@ import java.util.List;
 
 import project2.level.XMLLevelLoader;
 import project2.model.level.Box;
+import project2.model.level.BoxFactory;
 import project2.model.level.Level;
 
 public class GameStateManager {
@@ -15,7 +16,8 @@ public class GameStateManager {
 
         final Level level = loader.loadLevel(ClassLoader
                 .getSystemResource(levelFile));
-        final Box player = new Box(level.getStart(), 1);
+        final Box player = BoxFactory.getInstance().createBox(level.getStart(),
+                1);
 
         currentState = new GameState(level, player);
     }

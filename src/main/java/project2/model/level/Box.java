@@ -6,16 +6,14 @@ public class Box {
     private Vector3f location;
     private final int size;
     private final SwitchBox switchBox;
+    private final long id;
 
     private boolean changed = false;
 
-    public Box(final Vector3f location, final int size) {
-        this(location, size, null);
-    }
-
-    public Box(final Vector3f location2, final int size,
+    Box(final long id, final Vector3f location2, final int size,
             final SwitchBox switchBox) {
         location = location2;
+        this.id = id;
         this.size = size;
         this.switchBox = switchBox;
     }

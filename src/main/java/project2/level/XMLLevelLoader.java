@@ -11,6 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 
 import project2.model.level.Box;
+import project2.model.level.BoxFactory;
 import project2.model.level.Level;
 import project2.model.level.SwitchBox;
 import project2.util.XMLException;
@@ -79,7 +80,7 @@ public class XMLLevelLoader implements LevelLoader {
         final int size = (int) XMLUtils.parseNumber("@size", node, 1);
         final Node switchNode = XMLUtils.findNode("switch", node);
         final SwitchBox switchBox = parseSwitchBox(switchNode, switches);
-        return new Box(location, size, switchBox);
+        return BoxFactory.getInstance().createBox(location, size, switchBox);
     }
 
     private SwitchBox parseSwitchBox(final Node node,

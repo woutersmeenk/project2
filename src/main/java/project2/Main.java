@@ -40,7 +40,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private final TriggerManager triggerManager;
     private final GameStateManager gameStateManager;
-    private ViewManager viewManager;
+    private final ViewManager viewManager;
 
     public static void main(final String[] args) {
         JavaLoggingToCommonLoggingRedirector.activate();
