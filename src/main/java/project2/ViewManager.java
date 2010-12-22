@@ -1,5 +1,9 @@
 package project2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import project2.model.level.BoxMoveEvent;
 import project2.triggers.Trigger;
 import project2.triggers.TriggerManager;
 
@@ -10,9 +14,11 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
-public class ViewManager {
+public class ViewManager implements EventListener<BoxMoveEvent> {
+    private static final Log LOG = LogFactory.getLog(ViewManager.class);
     private AssetManager assetManager;
     private final Node rootNode;
 
@@ -59,6 +65,7 @@ public class ViewManager {
             }
 
             geom.setMaterial(mat2);
+            geom.setUserData("id", (int) box.getId());
 
             rootNode.attachChild(geom);
         }
@@ -88,5 +95,29 @@ public class ViewManager {
                 new ChangePositionResponse(geom, player));
         TriggerManager.getInstance().addTrigger(trigger);
 
+    }
+
+    public Geometry geometryFromId(long id) {
+        Integer idObject = (int) id; // make a cast to int, to circumvent an
+                                     // error in jme3
+
+        for (Spatial spatial : rootNode.getChildren()) {
+            if (idObject.equals(spatial.getUserData("id"))) {
+                return (Geometry) spatial;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onEvent(BoxMoveEvent event) {
+        Geometry geom = geometryFromId(event.getId());
+
+        if (geom != null) {
+            geom.setLocalTranslation(event.getNewPos());
+        } else {
+            LOG.error("No matching geometry found for id " + event.getId());
+        }
     }
 }

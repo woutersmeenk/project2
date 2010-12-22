@@ -68,6 +68,9 @@ public class Main extends SimpleApplication implements ActionListener {
 
         viewManager.initialize(assetManager);
         viewManager.createViewFromGameState(gameStateManager.getCurrentState());
+        
+        gameStateManager.getCurrentState().getLevel()
+                .addBoxMoveListener(viewManager);
 
         inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
@@ -121,6 +124,14 @@ public class Main extends SimpleApplication implements ActionListener {
             if (below != null && beside == null) {
                 gameStateManager.getCurrentState().getPlayer()
                         .setLocation(playerPos.add(0, -1, 0));
+            }
+        }
+
+        if (name.equals("Action") && !isPressed) {
+            // check if there is a switch below the player
+            Box below = levelMap.get(playerPos.add(0, 0, -1));
+            if (below != null && below.getSwitchBox() != null) {
+                below.getSwitchBox().doSwitch();
             }
         }
 

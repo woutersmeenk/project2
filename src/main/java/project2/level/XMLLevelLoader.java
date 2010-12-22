@@ -43,10 +43,11 @@ public class XMLLevelLoader implements LevelLoader {
             boxes.put(box.getLocation(), box);
         }
 
-        // Add boxes from the current switch state
+        // Add clones of the boxes from the current switch state
         for (final SwitchBox switchBox : switches) {
             for (final Box box : switchBox.getCurrentState()) {
-                boxes.put(box.getLocation(), box);
+                boxes.put(box.getLocation(), BoxFactory.getInstance()
+                        .createBox(box.getLocation(), box.getSize()));
             }
         }
 
