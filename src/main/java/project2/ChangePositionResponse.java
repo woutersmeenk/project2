@@ -9,11 +9,12 @@ import project2.triggers.Response;
 import com.jme3.scene.Geometry;
 
 public class ChangePositionResponse implements Response {
-    private static final Log LOG = LogFactory.getLog(ChangePositionResponse.class);
+    private static final Log LOG = LogFactory
+            .getLog(ChangePositionResponse.class);
     private final Geometry geometry;
     private final Box player;
 
-    public ChangePositionResponse(Geometry geometry, Box player) {
+    public ChangePositionResponse(final Geometry geometry, final Box player) {
         super();
         this.geometry = geometry;
         this.player = player;

@@ -6,7 +6,7 @@ public class BoxMoveEvent {
     private final long id;
     private final Vector3f newPos;
 
-    BoxMoveEvent(long id, Vector3f newPos) {
+    BoxMoveEvent(final long id, final Vector3f newPos) {
         this.id = id;
         this.newPos = newPos;
     }

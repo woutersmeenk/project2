@@ -11,8 +11,9 @@ public class BoxFactory {
     }
 
     public static BoxFactory getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new BoxFactory();
+        }
         return instance;
     }
 
@@ -21,12 +22,13 @@ public class BoxFactory {
         throw new CloneNotSupportedException();
     }
 
-    public Box createBox(Vector3f location, int size) {
+    public Box createBox(final Vector3f location, final int size) {
         return createBox(location, size, null);
     }
 
-    public Box createBox(Vector3f location, int size, SwitchBox switchBox) {
-        long id = currentID;
+    public Box createBox(final Vector3f location, final int size,
+            final SwitchBox switchBox) {
+        final long id = currentID;
         currentID++;
         return new Box(id, location, size, switchBox);
     }

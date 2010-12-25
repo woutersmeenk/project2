@@ -27,7 +27,7 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
         rootNode = root;
     }
 
-    public void initialize(AssetManager assetManager) {
+    public void initialize(final AssetManager assetManager) {
         this.assetManager = assetManager;
         /* Create a light. */
         final PointLight pl = new PointLight();
@@ -91,17 +91,18 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
 
         /* Register a move trigger */
         final project2.model.level.Box player = gameState.getPlayer();
-        Trigger trigger = new Trigger(new PlayerMovedCondition(player),
+        final Trigger trigger = new Trigger(new PlayerMovedCondition(player),
                 new ChangePositionResponse(geom, player));
         TriggerManager.getInstance().addTrigger(trigger);
 
     }
 
-    public Geometry geometryFromId(long id) {
-        Integer idObject = (int) id; // make a cast to int, to circumvent an
-                                     // error in jme3
+    public Geometry geometryFromId(final long id) {
+        final Integer idObject = (int) id; // make a cast to int, to circumvent
+                                           // an
+        // error in jme3
 
-        for (Spatial spatial : rootNode.getChildren()) {
+        for (final Spatial spatial : rootNode.getChildren()) {
             if (idObject.equals(spatial.getUserData("id"))) {
                 return (Geometry) spatial;
             }
@@ -111,8 +112,8 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
     }
 
     @Override
-    public void onEvent(BoxMoveEvent event) {
-        Geometry geom = geometryFromId(event.getId());
+    public void onEvent(final BoxMoveEvent event) {
+        final Geometry geom = geometryFromId(event.getId());
 
         if (geom != null) {
             geom.setLocalTranslation(event.getNewPos());

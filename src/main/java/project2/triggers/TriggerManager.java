@@ -33,8 +33,9 @@ public class TriggerManager {
     }
 
     public static TriggerManager getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new TriggerManager();
+        }
         return instance;
     }
 

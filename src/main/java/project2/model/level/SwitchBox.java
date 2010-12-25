@@ -27,7 +27,7 @@ public class SwitchBox {
         return currentStateID;
     }
 
-    public void setLevel(Level level) {
+    public void setLevel(final Level level) {
         this.level = level;
     }
 
@@ -37,15 +37,16 @@ public class SwitchBox {
 
     public void doSwitch() {
         // increment state
-        Box[] oldPos = getCurrentState().toArray(new Box[0]);
+        final Box[] oldPos = getCurrentState().toArray(new Box[0]);
         currentStateID = (currentStateID + 1) % states.size();
-        Box[] newPos = getCurrentState().toArray(new Box[0]);
+        final Box[] newPos = getCurrentState().toArray(new Box[0]);
 
         // move boxes
         if (level != null) {
             for (int i = 0; i < oldPos.length; i++) {
                 level.moveBox(oldPos[i].getLocation(), newPos[i].getLocation());
-                LOG.info(oldPos[i].getLocation() + " " + newPos[i].getLocation());
+                LOG.info(oldPos[i].getLocation() + " "
+                        + newPos[i].getLocation());
             }
 
             LOG.info("State switched.");

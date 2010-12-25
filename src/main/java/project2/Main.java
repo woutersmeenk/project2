@@ -68,7 +68,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
         viewManager.initialize(assetManager);
         viewManager.createViewFromGameState(gameStateManager.getCurrentState());
-        
+
         gameStateManager.getCurrentState().getLevel()
                 .addBoxMoveListener(viewManager);
 
@@ -81,15 +81,16 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     @Override
-    public void onAction(String name, boolean isPressed, float tpf) {
-        Vector3f playerPos = gameStateManager.getCurrentState().getPlayer()
-                .getLocation();
-        Map<Vector3f, Box> levelMap = gameStateManager.getCurrentState()
+    public void onAction(final String name, final boolean isPressed,
+            final float tpf) {
+        final Vector3f playerPos = gameStateManager.getCurrentState()
+                .getPlayer().getLocation();
+        final Map<Vector3f, Box> levelMap = gameStateManager.getCurrentState()
                 .getLevel().getBoxes();
 
         if (name.equals("Left") && !isPressed) {
-            Box beside = levelMap.get(playerPos.add(-1, 0, 0));
-            Box below = levelMap.get(playerPos.add(-1, 0, -1));
+            final Box beside = levelMap.get(playerPos.add(-1, 0, 0));
+            final Box below = levelMap.get(playerPos.add(-1, 0, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.getCurrentState().getPlayer()
@@ -98,8 +99,8 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("Up") && !isPressed) {
-            Box beside = levelMap.get(playerPos.add(0, 1, 0));
-            Box below = levelMap.get(playerPos.add(0, 1, -1));
+            final Box beside = levelMap.get(playerPos.add(0, 1, 0));
+            final Box below = levelMap.get(playerPos.add(0, 1, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.getCurrentState().getPlayer()
@@ -108,8 +109,8 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("Right") && !isPressed) {
-            Box beside = levelMap.get(playerPos.add(1, 0, 0));
-            Box below = levelMap.get(playerPos.add(1, 0, -1));
+            final Box beside = levelMap.get(playerPos.add(1, 0, 0));
+            final Box below = levelMap.get(playerPos.add(1, 0, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.getCurrentState().getPlayer()
@@ -118,8 +119,8 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("Down") && !isPressed) {
-            Box beside = levelMap.get(playerPos.add(0, -1, 0));
-            Box below = levelMap.get(playerPos.add(0, -1, -1));
+            final Box beside = levelMap.get(playerPos.add(0, -1, 0));
+            final Box below = levelMap.get(playerPos.add(0, -1, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.getCurrentState().getPlayer()
@@ -129,7 +130,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("Action") && !isPressed) {
             // check if there is a switch below the player
-            Box below = levelMap.get(playerPos.add(0, 0, -1));
+            final Box below = levelMap.get(playerPos.add(0, 0, -1));
             if (below != null && below.getSwitchBox() != null) {
                 below.getSwitchBox().doSwitch();
             }

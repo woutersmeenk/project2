@@ -32,7 +32,7 @@ public class Level {
         boxMoveListeners = new ArrayList<EventListener<BoxMoveEvent>>();
 
         // register the level with the switches
-        for (SwitchBox switchBox : switches) {
+        for (final SwitchBox switchBox : switches) {
             switchBox.setLevel(this);
         }
     }
@@ -53,8 +53,8 @@ public class Level {
         return checkpoints;
     }
 
-    public Box boxFromId(long id) {
-        for (Box box : boxes.values()) {
+    public Box boxFromId(final long id) {
+        for (final Box box : boxes.values()) {
             if (id == box.getId()) {
                 return box;
             }
@@ -64,9 +64,9 @@ public class Level {
     }
 
     // TODO: maybe do with id instead of current position?
-    public void moveBox(Vector3f curPos, Vector3f newPos) {
+    public void moveBox(final Vector3f curPos, final Vector3f newPos) {
         // move the box
-        Box box = boxes.get(curPos);
+        final Box box = boxes.get(curPos);
 
         if (box == null) {
             LOG.warn("No box found at" + curPos);
@@ -77,12 +77,12 @@ public class Level {
         boxes.put(newPos, boxes.remove(curPos));
         box.setLocation(newPos);
 
-        for (EventListener<BoxMoveEvent> listener : boxMoveListeners) {
+        for (final EventListener<BoxMoveEvent> listener : boxMoveListeners) {
             listener.onEvent(new BoxMoveEvent(box.getId(), newPos));
         }
     }
 
-    public boolean addBoxMoveListener(EventListener<BoxMoveEvent> listener) {
+    public boolean addBoxMoveListener(final EventListener<BoxMoveEvent> listener) {
         return boxMoveListeners.add(listener);
     }
 }

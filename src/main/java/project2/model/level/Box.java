@@ -34,15 +34,15 @@ public class Box {
         return changed;
     }
 
-    public void setChanged(boolean changed) {
+    public void setChanged(final boolean changed) {
         this.changed = changed;
     }
 
-    public void setLocation(Vector3f location) {
+    public void setLocation(final Vector3f location) {
         changed = true;
         this.location = location;
     }
-    
+
     public long getId() {
         return id;
     }

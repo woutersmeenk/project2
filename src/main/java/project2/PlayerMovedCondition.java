@@ -6,7 +6,7 @@ import project2.triggers.Condition;
 public class PlayerMovedCondition implements Condition {
     private final Box player;
 
-    public PlayerMovedCondition(Box player) {
+    public PlayerMovedCondition(final Box player) {
         super();
         this.player = player;
     }
