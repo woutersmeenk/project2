@@ -29,12 +29,12 @@ public class NodeIterable implements Iterable<Node>, Iterator<Node> {
     private final NodeList nodes;
     private int index;
 
-    public static NodeIterable wrap(final NodeList nodes) {
-        return new NodeIterable(nodes);
-    }
-
     public NodeIterable(final NodeList nodes) {
         this.nodes = nodes;
+    }
+
+    public static NodeIterable wrap(final NodeList nodes) {
+        return new NodeIterable(nodes);
     }
 
     @Override

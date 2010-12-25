@@ -21,5 +21,5 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 package project2.triggers;
 
 public interface Condition {
-    abstract boolean isTrue();
+    boolean isTrue();
 }

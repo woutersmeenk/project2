@@ -35,8 +35,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class XMLUtils {
-    private static final XPath path = XPathFactory.newInstance().newXPath();
+public final class XMLUtils {
+    private static final XPath PATH = XPathFactory.newInstance().newXPath();
+
+    private XMLUtils() {
+    }
 
     public static Node load(final URL file) throws XMLException {
         final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -55,7 +58,7 @@ public class XMLUtils {
     public static NodeIterable findNodes(final String expression,
             final Node node) throws XMLException {
         try {
-            final NodeList nodes = (NodeList) path.evaluate(expression, node,
+            final NodeList nodes = (NodeList) PATH.evaluate(expression, node,
                     XPathConstants.NODESET);
             return new NodeIterable(nodes);
         } catch (final XPathExpressionException e) {
@@ -66,7 +69,7 @@ public class XMLUtils {
     public static Node findNode(final String expression, final Node node)
             throws XMLException {
         try {
-            return (Node) path.evaluate(expression, node, XPathConstants.NODE);
+            return (Node) PATH.evaluate(expression, node, XPathConstants.NODE);
         } catch (final XPathExpressionException e) {
             throw new XMLException(e);
         }
@@ -75,7 +78,7 @@ public class XMLUtils {
     public static String parseString(final String expression, final Node node)
             throws XMLException {
         try {
-            return path.evaluate(expression, node);
+            return PATH.evaluate(expression, node);
         } catch (final XPathExpressionException e) {
             throw new XMLException(e);
         }
@@ -89,9 +92,9 @@ public class XMLUtils {
     public static double parseNumber(final String expression, final Node node,
             final double defaultValue) throws XMLException {
         try {
-            final Object test = path.evaluate(expression, node,
+            final Object test = PATH.evaluate(expression, node,
                     XPathConstants.NODE);
-            Double result = (Double) path.evaluate(expression, node,
+            Double result = (Double) PATH.evaluate(expression, node,
                     XPathConstants.NUMBER);
             if (test == null) {
                 result = defaultValue;
@@ -105,9 +108,9 @@ public class XMLUtils {
     public static boolean parseBoolean(final String expression,
             final Node node, final boolean defaultValue) throws XMLException {
         try {
-            final Object test = path.evaluate(expression, node,
+            final Object test = PATH.evaluate(expression, node,
                     XPathConstants.NODE);
-            Boolean result = (Boolean) path.evaluate(expression, node,
+            Boolean result = (Boolean) PATH.evaluate(expression, node,
                     XPathConstants.BOOLEAN);
             if (test == null) {
                 result = defaultValue;

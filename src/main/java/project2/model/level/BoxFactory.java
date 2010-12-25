@@ -22,10 +22,9 @@ package project2.model.level;
 
 import com.jme3.math.Vector3f;
 
-public class BoxFactory {
+public final class BoxFactory {
     private static BoxFactory instance;
-
-    public long currentID = 0;
+    private long currentID = 0;
 
     private BoxFactory() {
     }

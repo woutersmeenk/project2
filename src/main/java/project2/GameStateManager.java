@@ -28,8 +28,8 @@ import project2.model.level.BoxFactory;
 import project2.model.level.Level;
 
 public class GameStateManager {
-    GameState currentState;
-    List<GameState> history;
+    private GameState currentState;
+    private List<GameState> history;
 
     public void buildGameState(final String levelFile) {
         final XMLLevelLoader loader = new XMLLevelLoader();

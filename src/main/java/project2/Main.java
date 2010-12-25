@@ -42,16 +42,16 @@ public class Main extends SimpleApplication implements ActionListener {
     private final GameStateManager gameStateManager;
     private final ViewManager viewManager;
 
-    public static void main(final String[] args) {
-        JavaLoggingToCommonLoggingRedirector.activate();
-        final Main app = new Main();
-        app.start();
-    }
-
     public Main() {
         triggerManager = TriggerManager.getInstance();
         gameStateManager = new GameStateManager();
         viewManager = new ViewManager(rootNode);
+    }
+
+    public static void main(final String[] args) {
+        JavaLoggingToCommonLoggingRedirector.activate();
+        final Main app = new Main();
+        app.start();
     }
 
     @Override

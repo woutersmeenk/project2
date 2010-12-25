@@ -23,7 +23,7 @@ package project2.triggers;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TriggerManager {
+public final class TriggerManager {
     private static TriggerManager instance;
 
     private final List<Trigger> triggers;
