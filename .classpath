@@ -23,6 +23,5 @@
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-adapters-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/groovy-all-1.7.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
