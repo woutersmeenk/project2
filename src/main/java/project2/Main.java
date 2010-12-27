@@ -35,6 +35,12 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.Vector3f;
 
+/**
+ * Main entry point for the application. Initializes everything.
+ * 
+ * @author Ben Ruijl & Wouter Smeenk
+ * 
+ */
 public class Main extends SimpleApplication implements ActionListener {
     private static final Log LOG = LogFactory.getLog(Main.class);
 
@@ -42,12 +48,21 @@ public class Main extends SimpleApplication implements ActionListener {
     private final GameStateManager gameStateManager;
     private final ViewManager viewManager;
 
+    /**
+     * Default Constructor
+     * */
     public Main() {
         triggerManager = TriggerManager.getInstance();
         gameStateManager = new GameStateManager();
         viewManager = new ViewManager(rootNode);
     }
 
+    /**
+     * main method
+     * 
+     * @param args
+     *            The commandline arguments. These are not used currently.
+     */
     public static void main(final String[] args) {
         JavaLoggingToCommonLoggingRedirector.activate();
         final Main app = new Main();
@@ -80,6 +95,7 @@ public class Main extends SimpleApplication implements ActionListener {
         inputManager.addListener(this, "Action", "Left", "Right", "Up", "Down");
     }
 
+    // TODO: do this in triggers
     @Override
     public void onAction(final String name, final boolean isPressed,
             final float tpf) {
