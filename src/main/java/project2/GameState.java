@@ -20,27 +20,25 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  */
 package project2;
 
-import project2.model.level.Box;
+import java.util.ArrayList;
+import java.util.List;
+
 import project2.model.level.Level;
+import project2.model.level.SwitchBox;
 
 public class GameState {
-    /** Current level. */
-    private final Level level;
-    /** Player. */
-    private final Box player;
+    private final List<Integer> switchStates;
 
-    public GameState(final Level level, final Box player) {
-        super();
-        this.level = level;
-        this.player = player;
+    GameState(final Level level) {
+        switchStates = new ArrayList<Integer>(level.getSwitches().size());
+
+        // save all the states
+        for (SwitchBox switchBox : level.getSwitches()) {
+            switchStates.add(switchBox.getCurrentStateID());
+        }
     }
 
-    public Level getLevel() {
-        return level;
+    public List<Integer> getSwitchStates() {
+        return switchStates;
     }
-
-    public Box getPlayer() {
-        return player;
-    }
-
 }

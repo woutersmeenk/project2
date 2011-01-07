@@ -25,18 +25,27 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import project2.GameStateManager;
+
 public class SwitchBox {
     private static final Log LOG = LogFactory.getLog(SwitchBox.class);
     private final List<List<Box>> states;
     private int currentStateID;
+    private boolean loop;
+
+    private final GameStateManager gameStateManager;
+
     /**
      * Associated game level.
      */
     private Level level;
 
-    public SwitchBox(final List<List<Box>> states) {
+    public SwitchBox(final GameStateManager gameStateManager,
+            final List<List<Box>> states, final boolean loop) {
         currentStateID = 0;
         this.states = states;
+        this.loop = loop;
+        this.gameStateManager = gameStateManager;
     }
 
     public List<List<Box>> getStates() {
@@ -55,23 +64,40 @@ public class SwitchBox {
         return states.get(currentStateID);
     }
 
-    public void doSwitch() {
+    public void doSwitch(int id, boolean addToHistory) {
+        if (level == null) {
+            LOG.error("No level registered to switch.");
+            return;
+        }
+
         // increment state
         final Box[] oldPos = getCurrentState().toArray(new Box[0]);
-        currentStateID = (currentStateID + 1) % states.size();
+        currentStateID = id;
         final Box[] newPos = getCurrentState().toArray(new Box[0]);
 
         // move boxes
-        if (level != null) {
-            for (int i = 0; i < oldPos.length; i++) {
-                level.moveBox(oldPos[i].getLocation(), newPos[i].getLocation());
-                LOG.info(oldPos[i].getLocation() + " "
-                        + newPos[i].getLocation());
-            }
+        for (int i = 0; i < oldPos.length; i++) {
+            level.moveBox(oldPos[i].getLocation(), newPos[i].getLocation());
+        }
 
-            LOG.info("State switched.");
+        if (addToHistory) {
+            gameStateManager.makeHistory(); // register the action
+        }
+    }
+
+    public void doSwitch() {
+        int newId = currentStateID;
+
+        if (loop) {
+            newId = (currentStateID + 1) % states.size();
         } else {
-            LOG.error("No level registered to switch.");
+            if (newId + 1 < states.size()) {
+                newId++;
+            }
+        }
+
+        if (newId != currentStateID) {
+            doSwitch(newId, true);
         }
     }
 }

@@ -57,9 +57,9 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
         rootNode.addLight(pl);
     }
 
-    public void createViewFromGameState(final GameState gameState) {
+    public void createViewFromGameState(final GameStateManager gameStateManager) {
         // add boxes to scene graph
-        for (final project2.model.level.Box box : gameState.getLevel()
+        for (final project2.model.level.Box box : gameStateManager.getLevel()
                 .getBoxes().values()) {
             final int size = box.getSize();
             final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
@@ -91,11 +91,11 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
         }
 
         /* Add player. */
-        final int size = gameState.getPlayer().getSize();
+        final int size = gameStateManager.getPlayer().getSize();
         final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
                 0.5f * size);
         final Geometry geom = new Geometry("Box", box2);
-        geom.setLocalTranslation(gameState.getPlayer().getLocation());
+        geom.setLocalTranslation(gameStateManager.getPlayer().getLocation());
 
         final Material mat2 = new Material(assetManager,
                 "Common/MatDefs/Light/Lighting.j3md");
@@ -110,7 +110,7 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
         rootNode.attachChild(geom);
 
         /* Register a move trigger */
-        final project2.model.level.Box player = gameState.getPlayer();
+        final project2.model.level.Box player = gameStateManager.getPlayer();
         final Trigger trigger = new Trigger(new PlayerMovedCondition(player),
                 new ChangePositionResponse(geom, player));
         TriggerManager.getInstance().addTrigger(trigger);

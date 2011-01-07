@@ -61,7 +61,7 @@ public class Main extends SimpleApplication implements ActionListener {
      * main method
      * 
      * @param args
-     *            The commandline arguments. These are not used currently.
+     *            The command line arguments. These are not used currently.
      */
     public static void main(final String[] args) {
         JavaLoggingToCommonLoggingRedirector.activate();
@@ -82,35 +82,35 @@ public class Main extends SimpleApplication implements ActionListener {
         gameStateManager.buildGameState("simple.xml");
 
         viewManager.initialize(assetManager);
-        viewManager.createViewFromGameState(gameStateManager.getCurrentState());
+        viewManager.createViewFromGameState(gameStateManager);
 
-        gameStateManager.getCurrentState().getLevel()
-                .addBoxMoveListener(viewManager);
+        gameStateManager.getLevel().addBoxMoveListener(viewManager);
 
         inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
+        inputManager.addMapping("Revert", new KeyTrigger(KeyInput.KEY_LSHIFT));
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT));
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP));
         inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN));
-        inputManager.addListener(this, "Action", "Left", "Right", "Up", "Down");
+        inputManager.addListener(this, "Action", "Left", "Right", "Up", "Down",
+                "Revert");
     }
 
     // TODO: do this in triggers
     @Override
     public void onAction(final String name, final boolean isPressed,
             final float tpf) {
-        final Vector3f playerPos = gameStateManager.getCurrentState()
-                .getPlayer().getLocation();
-        final Map<Vector3f, Box> levelMap = gameStateManager.getCurrentState()
-                .getLevel().getBoxes();
+        final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
+        final Map<Vector3f, Box> levelMap = gameStateManager.getLevel()
+                .getBoxes();
 
         if (name.equals("Left") && !isPressed) {
             final Box beside = levelMap.get(playerPos.add(-1, 0, 0));
             final Box below = levelMap.get(playerPos.add(-1, 0, -1));
 
             if (below != null && beside == null) {
-                gameStateManager.getCurrentState().getPlayer()
-                        .setLocation(playerPos.add(-1, 0, 0));
+                gameStateManager.getPlayer().setLocation(
+                        playerPos.add(-1, 0, 0));
             }
         }
 
@@ -119,7 +119,7 @@ public class Main extends SimpleApplication implements ActionListener {
             final Box below = levelMap.get(playerPos.add(0, 1, -1));
 
             if (below != null && beside == null) {
-                gameStateManager.getCurrentState().getPlayer()
+                gameStateManager.getPlayer()
                         .setLocation(playerPos.add(0, 1, 0));
             }
         }
@@ -129,7 +129,7 @@ public class Main extends SimpleApplication implements ActionListener {
             final Box below = levelMap.get(playerPos.add(1, 0, -1));
 
             if (below != null && beside == null) {
-                gameStateManager.getCurrentState().getPlayer()
+                gameStateManager.getPlayer()
                         .setLocation(playerPos.add(1, 0, 0));
             }
         }
@@ -139,9 +139,13 @@ public class Main extends SimpleApplication implements ActionListener {
             final Box below = levelMap.get(playerPos.add(0, -1, -1));
 
             if (below != null && beside == null) {
-                gameStateManager.getCurrentState().getPlayer()
-                        .setLocation(playerPos.add(0, -1, 0));
+                gameStateManager.getPlayer().setLocation(
+                        playerPos.add(0, -1, 0));
             }
+        }
+
+        if (name.equals("Revert") && !isPressed) {
+            gameStateManager.revert();
         }
 
         if (name.equals("Action") && !isPressed) {

@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 
+import project2.GameStateManager;
 import project2.model.level.Box;
 import project2.model.level.BoxFactory;
 import project2.model.level.Level;
@@ -41,15 +42,20 @@ import com.jme3.math.Vector3f;
 
 public class XMLLevelLoader implements LevelLoader {
     private static final Log LOG = LogFactory.getLog(XMLLevelLoader.class);
+    private GameStateManager gameStateManager;
 
     @Override
-    public Level loadLevel(final URL url) {
+    public Level loadLevel(final URL url,
+            final GameStateManager gameStateManager) {
+        this.gameStateManager = gameStateManager;
+
         try {
             final Node node = XMLUtils.load(url);
             return parseLevel(node);
         } catch (final XMLException e) {
             LOG.warn("Could not load level: " + url, e);
         }
+
         return null;
     }
 
@@ -117,7 +123,10 @@ public class XMLLevelLoader implements LevelLoader {
             }
             states.add(state);
         }
-        final SwitchBox result = new SwitchBox(states);
+
+        // TODO: add loop property
+        final SwitchBox result = new SwitchBox(gameStateManager, states, false);
+
         switches.add(result);
         return result;
     }
