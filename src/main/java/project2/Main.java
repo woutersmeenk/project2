@@ -33,6 +33,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
 /**
@@ -79,10 +80,13 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void simpleInitApp() {
+        viewPort.setBackgroundColor(ColorRGBA.Black);
+        
         gameStateManager.buildGameState("simple.xml");
 
         viewManager.initialize(assetManager);
         viewManager.createViewFromGameState(gameStateManager);
+        gameStateManager.registerViewManager(viewManager);
 
         gameStateManager.getLevel().addBoxMoveListener(viewManager);
 

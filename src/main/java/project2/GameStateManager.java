@@ -40,6 +40,11 @@ public class GameStateManager {
     private Level level;
     /** Player. */
     private Box player;
+    private ViewManager viewManager;
+
+    public void registerViewManager(ViewManager viewManager) {
+        this.viewManager = viewManager;
+    }
 
     public Level getLevel() {
         return level;
@@ -72,6 +77,8 @@ public class GameStateManager {
     public void makeHistory() {
         history.add(currentState);
         currentState = new GameState(level);
+        
+        viewManager.showHistory(this);
     }
 
     /**
@@ -93,9 +100,15 @@ public class GameStateManager {
         }
 
         history.remove(history.size() - 1); // remove it
+        
+        viewManager.showHistory(this);
     }
 
     public GameState getCurrentState() {
         return currentState;
+    }
+    
+    public List<GameState> getHistory() {
+        return history;
     }
 }

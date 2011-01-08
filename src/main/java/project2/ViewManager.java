@@ -20,18 +20,24 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  */
 package project2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import project2.model.level.BoxMoveEvent;
+import project2.model.level.SwitchBox;
 import project2.triggers.Trigger;
 import project2.triggers.TriggerManager;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -42,9 +48,14 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
     private AssetManager assetManager;
     private final Node rootNode;
 
+    /* The geometry of the historical positions. */
+    private final List<Geometry> historyGeometry;
+
     public ViewManager(final Node root) {
         super();
         rootNode = root;
+
+        historyGeometry = new ArrayList<Geometry>();
     }
 
     public void initialize(final AssetManager assetManager) {
@@ -129,6 +140,49 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
         }
 
         return null;
+    }
+
+    public void showHistory(GameStateManager gameStateManager) {
+        // remove all
+        for (Geometry geom : historyGeometry) {
+            rootNode.detachChild(geom);
+        }
+
+        final List<SwitchBox> switches = gameStateManager.getLevel()
+                .getSwitches();
+
+        for (int i = 0; i < gameStateManager.getHistory().size(); i++) {
+            final List<Integer> switchStates = gameStateManager.getHistory()
+                    .get(i).getSwitchStates();
+
+            for (int j = 0; j < switchStates.size(); j++) {
+                for (project2.model.level.Box box : switches.get(j).getStates()
+                        .get(switchStates.get(j))) {
+                    // create transparent box
+
+                    final int size = box.getSize();
+                    final Box box2 = new Box(new Vector3f(), 0.5f * size,
+                            0.5f * size, 0.5f * size);
+                    final Geometry geom = new Geometry("Box", box2);
+                    geom.setLocalTranslation(box.getLocation());
+
+                    Material mat2 = new Material(assetManager,
+                            "Common/MatDefs/Misc/SolidColor.j3md");
+                    mat2.setColor("m_Color", new ColorRGBA(0, 0, 1, (i + 1)
+                            / (float) gameStateManager.getHistory().size()
+                            * 0.40f));
+
+                    mat2.getAdditionalRenderState().setBlendMode(
+                            BlendMode.Alpha);
+
+                    geom.setMaterial(mat2);
+                    geom.setQueueBucket(Bucket.Transparent);
+
+                    rootNode.attachChild(geom);
+                    historyGeometry.add(geom);
+                }
+            }
+        }
     }
 
     @Override
