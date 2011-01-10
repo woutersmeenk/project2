@@ -28,8 +28,6 @@ public class Box {
     private final SwitchBox switchBox;
     private final long id;
 
-    private boolean changed = false;
-
     Box(final long id, final Vector3f location2, final int size,
             final SwitchBox switchBox) {
         location = location2;
@@ -50,16 +48,7 @@ public class Box {
         return switchBox;
     }
 
-    public boolean isChanged() {
-        return changed;
-    }
-
-    public void setChanged(final boolean changed) {
-        this.changed = changed;
-    }
-
     public void setLocation(final Vector3f location) {
-        changed = true;
         this.location = location;
     }
 

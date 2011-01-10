@@ -18,18 +18,25 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA.
 
  */
-package project2.triggers;
+package project2.model.level;
 
-public class ConditionOr implements Condition {
-    private final Condition first, second;
+import com.jme3.math.Vector3f;
 
-    public ConditionOr(final Condition first, final Condition second) {
-        this.first = first;
-        this.second = second;
+public class LocationEvent {
+    private final long id;
+    private final Vector3f newPos;
+
+    LocationEvent(final long id, final Vector3f newPos) {
+        this.id = id;
+        this.newPos = newPos;
     }
 
-    @Override
-    public boolean isTrue() {
-        return first.isTrue() || second.isTrue();
+    public long getId() {
+        return id;
     }
+
+    public Vector3f getNewPos() {
+        return newPos;
+    }
+
 }

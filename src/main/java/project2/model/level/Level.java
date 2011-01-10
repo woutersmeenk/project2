@@ -39,7 +39,7 @@ public class Level {
     private final Vector3f start;
     private final List<Vector3f> checkpoints;
 
-    private final List<EventListener<BoxMoveEvent>> boxMoveListeners;
+    private final List<EventListener<LocationEvent>> locationListeners;
 
     public Level(final Map<Vector3f, Box> boxes,
             final List<SwitchBox> switches, final Vector3f start,
@@ -49,7 +49,7 @@ public class Level {
         this.start = start;
         this.checkpoints = checkpoints;
 
-        boxMoveListeners = new ArrayList<EventListener<BoxMoveEvent>>();
+        locationListeners = new ArrayList<EventListener<LocationEvent>>();
 
         // register the level with the switches
         for (final SwitchBox switchBox : switches) {
@@ -97,12 +97,12 @@ public class Level {
         boxes.put(newPos, boxes.remove(curPos));
         box.setLocation(newPos);
 
-        for (final EventListener<BoxMoveEvent> listener : boxMoveListeners) {
-            listener.onEvent(new BoxMoveEvent(box.getId(), newPos));
+        for (final EventListener<LocationEvent> listener : locationListeners) {
+            listener.onEvent(new LocationEvent(box.getId(), newPos));
         }
     }
 
-    public boolean addBoxMoveListener(final EventListener<BoxMoveEvent> listener) {
-        return boxMoveListeners.add(listener);
+    public boolean addLocationListener(final EventListener<LocationEvent> listener) {
+        return locationListeners.add(listener);
     }
 }

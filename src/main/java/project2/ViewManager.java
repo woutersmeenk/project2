@@ -26,10 +26,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import project2.model.level.BoxMoveEvent;
+import project2.model.level.LocationEvent;
 import project2.model.level.SwitchBox;
-import project2.triggers.Trigger;
-import project2.triggers.TriggerManager;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.light.PointLight;
@@ -43,7 +41,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
-public class ViewManager implements EventListener<BoxMoveEvent> {
+public class ViewManager implements EventListener<LocationEvent> {
     private static final Log LOG = LogFactory.getLog(ViewManager.class);
     private AssetManager assetManager;
     private final Node rootNode;
@@ -119,13 +117,6 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
         mat2.setColor("m_Diffuse", ColorRGBA.Yellow);
         geom.setMaterial(mat2);
         rootNode.attachChild(geom);
-
-        /* Register a move trigger */
-        final project2.model.level.Box player = gameStateManager.getPlayer();
-        final Trigger trigger = new Trigger(new PlayerMovedCondition(player),
-                new ChangePositionResponse(geom, player));
-        TriggerManager.getInstance().addTrigger(trigger);
-
     }
 
     public Geometry geometryFromId(final long id) {
@@ -186,7 +177,7 @@ public class ViewManager implements EventListener<BoxMoveEvent> {
     }
 
     @Override
-    public void onEvent(final BoxMoveEvent event) {
+    public void onEvent(final LocationEvent event) {
         final Geometry geom = geometryFromId(event.getId());
 
         if (geom != null) {

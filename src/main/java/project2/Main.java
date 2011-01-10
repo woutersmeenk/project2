@@ -26,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import project2.model.level.Box;
-import project2.triggers.TriggerManager;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
 import com.jme3.app.SimpleApplication;
@@ -45,7 +44,6 @@ import com.jme3.math.Vector3f;
 public class Main extends SimpleApplication implements ActionListener {
     private static final Log LOG = LogFactory.getLog(Main.class);
 
-    private final TriggerManager triggerManager;
     private final GameStateManager gameStateManager;
     private final ViewManager viewManager;
 
@@ -53,7 +51,6 @@ public class Main extends SimpleApplication implements ActionListener {
      * Default Constructor
      * */
     public Main() {
-        triggerManager = TriggerManager.getInstance();
         gameStateManager = new GameStateManager();
         viewManager = new ViewManager(rootNode);
     }
@@ -72,9 +69,6 @@ public class Main extends SimpleApplication implements ActionListener {
 
     @Override
     public void update() {
-        // update game logic
-        triggerManager.update();
-
         super.update();
     }
 
@@ -88,7 +82,7 @@ public class Main extends SimpleApplication implements ActionListener {
         viewManager.createViewFromGameState(gameStateManager);
         gameStateManager.registerViewManager(viewManager);
 
-        gameStateManager.getLevel().addBoxMoveListener(viewManager);
+        gameStateManager.getLevel().addLocationListener(viewManager);
 
         inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
         inputManager.addMapping("Revert", new KeyTrigger(KeyInput.KEY_LSHIFT));
