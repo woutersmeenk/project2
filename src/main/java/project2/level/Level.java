@@ -38,17 +38,17 @@ import com.jme3.math.Vector3f;
 public class Level {
     private static final Log LOG = LogFactory.getLog(Level.class);
 
-    private final Map<Vector3f, Cube> boxes;
+    private final Map<Vector3f, Cube> cubes;
     private final List<SwitchCube> switches;
     private final Vector3f start;
     private final Map<Vector3f, Checkpoint> checkpoints;
 
     private final List<EventListener<LocationEvent>> locationListeners;
 
-    public Level(final Map<Vector3f, Cube> boxes,
+    public Level(final Map<Vector3f, Cube> cubes,
             final List<SwitchCube> switches, final Vector3f start,
             final Map<Vector3f, Checkpoint> checkpoints) {
-        this.boxes = boxes;
+        this.cubes = cubes;
         this.switches = switches;
         this.start = start;
         this.checkpoints = checkpoints;
@@ -56,13 +56,13 @@ public class Level {
         locationListeners = new ArrayList<EventListener<LocationEvent>>();
 
         // register the level with the switches
-        for (final SwitchCube switchBox : switches) {
-            switchBox.setLevel(this);
+        for (final SwitchCube switchCube : switches) {
+            switchCube.setLevel(this);
         }
     }
 
-    public Map<Vector3f, Cube> getBoxes() {
-        return boxes;
+    public Map<Vector3f, Cube> getCubes() {
+        return cubes;
     }
 
     public List<SwitchCube> getSwitches() {
@@ -77,10 +77,10 @@ public class Level {
         return checkpoints;
     }
 
-    public Cube boxFromId(final long id) {
-        for (final Cube box : boxes.values()) {
-            if (id == box.getId()) {
-                return box;
+    public Cube cubeFromId(final long id) {
+        for (final Cube cube : cubes.values()) {
+            if (id == cube.getId()) {
+                return cube;
             }
         }
 
@@ -88,21 +88,21 @@ public class Level {
     }
 
     // TODO: maybe do with id instead of current position?
-    public void moveBox(final Vector3f curPos, final Vector3f newPos) {
-        // move the box
-        final Cube box = boxes.get(curPos);
+    public void moveCube(final Vector3f curPos, final Vector3f newPos) {
+        // move the cube
+        final Cube cube = cubes.get(curPos);
 
-        if (box == null) {
-            LOG.warn("No box found at" + curPos);
+        if (cube == null) {
+            LOG.warn("No cube found at" + curPos);
             return;
         }
 
-        // replace the box in the map and set the new position
-        boxes.put(newPos, boxes.remove(curPos));
-        box.setLocation(newPos);
+        // replace the cube in the map and set the new position
+        cubes.put(newPos, cubes.remove(curPos));
+        cube.setLocation(newPos);
 
         for (final EventListener<LocationEvent> listener : locationListeners) {
-            listener.onEvent(new LocationEvent(box.getId(), newPos));
+            listener.onEvent(new LocationEvent(cube.getId(), newPos));
         }
     }
 

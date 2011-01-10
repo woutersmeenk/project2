@@ -76,9 +76,9 @@ public class SwitchCube {
         currentStateID = id;
         final Cube[] newPos = getCurrentState().toArray(new Cube[0]);
 
-        // move boxes
+        // move cubes
         for (int i = 0; i < oldPos.length; i++) {
-            level.moveBox(oldPos[i].getLocation(), newPos[i].getLocation());
+            level.moveCube(oldPos[i].getLocation(), newPos[i].getLocation());
         }
 
         if (addToHistory) {

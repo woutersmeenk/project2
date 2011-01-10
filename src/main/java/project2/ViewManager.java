@@ -68,13 +68,13 @@ public class ViewManager implements EventListener<LocationEvent> {
     }
 
     public void createViewFromGameState(final GameStateManager gameStateManager) {
-        // add boxes to scene graph
-        for (final Cube box : gameStateManager.getLevel().getBoxes().values()) {
-            final int size = box.getSize();
+        // add cubes to scene graph
+        for (final Cube cube : gameStateManager.getLevel().getCubes().values()) {
+            final int size = cube.getSize();
             final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
                     0.5f * size);
-            final Geometry geom = new Geometry("Box", box2);
-            geom.setLocalTranslation(box.getLocation());
+            final Geometry geom = new Geometry("Cube", box2);
+            geom.setLocalTranslation(cube.getLocation());
             final Material mat2 = new Material(assetManager,
                     "Common/MatDefs/Light/Lighting.j3md");
 
@@ -84,7 +84,7 @@ public class ViewManager implements EventListener<LocationEvent> {
             mat2.setColor("m_Specular", ColorRGBA.Gray);
 
             // give switch a different color
-            if (box.getSwitchBox() == null) {
+            if (cube.getSwitchCube() == null) {
                 mat2.setColor("m_Ambient", ColorRGBA.Blue);
                 mat2.setColor("m_Diffuse", ColorRGBA.Blue);
 
@@ -94,7 +94,7 @@ public class ViewManager implements EventListener<LocationEvent> {
             }
 
             geom.setMaterial(mat2);
-            geom.setUserData("id", (int) box.getId());
+            geom.setUserData("id", (int) cube.getId());
 
             rootNode.attachChild(geom);
         }
@@ -103,7 +103,7 @@ public class ViewManager implements EventListener<LocationEvent> {
         final int size = gameStateManager.getPlayer().getSize();
         final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
                 0.5f * size);
-        final Geometry geom = new Geometry("Box", box2);
+        final Geometry geom = new Geometry("Player", box2);
         geom.setLocalTranslation(gameStateManager.getPlayer().getLocation());
 
         final Material mat2 = new Material(assetManager,
@@ -176,15 +176,15 @@ public class ViewManager implements EventListener<LocationEvent> {
                     .get(i).getSwitchStates();
 
             for (int j = 0; j < switchStates.size(); j++) {
-                for (final Cube box : switches.get(j).getStates()
+                for (final Cube cube : switches.get(j).getStates()
                         .get(switchStates.get(j))) {
                     // create transparent box
 
-                    final int size = box.getSize();
+                    final int size = cube.getSize();
                     final Box box2 = new Box(new Vector3f(), 0.5f * size,
                             0.5f * size, 0.5f * size);
-                    final Geometry geom = new Geometry("Box", box2);
-                    geom.setLocalTranslation(box.getLocation());
+                    final Geometry geom = new Geometry("Cube", box2);
+                    geom.setLocalTranslation(cube.getLocation());
 
                     final Material mat2 = new Material(assetManager,
                             "Common/MatDefs/Misc/SolidColor.j3md");

@@ -63,18 +63,18 @@ public class XMLLevelLoader implements LevelLoader {
     private Level parseLevel(final Node node) throws XMLException {
         final List<SwitchCube> switches = new ArrayList<SwitchCube>();
 
-        // Boxes
-        final Map<Vector3f, Cube> boxes = new HashMap<Vector3f, Cube>();
-        for (final Node boxNode : XMLUtils.findNodes("level/boxes/box", node)) {
-            final Cube box = parseBox(boxNode, switches);
-            boxes.put(box.getLocation(), box);
+        // Cubes
+        final Map<Vector3f, Cube> cubes = new HashMap<Vector3f, Cube>();
+        for (final Node cubeNode : XMLUtils.findNodes("level/cubes/cube", node)) {
+            final Cube cube = parseCube(cubeNode, switches);
+            cubes.put(cube.getLocation(), cube);
         }
 
-        // Add clones of the boxes from the current switch state
-        for (final SwitchCube switchBox : switches) {
-            for (final Cube box : switchBox.getCurrentState()) {
-                boxes.put(box.getLocation(), CubeFactory.getInstance()
-                        .createBox(box.getLocation(), box.getSize()));
+        // Add clones of the cubes from the current switch state
+        for (final SwitchCube switchCube : switches) {
+            for (final Cube cube : switchCube.getCurrentState()) {
+                cubes.put(cube.getLocation(), CubeFactory.getInstance()
+                        .createCube(cube.getLocation(), cube.getSize()));
             }
         }
 
@@ -89,7 +89,7 @@ public class XMLLevelLoader implements LevelLoader {
         // Start
         final Node startNode = XMLUtils.findNode("level/start", node);
         final Vector3f start = parseVector3f(startNode);
-        return new Level(boxes, switches, start, checkpoints);
+        return new Level(cubes, switches, start, checkpoints);
     }
 
     private Vector3f parseVector3f(final Node node) throws XMLException {
@@ -99,7 +99,7 @@ public class XMLLevelLoader implements LevelLoader {
         return new Vector3f(x, y, z);
     }
 
-    private Cube parseBox(final Node node, final List<SwitchCube> switches)
+    private Cube parseCube(final Node node, final List<SwitchCube> switches)
             throws XMLException {
         final boolean isNull = XMLUtils.parseBoolean("@null", node, false);
         if (isNull) {
@@ -108,11 +108,11 @@ public class XMLLevelLoader implements LevelLoader {
         final Vector3f location = parseVector3f(node);
         final int size = (int) XMLUtils.parseNumber("@size", node, 1);
         final Node switchNode = XMLUtils.findNode("switch", node);
-        final SwitchCube switchBox = parseSwitchBox(switchNode, switches);
-        return CubeFactory.getInstance().createBox(location, size, switchBox);
+        final SwitchCube switchCube = parseSwitchCube(switchNode, switches);
+        return CubeFactory.getInstance().createCube(location, size, switchCube);
     }
 
-    private SwitchCube parseSwitchBox(final Node node,
+    private SwitchCube parseSwitchCube(final Node node,
             final List<SwitchCube> switches) throws XMLException {
         if (node == null) {
             return null;
@@ -120,8 +120,8 @@ public class XMLLevelLoader implements LevelLoader {
         final List<List<Cube>> states = new ArrayList<List<Cube>>();
         for (final Node stateNode : XMLUtils.findNodes("state", node)) {
             final List<Cube> state = new ArrayList<Cube>();
-            for (final Node boxNode : XMLUtils.findNodes("box", stateNode)) {
-                state.add(parseBox(boxNode, switches));
+            for (final Node cubeNode : XMLUtils.findNodes("cube", stateNode)) {
+                state.add(parseCube(cubeNode, switches));
             }
             states.add(state);
         }

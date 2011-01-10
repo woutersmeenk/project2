@@ -1,21 +1,21 @@
 <level>
-	<boxes>
-		<box x="0" y="1" z="0" />
-		<box x="2" y="1" z="0" />
-		<box x="0" y="2" z="0" />
-		<box x="1" y="0" z="0" />
-		<box x="1" y="3" z="0" />
-		<box x="2" y="2" z="0">
+	<cubes>
+		<cube x="0" y="1" z="0" />
+		<cube x="2" y="1" z="0" />
+		<cube x="0" y="2" z="0" />
+		<cube x="1" y="0" z="0" />
+		<cube x="1" y="3" z="0" />
+		<cube x="2" y="2" z="0">
 			<switch>
 				<state>
-					<box x="1" y="1" z="0" />
+					<cube x="1" y="1" z="0" />
 				</state>
 				<state>
-					<box x="1" y="2" z="0" />
+					<cube x="1" y="2" z="0" />
 				</state>
 			</switch>
-		</box>
-	</boxes>
+		</cube>
+	</cubes>
 	<checkpoints>
 		<checkpoint x="1" y="3" z="1" />
 	</checkpoints>
