@@ -100,7 +100,7 @@ public class Main extends SimpleApplication implements ActionListener {
             final float tpf) {
         final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
         final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
-                .getBoxes();
+                .getCubes();
 
         if (name.equals("Left") && !isPressed) {
             final Cube beside = levelMap.get(playerPos.add(-1, 0, 0));
@@ -145,8 +145,8 @@ public class Main extends SimpleApplication implements ActionListener {
         if (name.equals("Action") && !isPressed) {
             // check if there is a switch below the player
             final Cube below = levelMap.get(playerPos.add(0, 0, -1));
-            if (below != null && below.getSwitchBox() != null) {
-                below.getSwitchBox().doSwitch();
+            if (below != null && below.getSwitchCube() != null) {
+                below.getSwitchCube().doSwitch();
             }
         }
 

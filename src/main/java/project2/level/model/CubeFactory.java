@@ -41,14 +41,14 @@ public final class CubeFactory {
         throw new CloneNotSupportedException();
     }
 
-    public Cube createBox(final Vector3f location, final int size) {
-        return createBox(location, size, null);
+    public Cube createCube(final Vector3f location, final int size) {
+        return createCube(location, size, null);
     }
 
-    public Cube createBox(final Vector3f location, final int size,
-            final SwitchCube switchBox) {
+    public Cube createCube(final Vector3f location, final int size,
+            final SwitchCube switchCube) {
         final long id = currentID;
         currentID++;
-        return new Cube(id, location, size, switchBox);
+        return new Cube(id, location, size, switchCube);
     }
 }

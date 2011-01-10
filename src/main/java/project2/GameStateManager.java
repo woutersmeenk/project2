@@ -78,7 +78,7 @@ public class GameStateManager {
 
         level = loader
                 .loadLevel(ClassLoader.getSystemResource(levelFile), this);
-        player = CubeFactory.getInstance().createBox(level.getStart(), 1);
+        player = CubeFactory.getInstance().createCube(level.getStart(), 1);
 
         // generate a gamestate from the level
         currentState = new GameState(level);
@@ -87,7 +87,7 @@ public class GameStateManager {
 
     /**
      * Saves a state to history and creates a new state. This function should be
-     * called every time a switchbox state is switched.
+     * called every time a switchCube state is switched.
      */
     public void makeHistory() {
         history.add(currentState);
