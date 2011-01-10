@@ -31,10 +31,9 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 
 import project2.GameStateManager;
-import project2.model.level.Box;
-import project2.model.level.BoxFactory;
-import project2.model.level.Level;
-import project2.model.level.SwitchBox;
+import project2.level.model.Box;
+import project2.level.model.BoxFactory;
+import project2.level.model.SwitchBox;
 import project2.util.XMLException;
 import project2.util.XMLUtils;
 
@@ -78,10 +77,10 @@ public class XMLLevelLoader implements LevelLoader {
         }
 
         // Checkpoints
-        final List<Vector3f> checkpoints = new ArrayList<Vector3f>();
+        final Map<Vector3f, Boolean> checkpoints = new HashMap<Vector3f, Boolean>();
         for (final Node checkpointNode : XMLUtils.findNodes(
                 "level/checkpoints/checkpoint", node)) {
-            checkpoints.add(parseVector3f(checkpointNode));
+	    checkpoints.put(parseVector3f(checkpointNode), Boolean.FALSE);
         }
 
         // Start

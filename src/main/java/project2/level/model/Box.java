@@ -18,37 +18,41 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA.
 
  */
-package project2.model.level;
+package project2.level.model;
 
 import com.jme3.math.Vector3f;
 
-public final class BoxFactory {
-    private static BoxFactory instance;
-    private long currentID = 0;
+public class Box {
+    private Vector3f location;
+    private final int size;
+    private final SwitchBox switchBox;
+    private final long id;
 
-    private BoxFactory() {
-    }
-
-    public static BoxFactory getInstance() {
-        if (instance == null) {
-            instance = new BoxFactory();
-        }
-        return instance;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        throw new CloneNotSupportedException();
-    }
-
-    public Box createBox(final Vector3f location, final int size) {
-        return createBox(location, size, null);
-    }
-
-    public Box createBox(final Vector3f location, final int size,
+    Box(final long id, final Vector3f location2, final int size,
             final SwitchBox switchBox) {
-        final long id = currentID;
-        currentID++;
-        return new Box(id, location, size, switchBox);
+        location = location2;
+        this.id = id;
+        this.size = size;
+        this.switchBox = switchBox;
+    }
+
+    public Vector3f getLocation() {
+        return location;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public SwitchBox getSwitchBox() {
+        return switchBox;
+    }
+
+    public void setLocation(final Vector3f location) {
+        this.location = location;
+    }
+
+    public long getId() {
+        return id;
     }
 }

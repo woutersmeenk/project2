@@ -23,7 +23,6 @@ package project2.level;
 import java.net.URL;
 
 import project2.GameStateManager;
-import project2.model.level.Level;
 
 public interface LevelLoader {
 

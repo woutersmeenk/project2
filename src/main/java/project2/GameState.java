@@ -23,8 +23,8 @@ package project2;
 import java.util.ArrayList;
 import java.util.List;
 
-import project2.model.level.Level;
-import project2.model.level.SwitchBox;
+import project2.level.Level;
+import project2.level.model.SwitchBox;
 
 public class GameState {
     private final List<Integer> switchStates;

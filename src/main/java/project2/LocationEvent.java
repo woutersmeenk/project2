@@ -18,41 +18,25 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA.
 
  */
-package project2.model.level;
+package project2;
 
 import com.jme3.math.Vector3f;
 
-public class Box {
-    private Vector3f location;
-    private final int size;
-    private final SwitchBox switchBox;
+public class LocationEvent {
     private final long id;
+    private final Vector3f newPos;
 
-    Box(final long id, final Vector3f location2, final int size,
-            final SwitchBox switchBox) {
-        location = location2;
+    public LocationEvent(final long id, final Vector3f newPos) {
         this.id = id;
-        this.size = size;
-        this.switchBox = switchBox;
-    }
-
-    public Vector3f getLocation() {
-        return location;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public SwitchBox getSwitchBox() {
-        return switchBox;
-    }
-
-    public void setLocation(final Vector3f location) {
-        this.location = location;
+        this.newPos = newPos;
     }
 
     public long getId() {
         return id;
     }
+
+    public Vector3f getNewPos() {
+        return newPos;
+    }
+
 }

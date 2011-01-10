@@ -18,7 +18,7 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 02111-1307 USA.
 
  */
-package project2.model.level;
+package project2.level.model;
 
 import java.util.List;
 
@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import project2.GameStateManager;
+import project2.level.Level;
 
 public class SwitchBox {
     private static final Log LOG = LogFactory.getLog(SwitchBox.class);

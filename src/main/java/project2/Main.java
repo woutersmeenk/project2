@@ -25,7 +25,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import project2.model.level.Box;
+import project2.level.model.Box;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
 import com.jme3.app.SimpleApplication;
@@ -51,8 +51,8 @@ public class Main extends SimpleApplication implements ActionListener {
      * Default Constructor
      * */
     public Main() {
-        gameStateManager = new GameStateManager();
-        viewManager = new ViewManager(rootNode);
+	gameStateManager = new GameStateManager();
+	viewManager = new ViewManager(rootNode);
     }
 
     /**
@@ -62,97 +62,93 @@ public class Main extends SimpleApplication implements ActionListener {
      *            The command line arguments. These are not used currently.
      */
     public static void main(final String[] args) {
-        JavaLoggingToCommonLoggingRedirector.activate();
-        final Main app = new Main();
-        app.start();
+	JavaLoggingToCommonLoggingRedirector.activate();
+	final Main app = new Main();
+	app.start();
     }
 
     @Override
     public void update() {
-        super.update();
+	super.update();
     }
 
     @Override
     public void simpleInitApp() {
-        viewPort.setBackgroundColor(ColorRGBA.Black);
-        
-        gameStateManager.buildGameState("simple.xml");
+	viewPort.setBackgroundColor(ColorRGBA.Black);
 
-        viewManager.initialize(assetManager);
-        viewManager.createViewFromGameState(gameStateManager);
-        gameStateManager.registerViewManager(viewManager);
+	gameStateManager.buildInitialGameState("simple.xml");
 
-        gameStateManager.getLevel().addLocationListener(viewManager);
+	viewManager.initialize(assetManager);
+	viewManager.createViewFromGameState(gameStateManager);
+	gameStateManager.registerViewManager(viewManager);
 
-        inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
-        inputManager.addMapping("Revert", new KeyTrigger(KeyInput.KEY_LSHIFT));
-        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
-        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT));
-        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP));
-        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN));
-        inputManager.addListener(this, "Action", "Left", "Right", "Up", "Down",
-                "Revert");
+	gameStateManager.getLevel().addLocationListener(viewManager);
+
+	inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
+	inputManager.addMapping("Revert", new KeyTrigger(KeyInput.KEY_LSHIFT));
+	inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
+	inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT));
+	inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP));
+	inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN));
+	inputManager.addListener(this, "Action", "Left", "Right", "Up", "Down",
+		"Revert");
     }
 
     // TODO: do this in triggers
     @Override
     public void onAction(final String name, final boolean isPressed,
-            final float tpf) {
-        final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
-        final Map<Vector3f, Box> levelMap = gameStateManager.getLevel()
-                .getBoxes();
+	    final float tpf) {
+	final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
+	final Map<Vector3f, Box> levelMap = gameStateManager.getLevel()
+		.getBoxes();
 
-        if (name.equals("Left") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(-1, 0, 0));
-            final Box below = levelMap.get(playerPos.add(-1, 0, -1));
+	if (name.equals("Left") && !isPressed) {
+	    final Box beside = levelMap.get(playerPos.add(-1, 0, 0));
+	    final Box below = levelMap.get(playerPos.add(-1, 0, -1));
 
-            if (below != null && beside == null) {
-                gameStateManager.getPlayer().setLocation(
-                        playerPos.add(-1, 0, 0));
-            }
-        }
+	    if (below != null && beside == null) {
+		gameStateManager.movePlayer(new Vector3f(-1, 0, 0));
+	    }
+	}
 
-        if (name.equals("Up") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(0, 1, 0));
-            final Box below = levelMap.get(playerPos.add(0, 1, -1));
+	if (name.equals("Up") && !isPressed) {
+	    final Box beside = levelMap.get(playerPos.add(0, 1, 0));
+	    final Box below = levelMap.get(playerPos.add(0, 1, -1));
 
-            if (below != null && beside == null) {
-                gameStateManager.getPlayer()
-                        .setLocation(playerPos.add(0, 1, 0));
-            }
-        }
+	    if (below != null && beside == null) {
+		gameStateManager.movePlayer(new Vector3f(0, 1, 0));
+	    }
+	}
 
-        if (name.equals("Right") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(1, 0, 0));
-            final Box below = levelMap.get(playerPos.add(1, 0, -1));
+	if (name.equals("Right") && !isPressed) {
+	    final Box beside = levelMap.get(playerPos.add(1, 0, 0));
+	    final Box below = levelMap.get(playerPos.add(1, 0, -1));
 
-            if (below != null && beside == null) {
-                gameStateManager.getPlayer()
-                        .setLocation(playerPos.add(1, 0, 0));
-            }
-        }
+	    if (below != null && beside == null) {
+		gameStateManager.movePlayer(new Vector3f(1, 0, 0));
+	    }
+	}
 
-        if (name.equals("Down") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(0, -1, 0));
-            final Box below = levelMap.get(playerPos.add(0, -1, -1));
+	if (name.equals("Down") && !isPressed) {
+	    final Box beside = levelMap.get(playerPos.add(0, -1, 0));
+	    final Box below = levelMap.get(playerPos.add(0, -1, -1));
 
-            if (below != null && beside == null) {
-                gameStateManager.getPlayer().setLocation(
-                        playerPos.add(0, -1, 0));
-            }
-        }
+	    if (below != null && beside == null) {
+		gameStateManager.movePlayer(new Vector3f(0, -1, 0));
+	    }
+	}
 
-        if (name.equals("Revert") && !isPressed) {
-            gameStateManager.revert();
-        }
+	if (name.equals("Revert") && !isPressed) {
+	    gameStateManager.revert();
+	}
 
-        if (name.equals("Action") && !isPressed) {
-            // check if there is a switch below the player
-            final Box below = levelMap.get(playerPos.add(0, 0, -1));
-            if (below != null && below.getSwitchBox() != null) {
-                below.getSwitchBox().doSwitch();
-            }
-        }
+	if (name.equals("Action") && !isPressed) {
+	    // check if there is a switch below the player
+	    final Box below = levelMap.get(playerPos.add(0, 0, -1));
+	    if (below != null && below.getSwitchBox() != null) {
+		below.getSwitchBox().doSwitch();
+	    }
+	}
 
     }
 }
