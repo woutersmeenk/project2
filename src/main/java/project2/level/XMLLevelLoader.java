@@ -31,9 +31,9 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 
 import project2.GameStateManager;
-import project2.level.model.Box;
-import project2.level.model.BoxFactory;
-import project2.level.model.SwitchBox;
+import project2.level.model.Cube;
+import project2.level.model.CubeFactory;
+import project2.level.model.SwitchCube;
 import project2.util.XMLException;
 import project2.util.XMLUtils;
 
@@ -59,19 +59,19 @@ public class XMLLevelLoader implements LevelLoader {
     }
 
     private Level parseLevel(final Node node) throws XMLException {
-        final List<SwitchBox> switches = new ArrayList<SwitchBox>();
+        final List<SwitchCube> switches = new ArrayList<SwitchCube>();
 
         // Boxes
-        final Map<Vector3f, Box> boxes = new HashMap<Vector3f, Box>();
+        final Map<Vector3f, Cube> boxes = new HashMap<Vector3f, Cube>();
         for (final Node boxNode : XMLUtils.findNodes("level/boxes/box", node)) {
-            final Box box = parseBox(boxNode, switches);
+            final Cube box = parseBox(boxNode, switches);
             boxes.put(box.getLocation(), box);
         }
 
         // Add clones of the boxes from the current switch state
-        for (final SwitchBox switchBox : switches) {
-            for (final Box box : switchBox.getCurrentState()) {
-                boxes.put(box.getLocation(), BoxFactory.getInstance()
+        for (final SwitchCube switchBox : switches) {
+            for (final Cube box : switchBox.getCurrentState()) {
+                boxes.put(box.getLocation(), CubeFactory.getInstance()
                         .createBox(box.getLocation(), box.getSize()));
             }
         }
@@ -96,7 +96,7 @@ public class XMLLevelLoader implements LevelLoader {
         return new Vector3f(x, y, z);
     }
 
-    private Box parseBox(final Node node, final List<SwitchBox> switches)
+    private Cube parseBox(final Node node, final List<SwitchCube> switches)
             throws XMLException {
         final boolean isNull = XMLUtils.parseBoolean("@null", node, false);
         if (isNull) {
@@ -105,18 +105,18 @@ public class XMLLevelLoader implements LevelLoader {
         final Vector3f location = parseVector3f(node);
         final int size = (int) XMLUtils.parseNumber("@size", node, 1);
         final Node switchNode = XMLUtils.findNode("switch", node);
-        final SwitchBox switchBox = parseSwitchBox(switchNode, switches);
-        return BoxFactory.getInstance().createBox(location, size, switchBox);
+        final SwitchCube switchBox = parseSwitchBox(switchNode, switches);
+        return CubeFactory.getInstance().createBox(location, size, switchBox);
     }
 
-    private SwitchBox parseSwitchBox(final Node node,
-            final List<SwitchBox> switches) throws XMLException {
+    private SwitchCube parseSwitchBox(final Node node,
+            final List<SwitchCube> switches) throws XMLException {
         if (node == null) {
             return null;
         }
-        final List<List<Box>> states = new ArrayList<List<Box>>();
+        final List<List<Cube>> states = new ArrayList<List<Cube>>();
         for (final Node stateNode : XMLUtils.findNodes("state", node)) {
-            final List<Box> state = new ArrayList<Box>();
+            final List<Cube> state = new ArrayList<Cube>();
             for (final Node boxNode : XMLUtils.findNodes("box", stateNode)) {
                 state.add(parseBox(boxNode, switches));
             }
@@ -124,7 +124,7 @@ public class XMLLevelLoader implements LevelLoader {
         }
 
         // TODO: add loop property
-        final SwitchBox result = new SwitchBox(gameStateManager, states, false);
+        final SwitchCube result = new SwitchCube(gameStateManager, states, false);
 
         switches.add(result);
         return result;

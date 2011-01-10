@@ -28,8 +28,8 @@ import org.apache.commons.logging.LogFactory;
 
 import project2.level.Level;
 import project2.level.XMLLevelLoader;
-import project2.level.model.Box;
-import project2.level.model.BoxFactory;
+import project2.level.model.Cube;
+import project2.level.model.CubeFactory;
 
 import com.jme3.math.Vector3f;
 
@@ -41,7 +41,7 @@ public class GameStateManager {
     /** Current level. */
     private Level level;
     /** Player. */
-    private Box player;
+    private Cube player;
     private ViewManager viewManager;
 
     public GameStateManager() {
@@ -56,7 +56,7 @@ public class GameStateManager {
         return level;
     }
 
-    public Box getPlayer() {
+    public Cube getPlayer() {
         return player;
     }
 
@@ -78,7 +78,7 @@ public class GameStateManager {
 
         level = loader
                 .loadLevel(ClassLoader.getSystemResource(levelFile), this);
-        player = BoxFactory.getInstance().createBox(level.getStart(), 1);
+        player = CubeFactory.getInstance().createBox(level.getStart(), 1);
 
         // generate a gamestate from the level
         currentState = new GameState(level);

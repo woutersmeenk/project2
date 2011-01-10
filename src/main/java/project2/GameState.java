@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import project2.level.Level;
-import project2.level.model.SwitchBox;
+import project2.level.model.SwitchCube;
 
 public class GameState {
     private final List<Integer> switchStates;
@@ -33,7 +33,7 @@ public class GameState {
         switchStates = new ArrayList<Integer>(level.getSwitches().size());
 
         // save all the states
-        for (final SwitchBox switchBox : level.getSwitches()) {
+        for (final SwitchCube switchBox : level.getSwitches()) {
             switchStates.add(switchBox.getCurrentStateID());
         }
     }

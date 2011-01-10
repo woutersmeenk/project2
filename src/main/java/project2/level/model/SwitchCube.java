@@ -28,9 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import project2.GameStateManager;
 import project2.level.Level;
 
-public class SwitchBox {
-    private static final Log LOG = LogFactory.getLog(SwitchBox.class);
-    private final List<List<Box>> states;
+public class SwitchCube {
+    private static final Log LOG = LogFactory.getLog(SwitchCube.class);
+    private final List<List<Cube>> states;
     private int currentStateID;
     private final boolean loop;
 
@@ -41,15 +41,15 @@ public class SwitchBox {
      */
     private Level level;
 
-    public SwitchBox(final GameStateManager gameStateManager,
-            final List<List<Box>> states, final boolean loop) {
+    public SwitchCube(final GameStateManager gameStateManager,
+            final List<List<Cube>> states, final boolean loop) {
         currentStateID = 0;
         this.states = states;
         this.loop = loop;
         this.gameStateManager = gameStateManager;
     }
 
-    public List<List<Box>> getStates() {
+    public List<List<Cube>> getStates() {
         return states;
     }
 
@@ -61,7 +61,7 @@ public class SwitchBox {
         this.level = level;
     }
 
-    public List<Box> getCurrentState() {
+    public List<Cube> getCurrentState() {
         return states.get(currentStateID);
     }
 
@@ -72,9 +72,9 @@ public class SwitchBox {
         }
 
         // increment state
-        final Box[] oldPos = getCurrentState().toArray(new Box[0]);
+        final Cube[] oldPos = getCurrentState().toArray(new Cube[0]);
         currentStateID = id;
-        final Box[] newPos = getCurrentState().toArray(new Box[0]);
+        final Cube[] newPos = getCurrentState().toArray(new Cube[0]);
 
         // move boxes
         for (int i = 0; i < oldPos.length; i++) {

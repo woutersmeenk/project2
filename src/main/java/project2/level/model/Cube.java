@@ -22,14 +22,14 @@ package project2.level.model;
 
 import com.jme3.math.Vector3f;
 
-public class Box {
+public class Cube {
     private Vector3f location;
     private final int size;
-    private final SwitchBox switchBox;
+    private final SwitchCube switchBox;
     private final long id;
 
-    Box(final long id, final Vector3f location2, final int size,
-            final SwitchBox switchBox) {
+    Cube(final long id, final Vector3f location2, final int size,
+            final SwitchCube switchBox) {
         location = location2;
         this.id = id;
         this.size = size;
@@ -44,7 +44,7 @@ public class Box {
         return size;
     }
 
-    public SwitchBox getSwitchBox() {
+    public SwitchCube getSwitchBox() {
         return switchBox;
     }
 

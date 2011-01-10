@@ -22,16 +22,16 @@ package project2.level.model;
 
 import com.jme3.math.Vector3f;
 
-public final class BoxFactory {
-    private static BoxFactory instance;
+public final class CubeFactory {
+    private static CubeFactory instance;
     private long currentID = 0;
 
-    private BoxFactory() {
+    private CubeFactory() {
     }
 
-    public static BoxFactory getInstance() {
+    public static CubeFactory getInstance() {
         if (instance == null) {
-            instance = new BoxFactory();
+            instance = new CubeFactory();
         }
         return instance;
     }
@@ -41,14 +41,14 @@ public final class BoxFactory {
         throw new CloneNotSupportedException();
     }
 
-    public Box createBox(final Vector3f location, final int size) {
+    public Cube createBox(final Vector3f location, final int size) {
         return createBox(location, size, null);
     }
 
-    public Box createBox(final Vector3f location, final int size,
-            final SwitchBox switchBox) {
+    public Cube createBox(final Vector3f location, final int size,
+            final SwitchCube switchBox) {
         final long id = currentID;
         currentID++;
-        return new Box(id, location, size, switchBox);
+        return new Cube(id, location, size, switchBox);
     }
 }

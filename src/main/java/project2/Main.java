@@ -25,7 +25,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import project2.level.model.Box;
+import project2.level.model.Cube;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
 import com.jme3.app.SimpleApplication;
@@ -99,12 +99,12 @@ public class Main extends SimpleApplication implements ActionListener {
     public void onAction(final String name, final boolean isPressed,
             final float tpf) {
         final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
-        final Map<Vector3f, Box> levelMap = gameStateManager.getLevel()
+        final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
                 .getBoxes();
 
         if (name.equals("Left") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(-1, 0, 0));
-            final Box below = levelMap.get(playerPos.add(-1, 0, -1));
+            final Cube beside = levelMap.get(playerPos.add(-1, 0, 0));
+            final Cube below = levelMap.get(playerPos.add(-1, 0, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.movePlayer(new Vector3f(-1, 0, 0));
@@ -112,8 +112,8 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("Up") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(0, 1, 0));
-            final Box below = levelMap.get(playerPos.add(0, 1, -1));
+            final Cube beside = levelMap.get(playerPos.add(0, 1, 0));
+            final Cube below = levelMap.get(playerPos.add(0, 1, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.movePlayer(new Vector3f(0, 1, 0));
@@ -121,8 +121,8 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("Right") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(1, 0, 0));
-            final Box below = levelMap.get(playerPos.add(1, 0, -1));
+            final Cube beside = levelMap.get(playerPos.add(1, 0, 0));
+            final Cube below = levelMap.get(playerPos.add(1, 0, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.movePlayer(new Vector3f(1, 0, 0));
@@ -130,8 +130,8 @@ public class Main extends SimpleApplication implements ActionListener {
         }
 
         if (name.equals("Down") && !isPressed) {
-            final Box beside = levelMap.get(playerPos.add(0, -1, 0));
-            final Box below = levelMap.get(playerPos.add(0, -1, -1));
+            final Cube beside = levelMap.get(playerPos.add(0, -1, 0));
+            final Cube below = levelMap.get(playerPos.add(0, -1, -1));
 
             if (below != null && beside == null) {
                 gameStateManager.movePlayer(new Vector3f(0, -1, 0));
@@ -144,7 +144,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
         if (name.equals("Action") && !isPressed) {
             // check if there is a switch below the player
-            final Box below = levelMap.get(playerPos.add(0, 0, -1));
+            final Cube below = levelMap.get(playerPos.add(0, 0, -1));
             if (below != null && below.getSwitchBox() != null) {
                 below.getSwitchBox().doSwitch();
             }

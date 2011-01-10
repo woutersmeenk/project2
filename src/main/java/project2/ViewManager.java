@@ -26,7 +26,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import project2.level.model.SwitchBox;
+import project2.level.model.Cube;
+import project2.level.model.SwitchCube;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.light.PointLight;
@@ -67,7 +68,7 @@ public class ViewManager implements EventListener<LocationEvent> {
 
     public void createViewFromGameState(final GameStateManager gameStateManager) {
         // add boxes to scene graph
-        for (final project2.level.model.Box box : gameStateManager.getLevel()
+        for (final Cube box : gameStateManager.getLevel()
                 .getBoxes().values()) {
             final int size = box.getSize();
             final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
@@ -139,7 +140,7 @@ public class ViewManager implements EventListener<LocationEvent> {
             rootNode.detachChild(geom);
         }
 
-        final List<SwitchBox> switches = gameStateManager.getLevel()
+        final List<SwitchCube> switches = gameStateManager.getLevel()
                 .getSwitches();
 
         for (int i = 0; i < gameStateManager.getHistory().size(); i++) {
@@ -147,7 +148,7 @@ public class ViewManager implements EventListener<LocationEvent> {
                     .get(i).getSwitchStates();
 
             for (int j = 0; j < switchStates.size(); j++) {
-                for (final project2.level.model.Box box : switches.get(j)
+                for (final Cube box : switches.get(j)
                         .getStates().get(switchStates.get(j))) {
                     // create transparent box
 

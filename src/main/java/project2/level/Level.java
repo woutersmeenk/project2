@@ -29,23 +29,23 @@ import org.apache.commons.logging.LogFactory;
 
 import project2.EventListener;
 import project2.LocationEvent;
-import project2.level.model.Box;
-import project2.level.model.SwitchBox;
+import project2.level.model.Cube;
+import project2.level.model.SwitchCube;
 
 import com.jme3.math.Vector3f;
 
 public class Level {
     private static final Log LOG = LogFactory.getLog(Level.class);
 
-    private final Map<Vector3f, Box> boxes;
-    private final List<SwitchBox> switches;
+    private final Map<Vector3f, Cube> boxes;
+    private final List<SwitchCube> switches;
     private final Vector3f start;
     private final Map<Vector3f, Boolean> checkpoints;
 
     private final List<EventListener<LocationEvent>> locationListeners;
 
-    public Level(final Map<Vector3f, Box> boxes,
-            final List<SwitchBox> switches, final Vector3f start,
+    public Level(final Map<Vector3f, Cube> boxes,
+            final List<SwitchCube> switches, final Vector3f start,
             final Map<Vector3f, Boolean> checkpoints) {
         this.boxes = boxes;
         this.switches = switches;
@@ -55,16 +55,16 @@ public class Level {
         locationListeners = new ArrayList<EventListener<LocationEvent>>();
 
         // register the level with the switches
-        for (final SwitchBox switchBox : switches) {
+        for (final SwitchCube switchBox : switches) {
             switchBox.setLevel(this);
         }
     }
 
-    public Map<Vector3f, Box> getBoxes() {
+    public Map<Vector3f, Cube> getBoxes() {
         return boxes;
     }
 
-    public List<SwitchBox> getSwitches() {
+    public List<SwitchCube> getSwitches() {
         return switches;
     }
 
@@ -76,8 +76,8 @@ public class Level {
         return checkpoints;
     }
 
-    public Box boxFromId(final long id) {
-        for (final Box box : boxes.values()) {
+    public Cube boxFromId(final long id) {
+        for (final Cube box : boxes.values()) {
             if (id == box.getId()) {
                 return box;
             }
@@ -89,7 +89,7 @@ public class Level {
     // TODO: maybe do with id instead of current position?
     public void moveBox(final Vector3f curPos, final Vector3f newPos) {
         // move the box
-        final Box box = boxes.get(curPos);
+        final Cube box = boxes.get(curPos);
 
         if (box == null) {
             LOG.warn("No box found at" + curPos);
