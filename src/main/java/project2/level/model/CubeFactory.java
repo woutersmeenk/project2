@@ -20,11 +20,12 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  */
 package project2.level.model;
 
+import project2.util.IdFactory;
+
 import com.jme3.math.Vector3f;
 
 public final class CubeFactory {
     private static CubeFactory instance;
-    private long currentID = 0;
 
     private CubeFactory() {
     }
@@ -47,8 +48,6 @@ public final class CubeFactory {
 
     public Cube createBox(final Vector3f location, final int size,
             final SwitchCube switchBox) {
-        final long id = currentID;
-        currentID++;
-        return new Cube(id, location, size, switchBox);
+        return new Cube(IdFactory.generateID(), location, size, switchBox);
     }
 }

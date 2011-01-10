@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
 
@@ -68,8 +69,7 @@ public class ViewManager implements EventListener<LocationEvent> {
 
     public void createViewFromGameState(final GameStateManager gameStateManager) {
         // add boxes to scene graph
-        for (final Cube box : gameStateManager.getLevel()
-                .getBoxes().values()) {
+        for (final Cube box : gameStateManager.getLevel().getBoxes().values()) {
             final int size = box.getSize();
             final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
                     0.5f * size);
@@ -118,6 +118,26 @@ public class ViewManager implements EventListener<LocationEvent> {
         geom.setMaterial(mat2);
         geom.setUserData("id", (int) gameStateManager.getPlayer().getId());
         rootNode.attachChild(geom);
+
+        /* Add checkpoints */
+        for (Checkpoint cp : gameStateManager.getLevel().getCheckpoints()
+                .values()) {
+            final Geometry checkpoint = new Geometry("Box", box2);
+            checkpoint.setLocalTranslation(cp.getLocation());
+
+            final Material mat3 = new Material(assetManager,
+                    "Common/MatDefs/Misc/SolidColor.j3md");
+            mat3.setColor("m_Color", new ColorRGBA(0, 1, 0, 0.15f));
+
+            mat3.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+
+            checkpoint.setMaterial(mat3);
+            checkpoint.setQueueBucket(Bucket.Transparent);
+
+            checkpoint.setUserData("id", (int) cp.getId());
+            rootNode.attachChild(checkpoint);
+
+        }
     }
 
     public Geometry geometryFromId(final long id) {
@@ -131,7 +151,15 @@ public class ViewManager implements EventListener<LocationEvent> {
             }
         }
 
+        LOG.info("Could not find ID " + id);
         return null;
+    }
+
+    public void deleteById(final long id) {
+        Geometry geom = geometryFromId(id);
+        if (geom != null) {
+            geom.removeFromParent();
+        }
     }
 
     public void showHistory(final GameStateManager gameStateManager) {
@@ -148,8 +176,8 @@ public class ViewManager implements EventListener<LocationEvent> {
                     .get(i).getSwitchStates();
 
             for (int j = 0; j < switchStates.size(); j++) {
-                for (final Cube box : switches.get(j)
-                        .getStates().get(switchStates.get(j))) {
+                for (final Cube box : switches.get(j).getStates()
+                        .get(switchStates.get(j))) {
                     // create transparent box
 
                     final int size = box.getSize();

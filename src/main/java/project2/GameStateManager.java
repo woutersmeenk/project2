@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import project2.level.Level;
 import project2.level.XMLLevelLoader;
+import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.CubeFactory;
 
@@ -63,8 +64,11 @@ public class GameStateManager {
     public void movePlayer(final Vector3f displacement) {
         final Vector3f newPos = player.getLocation().add(displacement);
 
-        if (level.getCheckpoints().containsKey(newPos)) {
-            level.getCheckpoints().put(displacement, Boolean.TRUE);
+        Checkpoint checkpoint = level.getCheckpoints().get(newPos);
+
+        if (checkpoint != null) {
+            checkpoint.setVisited(true);
+            viewManager.deleteById(checkpoint.getId());
 
             LOG.info("Checkpoint reached.");
         }

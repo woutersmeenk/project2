@@ -31,9 +31,11 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 
 import project2.GameStateManager;
+import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.CubeFactory;
 import project2.level.model.SwitchCube;
+import project2.util.IdFactory;
 import project2.util.XMLException;
 import project2.util.XMLUtils;
 
@@ -77,10 +79,11 @@ public class XMLLevelLoader implements LevelLoader {
         }
 
         // Checkpoints
-        final Map<Vector3f, Boolean> checkpoints = new HashMap<Vector3f, Boolean>();
+        final Map<Vector3f, Checkpoint> checkpoints = new HashMap<Vector3f, Checkpoint>();
         for (final Node checkpointNode : XMLUtils.findNodes(
                 "level/checkpoints/checkpoint", node)) {
-            checkpoints.put(parseVector3f(checkpointNode), Boolean.FALSE);
+            Vector3f pos = parseVector3f(checkpointNode);
+            checkpoints.put(pos, new Checkpoint(IdFactory.generateID(), pos));
         }
 
         // Start
@@ -124,7 +127,8 @@ public class XMLLevelLoader implements LevelLoader {
         }
 
         // TODO: add loop property
-        final SwitchCube result = new SwitchCube(gameStateManager, states, false);
+        final SwitchCube result = new SwitchCube(gameStateManager, states,
+                false);
 
         switches.add(result);
         return result;

@@ -17,8 +17,7 @@
 		</box>
 	</boxes>
 	<checkpoints>
-		<checkpoint x="1" y="0" z="0" />
-		<checkpoint x="1" y="3" z="0" />
+		<checkpoint x="1" y="3" z="1" />
 	</checkpoints>
 	<start x="1" y="0" z="1" />
 </level>

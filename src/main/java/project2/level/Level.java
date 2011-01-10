@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import project2.EventListener;
 import project2.LocationEvent;
+import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
 
@@ -40,13 +41,13 @@ public class Level {
     private final Map<Vector3f, Cube> boxes;
     private final List<SwitchCube> switches;
     private final Vector3f start;
-    private final Map<Vector3f, Boolean> checkpoints;
+    private final Map<Vector3f, Checkpoint> checkpoints;
 
     private final List<EventListener<LocationEvent>> locationListeners;
 
     public Level(final Map<Vector3f, Cube> boxes,
             final List<SwitchCube> switches, final Vector3f start,
-            final Map<Vector3f, Boolean> checkpoints) {
+            final Map<Vector3f, Checkpoint> checkpoints) {
         this.boxes = boxes;
         this.switches = switches;
         this.start = start;
@@ -72,7 +73,7 @@ public class Level {
         return start;
     }
 
-    public Map<Vector3f, Boolean> getCheckpoints() {
+    public Map<Vector3f, Checkpoint> getCheckpoints() {
         return checkpoints;
     }
 
