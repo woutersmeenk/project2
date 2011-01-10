@@ -45,68 +45,68 @@ public class Level {
     private final List<EventListener<LocationEvent>> locationListeners;
 
     public Level(final Map<Vector3f, Box> boxes,
-	    final List<SwitchBox> switches, final Vector3f start,
-	    final Map<Vector3f, Boolean> checkpoints) {
-	this.boxes = boxes;
-	this.switches = switches;
-	this.start = start;
-	this.checkpoints = checkpoints;
+            final List<SwitchBox> switches, final Vector3f start,
+            final Map<Vector3f, Boolean> checkpoints) {
+        this.boxes = boxes;
+        this.switches = switches;
+        this.start = start;
+        this.checkpoints = checkpoints;
 
-	locationListeners = new ArrayList<EventListener<LocationEvent>>();
+        locationListeners = new ArrayList<EventListener<LocationEvent>>();
 
-	// register the level with the switches
-	for (final SwitchBox switchBox : switches) {
-	    switchBox.setLevel(this);
-	}
+        // register the level with the switches
+        for (final SwitchBox switchBox : switches) {
+            switchBox.setLevel(this);
+        }
     }
 
     public Map<Vector3f, Box> getBoxes() {
-	return boxes;
+        return boxes;
     }
 
     public List<SwitchBox> getSwitches() {
-	return switches;
+        return switches;
     }
 
     public Vector3f getStart() {
-	return start;
+        return start;
     }
 
     public Map<Vector3f, Boolean> getCheckpoints() {
-	return checkpoints;
+        return checkpoints;
     }
 
     public Box boxFromId(final long id) {
-	for (final Box box : boxes.values()) {
-	    if (id == box.getId()) {
-		return box;
-	    }
-	}
+        for (final Box box : boxes.values()) {
+            if (id == box.getId()) {
+                return box;
+            }
+        }
 
-	return null;
+        return null;
     }
 
     // TODO: maybe do with id instead of current position?
     public void moveBox(final Vector3f curPos, final Vector3f newPos) {
-	// move the box
-	final Box box = boxes.get(curPos);
+        // move the box
+        final Box box = boxes.get(curPos);
 
-	if (box == null) {
-	    LOG.warn("No box found at" + curPos);
-	    return;
-	}
+        if (box == null) {
+            LOG.warn("No box found at" + curPos);
+            return;
+        }
 
-	// replace the box in the map and set the new position
-	boxes.put(newPos, boxes.remove(curPos));
-	box.setLocation(newPos);
+        // replace the box in the map and set the new position
+        boxes.put(newPos, boxes.remove(curPos));
+        box.setLocation(newPos);
 
-	for (final EventListener<LocationEvent> listener : locationListeners) {
-	    listener.onEvent(new LocationEvent(box.getId(), newPos));
-	}
+        for (final EventListener<LocationEvent> listener : locationListeners) {
+            listener.onEvent(new LocationEvent(box.getId(), newPos));
+        }
     }
 
     public boolean addLocationListener(
-	    final EventListener<LocationEvent> listener) {
-	return locationListeners.add(listener);
+            final EventListener<LocationEvent> listener) {
+        return locationListeners.add(listener);
     }
 }

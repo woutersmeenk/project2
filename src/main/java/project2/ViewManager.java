@@ -49,141 +49,141 @@ public class ViewManager implements EventListener<LocationEvent> {
     private final List<Geometry> historyGeometry;
 
     public ViewManager(final Node root) {
-	super();
-	rootNode = root;
+        super();
+        rootNode = root;
 
-	historyGeometry = new ArrayList<Geometry>();
+        historyGeometry = new ArrayList<Geometry>();
     }
 
     public void initialize(final AssetManager assetManager) {
-	this.assetManager = assetManager;
-	/* Create a light. */
-	final PointLight pl = new PointLight();
-	pl.setPosition(new Vector3f(2, 2, 10));
-	pl.setColor(ColorRGBA.White);
-	pl.setRadius(30f);
-	rootNode.addLight(pl);
+        this.assetManager = assetManager;
+        /* Create a light. */
+        final PointLight pl = new PointLight();
+        pl.setPosition(new Vector3f(2, 2, 10));
+        pl.setColor(ColorRGBA.White);
+        pl.setRadius(30f);
+        rootNode.addLight(pl);
     }
 
     public void createViewFromGameState(final GameStateManager gameStateManager) {
-	// add boxes to scene graph
-	for (final project2.level.model.Box box : gameStateManager.getLevel()
-		.getBoxes().values()) {
-	    final int size = box.getSize();
-	    final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
-		    0.5f * size);
-	    final Geometry geom = new Geometry("Box", box2);
-	    geom.setLocalTranslation(box.getLocation());
-	    final Material mat2 = new Material(assetManager,
-		    "Common/MatDefs/Light/Lighting.j3md");
+        // add boxes to scene graph
+        for (final project2.level.model.Box box : gameStateManager.getLevel()
+                .getBoxes().values()) {
+            final int size = box.getSize();
+            final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+                    0.5f * size);
+            final Geometry geom = new Geometry("Box", box2);
+            geom.setLocalTranslation(box.getLocation());
+            final Material mat2 = new Material(assetManager,
+                    "Common/MatDefs/Light/Lighting.j3md");
 
-	    mat2.setFloat("m_Shininess", 12);
-	    mat2.setBoolean("m_UseMaterialColors", true);
+            mat2.setFloat("m_Shininess", 12);
+            mat2.setBoolean("m_UseMaterialColors", true);
 
-	    mat2.setColor("m_Specular", ColorRGBA.Gray);
+            mat2.setColor("m_Specular", ColorRGBA.Gray);
 
-	    // give switch a different color
-	    if (box.getSwitchBox() == null) {
-		mat2.setColor("m_Ambient", ColorRGBA.Blue);
-		mat2.setColor("m_Diffuse", ColorRGBA.Blue);
+            // give switch a different color
+            if (box.getSwitchBox() == null) {
+                mat2.setColor("m_Ambient", ColorRGBA.Blue);
+                mat2.setColor("m_Diffuse", ColorRGBA.Blue);
 
-	    } else {
-		mat2.setColor("m_Ambient", ColorRGBA.Red);
-		mat2.setColor("m_Diffuse", ColorRGBA.Red);
-	    }
+            } else {
+                mat2.setColor("m_Ambient", ColorRGBA.Red);
+                mat2.setColor("m_Diffuse", ColorRGBA.Red);
+            }
 
-	    geom.setMaterial(mat2);
-	    geom.setUserData("id", (int) box.getId());
+            geom.setMaterial(mat2);
+            geom.setUserData("id", (int) box.getId());
 
-	    rootNode.attachChild(geom);
-	}
+            rootNode.attachChild(geom);
+        }
 
-	/* Add player. */
-	final int size = gameStateManager.getPlayer().getSize();
-	final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
-		0.5f * size);
-	final Geometry geom = new Geometry("Box", box2);
-	geom.setLocalTranslation(gameStateManager.getPlayer().getLocation());
+        /* Add player. */
+        final int size = gameStateManager.getPlayer().getSize();
+        final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+                0.5f * size);
+        final Geometry geom = new Geometry("Box", box2);
+        geom.setLocalTranslation(gameStateManager.getPlayer().getLocation());
 
-	final Material mat2 = new Material(assetManager,
-		"Common/MatDefs/Light/Lighting.j3md");
+        final Material mat2 = new Material(assetManager,
+                "Common/MatDefs/Light/Lighting.j3md");
 
-	mat2.setFloat("m_Shininess", 12);
-	mat2.setBoolean("m_UseMaterialColors", true);
+        mat2.setFloat("m_Shininess", 12);
+        mat2.setBoolean("m_UseMaterialColors", true);
 
-	mat2.setColor("m_Specular", ColorRGBA.Gray);
-	mat2.setColor("m_Ambient", ColorRGBA.Yellow);
-	mat2.setColor("m_Diffuse", ColorRGBA.Yellow);
-	geom.setMaterial(mat2);
-	geom.setUserData("id", (int) gameStateManager.getPlayer().getId());
-	rootNode.attachChild(geom);
+        mat2.setColor("m_Specular", ColorRGBA.Gray);
+        mat2.setColor("m_Ambient", ColorRGBA.Yellow);
+        mat2.setColor("m_Diffuse", ColorRGBA.Yellow);
+        geom.setMaterial(mat2);
+        geom.setUserData("id", (int) gameStateManager.getPlayer().getId());
+        rootNode.attachChild(geom);
     }
 
     public Geometry geometryFromId(final long id) {
-	final Integer idObject = (int) id; // make a cast to int, to circumvent
-					   // an
-	// error in jme3
+        final Integer idObject = (int) id; // make a cast to int, to circumvent
+        // an
+        // error in jme3
 
-	for (final Spatial spatial : rootNode.getChildren()) {
-	    if (idObject.equals(spatial.getUserData("id"))) {
-		return (Geometry) spatial;
-	    }
-	}
+        for (final Spatial spatial : rootNode.getChildren()) {
+            if (idObject.equals(spatial.getUserData("id"))) {
+                return (Geometry) spatial;
+            }
+        }
 
-	return null;
+        return null;
     }
 
-    public void showHistory(GameStateManager gameStateManager) {
-	// remove all
-	for (Geometry geom : historyGeometry) {
-	    rootNode.detachChild(geom);
-	}
+    public void showHistory(final GameStateManager gameStateManager) {
+        // remove all
+        for (final Geometry geom : historyGeometry) {
+            rootNode.detachChild(geom);
+        }
 
-	final List<SwitchBox> switches = gameStateManager.getLevel()
-		.getSwitches();
+        final List<SwitchBox> switches = gameStateManager.getLevel()
+                .getSwitches();
 
-	for (int i = 0; i < gameStateManager.getHistory().size(); i++) {
-	    final List<Integer> switchStates = gameStateManager.getHistory()
-		    .get(i).getSwitchStates();
+        for (int i = 0; i < gameStateManager.getHistory().size(); i++) {
+            final List<Integer> switchStates = gameStateManager.getHistory()
+                    .get(i).getSwitchStates();
 
-	    for (int j = 0; j < switchStates.size(); j++) {
-		for (project2.level.model.Box box : switches.get(j).getStates()
-			.get(switchStates.get(j))) {
-		    // create transparent box
+            for (int j = 0; j < switchStates.size(); j++) {
+                for (final project2.level.model.Box box : switches.get(j)
+                        .getStates().get(switchStates.get(j))) {
+                    // create transparent box
 
-		    final int size = box.getSize();
-		    final Box box2 = new Box(new Vector3f(), 0.5f * size,
-			    0.5f * size, 0.5f * size);
-		    final Geometry geom = new Geometry("Box", box2);
-		    geom.setLocalTranslation(box.getLocation());
+                    final int size = box.getSize();
+                    final Box box2 = new Box(new Vector3f(), 0.5f * size,
+                            0.5f * size, 0.5f * size);
+                    final Geometry geom = new Geometry("Box", box2);
+                    geom.setLocalTranslation(box.getLocation());
 
-		    final Material mat2 = new Material(assetManager,
-			    "Common/MatDefs/Misc/SolidColor.j3md");
-		    mat2.setColor("m_Color", new ColorRGBA(0, 0, 1, (i + 1)
-			    / (float) gameStateManager.getHistory().size()
-			    * 0.40f));
+                    final Material mat2 = new Material(assetManager,
+                            "Common/MatDefs/Misc/SolidColor.j3md");
+                    mat2.setColor("m_Color", new ColorRGBA(0, 0, 1, (i + 1)
+                            / (float) gameStateManager.getHistory().size()
+                            * 0.40f));
 
-		    mat2.getAdditionalRenderState().setBlendMode(
-			    BlendMode.Alpha);
+                    mat2.getAdditionalRenderState().setBlendMode(
+                            BlendMode.Alpha);
 
-		    geom.setMaterial(mat2);
-		    geom.setQueueBucket(Bucket.Transparent);
+                    geom.setMaterial(mat2);
+                    geom.setQueueBucket(Bucket.Transparent);
 
-		    rootNode.attachChild(geom);
-		    historyGeometry.add(geom);
-		}
-	    }
-	}
+                    rootNode.attachChild(geom);
+                    historyGeometry.add(geom);
+                }
+            }
+        }
     }
 
     @Override
     public void onEvent(final LocationEvent event) {
-	final Geometry geom = geometryFromId(event.getId());
+        final Geometry geom = geometryFromId(event.getId());
 
-	if (geom != null) {
-	    geom.setLocalTranslation(event.getNewPos());
-	} else {
-	    LOG.error("No matching geometry found for id " + event.getId());
-	}
+        if (geom != null) {
+            geom.setLocalTranslation(event.getNewPos());
+        } else {
+            LOG.error("No matching geometry found for id " + event.getId());
+        }
     }
 }

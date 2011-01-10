@@ -32,7 +32,7 @@ public class SwitchBox {
     private static final Log LOG = LogFactory.getLog(SwitchBox.class);
     private final List<List<Box>> states;
     private int currentStateID;
-    private boolean loop;
+    private final boolean loop;
 
     private final GameStateManager gameStateManager;
 
@@ -65,7 +65,7 @@ public class SwitchBox {
         return states.get(currentStateID);
     }
 
-    public void doSwitch(int id, boolean addToHistory) {
+    public void doSwitch(final int id, final boolean addToHistory) {
         if (level == null) {
             LOG.error("No level registered to switch.");
             return;

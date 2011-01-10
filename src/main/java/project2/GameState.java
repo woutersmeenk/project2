@@ -33,7 +33,7 @@ public class GameState {
         switchStates = new ArrayList<Integer>(level.getSwitches().size());
 
         // save all the states
-        for (SwitchBox switchBox : level.getSwitches()) {
+        for (final SwitchBox switchBox : level.getSwitches()) {
             switchStates.add(switchBox.getCurrentStateID());
         }
     }

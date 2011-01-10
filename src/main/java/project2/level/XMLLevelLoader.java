@@ -80,7 +80,7 @@ public class XMLLevelLoader implements LevelLoader {
         final Map<Vector3f, Boolean> checkpoints = new HashMap<Vector3f, Boolean>();
         for (final Node checkpointNode : XMLUtils.findNodes(
                 "level/checkpoints/checkpoint", node)) {
-	    checkpoints.put(parseVector3f(checkpointNode), Boolean.FALSE);
+            checkpoints.put(parseVector3f(checkpointNode), Boolean.FALSE);
         }
 
         // Start

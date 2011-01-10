@@ -22,7 +22,6 @@ package project2;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,44 +45,44 @@ public class GameStateManager {
     private ViewManager viewManager;
 
     public GameStateManager() {
-	history = new ArrayList<GameState>();
+        history = new ArrayList<GameState>();
     }
 
-    public void registerViewManager(ViewManager viewManager) {
-	this.viewManager = viewManager;
+    public void registerViewManager(final ViewManager viewManager) {
+        this.viewManager = viewManager;
     }
 
     public Level getLevel() {
-	return level;
+        return level;
     }
 
     public Box getPlayer() {
-	return player;
+        return player;
     }
 
-    public void movePlayer(Vector3f displacement) {
-	Vector3f newPos = player.getLocation().add(displacement);
+    public void movePlayer(final Vector3f displacement) {
+        final Vector3f newPos = player.getLocation().add(displacement);
 
-	if (level.getCheckpoints().containsKey(newPos)) {
-	    level.getCheckpoints().put(displacement, Boolean.TRUE);
+        if (level.getCheckpoints().containsKey(newPos)) {
+            level.getCheckpoints().put(displacement, Boolean.TRUE);
 
-	    LOG.info("Checkpoint reached.");
-	}
+            LOG.info("Checkpoint reached.");
+        }
 
-	player.setLocation(newPos);
-	viewManager.onEvent(new LocationEvent(player.getId(), newPos));
+        player.setLocation(newPos);
+        viewManager.onEvent(new LocationEvent(player.getId(), newPos));
     }
 
     public void buildInitialGameState(final String levelFile) {
-	final XMLLevelLoader loader = new XMLLevelLoader();
+        final XMLLevelLoader loader = new XMLLevelLoader();
 
-	level = loader
-		.loadLevel(ClassLoader.getSystemResource(levelFile), this);
-	player = BoxFactory.getInstance().createBox(level.getStart(), 1);
+        level = loader
+                .loadLevel(ClassLoader.getSystemResource(levelFile), this);
+        player = BoxFactory.getInstance().createBox(level.getStart(), 1);
 
-	// generate a gamestate from the level
-	currentState = new GameState(level);
-	history.clear();
+        // generate a gamestate from the level
+        currentState = new GameState(level);
+        history.clear();
     }
 
     /**
@@ -91,40 +90,40 @@ public class GameStateManager {
      * called every time a switchbox state is switched.
      */
     public void makeHistory() {
-	history.add(currentState);
-	currentState = new GameState(level);
+        history.add(currentState);
+        currentState = new GameState(level);
 
-	viewManager.showHistory(this);
+        viewManager.showHistory(this);
     }
 
     /**
      * Goes one step back into history.
      */
     public void revert() {
-	if (history.size() == 0) {
-	    return;
-	}
+        if (history.size() == 0) {
+            return;
+        }
 
-	LOG.info("Going back in time...");
+        LOG.info("Going back in time...");
 
-	final GameState old = history.get(history.size() - 1);
-	currentState = old;
+        final GameState old = history.get(history.size() - 1);
+        currentState = old;
 
-	for (int i = 0; i < old.getSwitchStates().size(); i++) {
-	    level.getSwitches().get(i)
-		    .doSwitch(old.getSwitchStates().get(i), false);
-	}
+        for (int i = 0; i < old.getSwitchStates().size(); i++) {
+            level.getSwitches().get(i)
+                    .doSwitch(old.getSwitchStates().get(i), false);
+        }
 
-	history.remove(history.size() - 1); // remove it
+        history.remove(history.size() - 1); // remove it
 
-	viewManager.showHistory(this);
+        viewManager.showHistory(this);
     }
 
     public GameState getCurrentState() {
-	return currentState;
+        return currentState;
     }
 
     public List<GameState> getHistory() {
-	return history;
+        return history;
     }
 }
