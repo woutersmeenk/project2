@@ -42,7 +42,6 @@ public class Level {
     private final List<SwitchCube> switches;
     private final Vector3f start;
     private final Map<Vector3f, Checkpoint> checkpoints;
-
     private final List<EventListener<LocationEvent>> locationListeners;
 
     public Level(final Map<Vector3f, Cube> cubes,

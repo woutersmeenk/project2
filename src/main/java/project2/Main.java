@@ -84,71 +84,71 @@ public class Main extends SimpleApplication implements ActionListener {
 
         gameStateManager.getLevel().addLocationListener(viewManager);
 
-        inputManager.addMapping("Action", new KeyTrigger(KeyInput.KEY_RETURN));
-        inputManager.addMapping("Revert", new KeyTrigger(KeyInput.KEY_LSHIFT));
-        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_LEFT));
-        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_RIGHT));
-        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_UP));
-        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_DOWN));
-        inputManager.addListener(this, "Action", "Left", "Right", "Up", "Down",
-                "Revert");
+        for (PlayerAction action : PlayerAction.values()) {
+            inputManager.addMapping(action.toString(), action.trigger);
+            inputManager.addListener(this, action.toString());
+        }
     }
 
-    // TODO: do this in triggers
     @Override
     public void onAction(final String name, final boolean isPressed,
             final float tpf) {
+        final PlayerAction action = PlayerAction.valueOf(name);
+
+        switch (action) {
+        case LEFT:
+            processMoveAction(new Vector3f(-1, 0, 0), isPressed);
+            break;
+        case UP:
+            processMoveAction(new Vector3f(0, 1, 0), isPressed);
+            break;
+        case RIGHT:
+            processMoveAction(new Vector3f(1, 0, 0), isPressed);
+            break;
+        case DOWN:
+            processMoveAction(new Vector3f(0, -1, 0), isPressed);
+            break;
+        case REVERT:
+            if (isPressed) {
+                break;
+            }
+            gameStateManager.revert();
+            break;
+        case ACTION:
+            processSwitch(isPressed);
+            break;
+        default:
+            break;
+        }
+    }
+
+    private void processSwitch(boolean isPressed) {
+        if (isPressed) {
+            return;
+        }
         final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
         final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
                 .getCubes();
-
-        if (name.equals("Left") && !isPressed) {
-            final Cube beside = levelMap.get(playerPos.add(-1, 0, 0));
-            final Cube below = levelMap.get(playerPos.add(-1, 0, -1));
-
-            if (below != null && beside == null) {
-                gameStateManager.movePlayer(new Vector3f(-1, 0, 0));
-            }
+        // check if there is a switch below the player
+        final Cube below = levelMap.get(playerPos.add(0, 0, -1));
+        if (below != null && below.getSwitchCube() != null) {
+            below.getSwitchCube().doSwitch();
         }
+    }
 
-        if (name.equals("Up") && !isPressed) {
-            final Cube beside = levelMap.get(playerPos.add(0, 1, 0));
-            final Cube below = levelMap.get(playerPos.add(0, 1, -1));
-
-            if (below != null && beside == null) {
-                gameStateManager.movePlayer(new Vector3f(0, 1, 0));
-            }
+    private void processMoveAction(Vector3f direction, boolean isPressed) {
+        if (isPressed) {
+            return;
         }
+        final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
+        final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
+                .getCubes();
+        final Cube beside = levelMap.get(playerPos.add(direction));
+        final Cube below = levelMap.get(playerPos.add(direction).add(
+                new Vector3f(0, 0, -1)));
 
-        if (name.equals("Right") && !isPressed) {
-            final Cube beside = levelMap.get(playerPos.add(1, 0, 0));
-            final Cube below = levelMap.get(playerPos.add(1, 0, -1));
-
-            if (below != null && beside == null) {
-                gameStateManager.movePlayer(new Vector3f(1, 0, 0));
-            }
+        if (below != null && beside == null) {
+            gameStateManager.movePlayer(direction);
         }
-
-        if (name.equals("Down") && !isPressed) {
-            final Cube beside = levelMap.get(playerPos.add(0, -1, 0));
-            final Cube below = levelMap.get(playerPos.add(0, -1, -1));
-
-            if (below != null && beside == null) {
-                gameStateManager.movePlayer(new Vector3f(0, -1, 0));
-            }
-        }
-
-        if (name.equals("Revert") && !isPressed) {
-            gameStateManager.revert();
-        }
-
-        if (name.equals("Action") && !isPressed) {
-            // check if there is a switch below the player
-            final Cube below = levelMap.get(playerPos.add(0, 0, -1));
-            if (below != null && below.getSwitchCube() != null) {
-                below.getSwitchCube().doSwitch();
-            }
-        }
-
     }
 }
