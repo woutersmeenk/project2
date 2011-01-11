@@ -67,76 +67,69 @@ public class ViewManager implements EventListener<LocationEvent> {
         rootNode.addLight(pl);
     }
 
+    public Geometry addCube(final long id, final Vector3f pos, final int size,
+            final ColorRGBA color) {
+        final Box box = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+                0.5f * size);
+        final Geometry geom = new Geometry("Cube_" + id, box);
+        geom.setLocalTranslation(pos);
+        final Material mat = new Material(assetManager,
+                "Common/MatDefs/Light/Lighting.j3md");
+
+        mat.setFloat("m_Shininess", 12);
+        mat.setBoolean("m_UseMaterialColors", true);
+
+        mat.setColor("m_Specular", ColorRGBA.Gray);
+        mat.setColor("m_Ambient", color);
+        mat.setColor("m_Diffuse", color);
+
+        geom.setMaterial(mat);
+        geom.setUserData("id", (int) id);
+
+        rootNode.attachChild(geom);
+
+        return geom;
+    }
+
+    public Geometry addTransparentCube(final long id, final Vector3f pos,
+            final int size, final ColorRGBA color) {
+        final Box box = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+                0.5f * size);
+        final Geometry geom = new Geometry("Cube_" + id, box);
+        geom.setLocalTranslation(pos);
+
+        final Material mat2 = new Material(assetManager,
+                "Common/MatDefs/Misc/SolidColor.j3md");
+        mat2.setColor("m_Color", color);
+        mat2.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+
+        geom.setMaterial(mat2);
+        geom.setQueueBucket(Bucket.Transparent);
+        geom.setUserData("id", (int) id);
+
+        rootNode.attachChild(geom);
+
+        return geom;
+    }
+
     public void createViewFromGameState(final GameStateManager gameStateManager) {
         // add cubes to scene graph
         for (final Cube cube : gameStateManager.getLevel().getCubes().values()) {
-            final int size = cube.getSize();
-            final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
-                    0.5f * size);
-            final Geometry geom = new Geometry("Cube", box2);
-            geom.setLocalTranslation(cube.getLocation());
-            final Material mat2 = new Material(assetManager,
-                    "Common/MatDefs/Light/Lighting.j3md");
-
-            mat2.setFloat("m_Shininess", 12);
-            mat2.setBoolean("m_UseMaterialColors", true);
-
-            mat2.setColor("m_Specular", ColorRGBA.Gray);
-
-            // give switch a different color
-            if (cube.getSwitchCube() == null) {
-                mat2.setColor("m_Ambient", ColorRGBA.Blue);
-                mat2.setColor("m_Diffuse", ColorRGBA.Blue);
-
-            } else {
-                mat2.setColor("m_Ambient", ColorRGBA.Red);
-                mat2.setColor("m_Diffuse", ColorRGBA.Red);
-            }
-
-            geom.setMaterial(mat2);
-            geom.setUserData("id", (int) cube.getId());
-
-            rootNode.attachChild(geom);
+            final ColorRGBA color = cube.getSwitchCube() == null ? ColorRGBA.Blue
+                    : ColorRGBA.Red;
+            addCube(cube.getId(), cube.getLocation(), cube.getSize(), color);
         }
 
         /* Add player. */
-        final int size = gameStateManager.getPlayer().getSize();
-        final Box box2 = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
-                0.5f * size);
-        final Geometry geom = new Geometry("Player", box2);
-        geom.setLocalTranslation(gameStateManager.getPlayer().getLocation());
-
-        final Material mat2 = new Material(assetManager,
-                "Common/MatDefs/Light/Lighting.j3md");
-
-        mat2.setFloat("m_Shininess", 12);
-        mat2.setBoolean("m_UseMaterialColors", true);
-
-        mat2.setColor("m_Specular", ColorRGBA.Gray);
-        mat2.setColor("m_Ambient", ColorRGBA.Yellow);
-        mat2.setColor("m_Diffuse", ColorRGBA.Yellow);
-        geom.setMaterial(mat2);
-        geom.setUserData("id", (int) gameStateManager.getPlayer().getId());
-        rootNode.attachChild(geom);
+        final Cube player = gameStateManager.getPlayer();
+        addCube(player.getId(), player.getLocation(), player.getSize(),
+                ColorRGBA.Yellow);
 
         /* Add checkpoints */
         for (final Checkpoint cp : gameStateManager.getLevel().getCheckpoints()
                 .values()) {
-            final Geometry checkpoint = new Geometry("Box", box2);
-            checkpoint.setLocalTranslation(cp.getLocation());
-
-            final Material mat3 = new Material(assetManager,
-                    "Common/MatDefs/Misc/SolidColor.j3md");
-            mat3.setColor("m_Color", new ColorRGBA(0, 1, 0, 0.15f));
-
-            mat3.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-
-            checkpoint.setMaterial(mat3);
-            checkpoint.setQueueBucket(Bucket.Transparent);
-
-            checkpoint.setUserData("id", (int) cp.getId());
-            rootNode.attachChild(checkpoint);
-
+            addTransparentCube(cp.getId(), cp.getLocation(), 1, new ColorRGBA(
+                    0, 1, 0, 0.15f));
         }
     }
 
@@ -178,27 +171,12 @@ public class ViewManager implements EventListener<LocationEvent> {
             for (int j = 0; j < switchStates.size(); j++) {
                 for (final Cube cube : switches.get(j).getStates()
                         .get(switchStates.get(j))) {
-                    // create transparent box
-
-                    final int size = cube.getSize();
-                    final Box box2 = new Box(new Vector3f(), 0.5f * size,
-                            0.5f * size, 0.5f * size);
-                    final Geometry geom = new Geometry("Cube", box2);
-                    geom.setLocalTranslation(cube.getLocation());
-
-                    final Material mat2 = new Material(assetManager,
-                            "Common/MatDefs/Misc/SolidColor.j3md");
-                    mat2.setColor("m_Color", new ColorRGBA(0, 0, 1, (i + 1)
+                    final ColorRGBA color = new ColorRGBA(0, 0, 1, (i + 1)
                             / (float) gameStateManager.getHistory().size()
-                            * 0.40f));
+                            * 0.40f);
+                    final Geometry geom = addTransparentCube(cube.getId(),
+                            cube.getLocation(), 1, color);
 
-                    mat2.getAdditionalRenderState().setBlendMode(
-                            BlendMode.Alpha);
-
-                    geom.setMaterial(mat2);
-                    geom.setQueueBucket(Bucket.Transparent);
-
-                    rootNode.attachChild(geom);
                     historyGeometry.add(geom);
                 }
             }
