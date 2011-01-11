@@ -32,19 +32,22 @@ public abstract class GameApplication extends Application {
     protected FlyByCamera flyCam;
     protected boolean showSettings = false;
 
-    private AppActionListener actionListener = new AppActionListener();
+    private final AppActionListener actionListener = new AppActionListener();
 
     private class AppActionListener implements ActionListener {
-        public void onAction(String name, boolean value, float tpf) {
-            if (!value)
+        @Override
+        public void onAction(final String name, final boolean value,
+                final float tpf) {
+            if (!value) {
                 return;
+            }
 
             if (name.equals("SIMPLEAPP_Exit")) {
                 stop();
             } else if (name.equals("SIMPLEAPP_CameraPos")) {
                 if (cam != null) {
-                    Vector3f loc = cam.getLocation();
-                    Quaternion rot = cam.getRotation();
+                    final Vector3f loc = cam.getLocation();
+                    final Quaternion rot = cam.getRotation();
                     System.out.println("Camera Position: (" + loc.x + ", "
                             + loc.y + ", " + loc.z + ")");
                     System.out.println("Camera Rotation: " + rot);
@@ -65,13 +68,15 @@ public abstract class GameApplication extends Application {
     public void start() {
         // set some default settings in-case
         // settings dialog is not shown
-        if (settings == null)
+        if (settings == null) {
             setSettings(new AppSettings(true));
+        }
 
         // show settings dialog
         if (showSettings) {
-            if (!JmeSystem.showSettingsDialog(settings))
+            if (!JmeSystem.showSettingsDialog(settings)) {
                 return;
+            }
         }
 
         super.start();
@@ -93,7 +98,7 @@ public abstract class GameApplication extends Application {
         return showSettings;
     }
 
-    public void setShowSettings(boolean showSettings) {
+    public void setShowSettings(final boolean showSettings) {
         this.showSettings = showSettings;
     }
 
@@ -128,9 +133,10 @@ public abstract class GameApplication extends Application {
             flyCam = new FlyByCamera(cam);
             flyCam.setMoveSpeed(1f);
 
-            if (context.getType() == Type.Display)
+            if (context.getType() == Type.Display) {
                 inputManager.addMapping("SIMPLEAPP_Exit", new KeyTrigger(
                         KeyInput.KEY_ESCAPE));
+            }
 
             inputManager.addMapping("SIMPLEAPP_CameraPos", new KeyTrigger(
                     KeyInput.KEY_C));
@@ -145,14 +151,15 @@ public abstract class GameApplication extends Application {
 
     @Override
     public void update() {
-        if (speed == 0 || paused)
+        if (speed == 0 || paused) {
             return;
+        }
 
         super.update();
-        float tpf = timer.getTimePerFrame() * speed;
+        final float tpf = timer.getTimePerFrame() * speed;
 
         secondCounter += timer.getTimePerFrame();
-        int fps = (int) timer.getFrameRate();
+        final int fps = (int) timer.getFrameRate();
         if (secondCounter >= 1.0f) {
             fpsText.setText("Frames per second: " + fps);
             secondCounter = 0.0f;
@@ -177,10 +184,10 @@ public abstract class GameApplication extends Application {
 
     public abstract void init();
 
-    public void update(float tpf) {
+    public void update(final float tpf) {
     }
 
-    public void render(RenderManager rm) {
+    public void render(final RenderManager rm) {
     }
 
 }

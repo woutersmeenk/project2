@@ -7,7 +7,7 @@ public class Checkpoint {
     private final Vector3f location;
     private boolean visited;
 
-    public Checkpoint(long id, Vector3f location) {
+    public Checkpoint(final long id, final Vector3f location) {
         this.id = id;
         this.location = location;
         visited = false;
@@ -25,7 +25,7 @@ public class Checkpoint {
         return visited;
     }
 
-    public void setVisited(boolean visited) {
+    public void setVisited(final boolean visited) {
         this.visited = visited;
     }
 }

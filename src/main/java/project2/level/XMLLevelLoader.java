@@ -82,7 +82,7 @@ public class XMLLevelLoader implements LevelLoader {
         final Map<Vector3f, Checkpoint> checkpoints = new HashMap<Vector3f, Checkpoint>();
         for (final Node checkpointNode : XMLUtils.findNodes(
                 "level/checkpoints/checkpoint", node)) {
-            Vector3f pos = parseVector3f(checkpointNode);
+            final Vector3f pos = parseVector3f(checkpointNode);
             checkpoints.put(pos, new Checkpoint(IdFactory.generateID(), pos));
         }
 

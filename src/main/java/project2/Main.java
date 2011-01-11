@@ -82,7 +82,7 @@ public class Main extends GameApplication implements ActionListener {
 
         gameStateManager.getLevel().addLocationListener(viewManager);
 
-        for (PlayerAction action : PlayerAction.values()) {
+        for (final PlayerAction action : PlayerAction.values()) {
             inputManager.addMapping(action.toString(), action.trigger);
             inputManager.addListener(this, action.toString());
         }
@@ -120,7 +120,7 @@ public class Main extends GameApplication implements ActionListener {
         }
     }
 
-    private void processSwitch(boolean isPressed) {
+    private void processSwitch(final boolean isPressed) {
         if (isPressed) {
             return;
         }
@@ -134,7 +134,8 @@ public class Main extends GameApplication implements ActionListener {
         }
     }
 
-    private void processMoveAction(Vector3f direction, boolean isPressed) {
+    private void processMoveAction(final Vector3f direction,
+            final boolean isPressed) {
         if (isPressed) {
             return;
         }

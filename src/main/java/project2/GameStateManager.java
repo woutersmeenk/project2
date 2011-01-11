@@ -64,7 +64,7 @@ public class GameStateManager {
     public void movePlayer(final Vector3f displacement) {
         final Vector3f newPos = player.getLocation().add(displacement);
 
-        Checkpoint checkpoint = level.getCheckpoints().get(newPos);
+        final Checkpoint checkpoint = level.getCheckpoints().get(newPos);
 
         if (checkpoint != null) {
             checkpoint.setVisited(true);

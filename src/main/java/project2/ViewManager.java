@@ -120,7 +120,7 @@ public class ViewManager implements EventListener<LocationEvent> {
         rootNode.attachChild(geom);
 
         /* Add checkpoints */
-        for (Checkpoint cp : gameStateManager.getLevel().getCheckpoints()
+        for (final Checkpoint cp : gameStateManager.getLevel().getCheckpoints()
                 .values()) {
             final Geometry checkpoint = new Geometry("Box", box2);
             checkpoint.setLocalTranslation(cp.getLocation());
@@ -156,7 +156,7 @@ public class ViewManager implements EventListener<LocationEvent> {
     }
 
     public void deleteById(final long id) {
-        Geometry geom = geometryFromId(id);
+        final Geometry geom = geometryFromId(id);
         if (geom != null) {
             geom.removeFromParent();
         }
