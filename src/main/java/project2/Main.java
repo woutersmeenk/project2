@@ -28,10 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import project2.level.model.Cube;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
-import com.jme3.app.SimpleApplication;
-import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 
@@ -41,7 +38,7 @@ import com.jme3.math.Vector3f;
  * @author Ben Ruijl & Wouter Smeenk
  * 
  */
-public class Main extends SimpleApplication implements ActionListener {
+public class Main extends GameApplication implements ActionListener {
     private static final Log LOG = LogFactory.getLog(Main.class);
 
     private final GameStateManager gameStateManager;
@@ -73,8 +70,9 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     @Override
-    public void simpleInitApp() {
+    public void init() {
         viewPort.setBackgroundColor(ColorRGBA.Black);
+        cam.setLocation(new Vector3f(1, 1, 10));
 
         gameStateManager.buildInitialGameState("simple.xml");
 
