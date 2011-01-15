@@ -41,15 +41,17 @@ public class Level {
     private final Map<Vector3f, Cube> cubes;
     private final List<SwitchCube> switches;
     private final Vector3f start;
+    private final Vector3f end;
     private final Map<Vector3f, Checkpoint> checkpoints;
     private final List<EventListener<LocationEvent>> locationListeners;
 
     public Level(final Map<Vector3f, Cube> cubes,
             final List<SwitchCube> switches, final Vector3f start,
-            final Map<Vector3f, Checkpoint> checkpoints) {
+            final Vector3f end, final Map<Vector3f, Checkpoint> checkpoints) {
         this.cubes = cubes;
         this.switches = switches;
         this.start = start;
+        this.end = end;
         this.checkpoints = checkpoints;
 
         locationListeners = new ArrayList<EventListener<LocationEvent>>();
@@ -70,6 +72,10 @@ public class Level {
 
     public Vector3f getStart() {
         return start;
+    }
+    
+    public Vector3f getEnd() {
+        return end;
     }
 
     public Map<Vector3f, Checkpoint> getCheckpoints() {

@@ -89,7 +89,9 @@ public class XMLLevelLoader implements LevelLoader {
         // Start
         final Node startNode = XMLUtils.findNode("level/start", node);
         final Vector3f start = parseVector3f(startNode);
-        return new Level(cubes, switches, start, checkpoints);
+        final Node endNode = XMLUtils.findNode("level/end", node);
+        final Vector3f end = parseVector3f(startNode);
+        return new Level(cubes, switches, start, end, checkpoints);
     }
 
     private Vector3f parseVector3f(final Node node) throws XMLException {

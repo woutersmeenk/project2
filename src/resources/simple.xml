@@ -20,4 +20,5 @@
 		<checkpoint x="1" y="3" z="1" />
 	</checkpoints>
 	<start x="1" y="0" z="1" />
+	<end   x="1" y="0" z="1" />
 </level>

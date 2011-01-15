@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
+import project2.util.IdFactory;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.light.PointLight;
@@ -131,6 +132,10 @@ public class ViewManager implements EventListener<LocationEvent> {
             addTransparentCube(cp.getId(), cp.getLocation(), 1, new ColorRGBA(
                     0, 1, 0, 0.15f));
         }
+
+        /* Add end indicator */
+        addTransparentCube(IdFactory.generateID(), gameStateManager.getLevel()
+                .getStart(), 1, new ColorRGBA(1, 0, 1, 0.15f));
     }
 
     public Geometry geometryFromId(final long id) {
