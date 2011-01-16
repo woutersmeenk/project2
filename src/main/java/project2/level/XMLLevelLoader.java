@@ -69,7 +69,7 @@ public class XMLLevelLoader implements LevelLoader {
 
         // Cubes
         final Map<Vector3f, Cube> cubes = new HashMap<Vector3f, Cube>();
-        for (final Node cubeNode : XMLUtils.findNodes("level/cubes/cube", node)) {
+        for (final Node cubeNode : XMLUtils.findNodes("cubes/cube", node)) {
             final Cube cube = parseCube(cubeNode, switches);
             cubes.put(cube.getLocation(), cube);
         }
@@ -91,9 +91,9 @@ public class XMLLevelLoader implements LevelLoader {
         }
 
         // Start
-        final Node startNode = XMLUtils.findNode("level/start", node);
+        final Node startNode = XMLUtils.findNode("start", node);
         final Vector3f start = parseVector3f(startNode);
-        final Node endNode = XMLUtils.findNode("level/end", node);
+        final Node endNode = XMLUtils.findNode("end", node);
         final Vector3f end = parseVector3f(startNode);
         return new Level(cubes, switches, start, end, checkpoints);
     }
