@@ -46,18 +46,22 @@ public class XMLLevelLoader implements LevelLoader {
     private GameStateManager gameStateManager;
 
     @Override
-    public Level loadLevel(final URL url,
-            final GameStateManager gameStateManager) {
+    public List<Level> loadLevelSet(URL url, GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
+        List<Level> levelSet = new ArrayList<Level>();
 
         try {
             final Node node = XMLUtils.load(url);
-            return parseLevel(node);
+
+            for (final Node levelNode : XMLUtils
+                    .findNodes("levels/level", node)) {
+                levelSet.add(parseLevel(levelNode));
+            }
         } catch (final XMLException e) {
             LOG.warn("Could not load level: " + url, e);
         }
 
-        return null;
+        return levelSet;
     }
 
     private Level parseLevel(final Node node) throws XMLException {

@@ -41,6 +41,8 @@ public class GameStateManager {
     private final List<GameState> history;
     /** Current level. */
     private Level level;
+    /** Level list. */
+    private List<Level> levelSet;
     /** Player. */
     private Cube player;
     private ViewManager viewManager;
@@ -80,8 +82,16 @@ public class GameStateManager {
     public void buildInitialGameState(final String levelFile) {
         final XMLLevelLoader loader = new XMLLevelLoader();
 
-        level = loader
-                .loadLevel(ClassLoader.getSystemResource(levelFile), this);
+        levelSet = loader.loadLevelSet(
+                ClassLoader.getSystemResource(levelFile), this);
+
+        if (levelSet.size() == 0) {
+            LOG.info("Could not load level 0 from the levelset.");
+            return;
+        }
+        
+        level = levelSet.get(0); // get first level
+
         player = CubeFactory.getInstance().createCube(level.getStart(), 1);
 
         // generate a gamestate from the level

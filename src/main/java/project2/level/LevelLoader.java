@@ -21,11 +21,11 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
 package project2.level;
 
 import java.net.URL;
+import java.util.List;
 
 import project2.GameStateManager;
 
 public interface LevelLoader {
 
-    Level loadLevel(URL url, final GameStateManager gameStateManager);
-
+    List<Level> loadLevelSet(URL url, final GameStateManager gameStateManager);
 }

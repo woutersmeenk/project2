@@ -74,7 +74,7 @@ public class Main extends GameApplication implements ActionListener {
         viewPort.setBackgroundColor(ColorRGBA.Black);
         cam.setLocation(new Vector3f(1, 1, 10));
 
-        gameStateManager.buildInitialGameState("simple.xml");
+        gameStateManager.buildInitialGameState("levels.xml");
 
         viewManager.initialize(assetManager);
         viewManager.createViewFromGameState(gameStateManager);
