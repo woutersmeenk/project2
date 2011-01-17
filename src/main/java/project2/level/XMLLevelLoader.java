@@ -45,6 +45,8 @@ public class XMLLevelLoader implements LevelLoader {
     private static final Log LOG = LogFactory.getLog(XMLLevelLoader.class);
     private GameStateManager gameStateManager;
 
+    private Vector3f currentOffset;
+
     @Override
     public List<Level> loadLevelSet(URL url, GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
@@ -67,6 +69,10 @@ public class XMLLevelLoader implements LevelLoader {
     private Level parseLevel(final Node node) throws XMLException {
         final List<SwitchCube> switches = new ArrayList<SwitchCube>();
 
+        // read offset
+        currentOffset = new Vector3f(); // required for parseVector3f
+        currentOffset = parseVector3f(node);
+
         // Cubes
         final Map<Vector3f, Cube> cubes = new HashMap<Vector3f, Cube>();
         for (final Node cubeNode : XMLUtils.findNodes("cubes/cube", node)) {
@@ -85,7 +91,7 @@ public class XMLLevelLoader implements LevelLoader {
         // Checkpoints
         final Map<Vector3f, Checkpoint> checkpoints = new HashMap<Vector3f, Checkpoint>();
         for (final Node checkpointNode : XMLUtils.findNodes(
-                "level/checkpoints/checkpoint", node)) {
+                "checkpoints/checkpoint", node)) {
             final Vector3f pos = parseVector3f(checkpointNode);
             checkpoints.put(pos, new Checkpoint(IdFactory.generateID(), pos));
         }
@@ -102,7 +108,7 @@ public class XMLLevelLoader implements LevelLoader {
         final float x = (float) XMLUtils.parseNumber("@x", node);
         final float y = (float) XMLUtils.parseNumber("@y", node);
         final float z = (float) XMLUtils.parseNumber("@z", node);
-        return new Vector3f(x, y, z);
+        return new Vector3f(x, y, z).add(currentOffset);
     }
 
     private Cube parseCube(final Node node, final List<SwitchCube> switches)
