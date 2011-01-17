@@ -23,8 +23,6 @@ package project2;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.Box;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,6 +37,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.shape.Box;
 import com.jmex.model.ogrexml.Material;
 
 public class ViewManager implements EventListener<LocationEvent> {
