@@ -99,9 +99,14 @@ public class XMLLevelLoader implements LevelLoader {
         // Start
         final Node startNode = XMLUtils.findNode("start", node);
         final Vector3f start = parseVector3f(startNode);
+
+        // End
         final Node endNode = XMLUtils.findNode("end", node);
-        final Vector3f end = parseVector3f(startNode);
-        return new Level(cubes, switches, start, end, checkpoints);
+        final Vector3f end = parseVector3f(endNode);
+        final Node switchNode = XMLUtils.findNode("switch", endNode);
+        final SwitchCube endSwitch = parseSwitchCube(switchNode, null);
+
+        return new Level(cubes, switches, start, end, endSwitch, checkpoints);
     }
 
     private Vector3f parseVector3f(final Node node) throws XMLException {
@@ -142,7 +147,10 @@ public class XMLLevelLoader implements LevelLoader {
         final SwitchCube result = new SwitchCube(gameStateManager, states,
                 false);
 
-        switches.add(result);
+        if (switches != null) {
+            switches.add(result);
+        }
+
         return result;
     }
 

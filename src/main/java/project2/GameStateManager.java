@@ -59,6 +59,10 @@ public class GameStateManager {
         return level;
     }
 
+    public List<Level> getLevelSet() {
+        return levelSet;
+    }
+
     public Cube getPlayer() {
         return player;
     }
@@ -75,6 +79,12 @@ public class GameStateManager {
             LOG.info("Checkpoint reached.");
         }
 
+        // check if done
+        if (level.getEnd().equals(newPos) && level.getEndSwitch() != null
+                && level.allCheckpointsVisited()) {
+            level.getEndSwitch().doSwitch(1, false); // switch up
+        }
+
         player.setLocation(newPos);
         viewManager.onEvent(new LocationEvent(player.getId(), newPos));
     }
@@ -89,7 +99,7 @@ public class GameStateManager {
             LOG.info("Could not load level 0 from the levelset.");
             return;
         }
-        
+
         level = levelSet.get(0); // get first level
 
         player = CubeFactory.getInstance().createCube(level.getStart(), 1);

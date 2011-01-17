@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import project2.level.Level;
 import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
@@ -114,28 +115,29 @@ public class ViewManager implements EventListener<LocationEvent> {
     }
 
     public void createViewFromGameState(final GameStateManager gameStateManager) {
-        // add cubes to scene graph
-        for (final Cube cube : gameStateManager.getLevel().getCubes().values()) {
-            final ColorRGBA color = cube.getSwitchCube() == null ? ColorRGBA.Blue
-                    : ColorRGBA.Red;
-            addCube(cube.getId(), cube.getLocation(), cube.getSize(), color);
-        }
-
         /* Add player. */
         final Cube player = gameStateManager.getPlayer();
         addCube(player.getId(), player.getLocation(), player.getSize(),
                 ColorRGBA.Yellow);
 
-        /* Add checkpoints */
-        for (final Checkpoint cp : gameStateManager.getLevel().getCheckpoints()
-                .values()) {
-            addTransparentCube(cp.getId(), cp.getLocation(), 1, new ColorRGBA(
-                    0, 1, 0, 0.15f));
-        }
+        for (Level level : gameStateManager.getLevelSet()) {
+            // add cubes to scene graph
+            for (final Cube cube : level.getCubes().values()) {
+                final ColorRGBA color = cube.getSwitchCube() == null ? ColorRGBA.Blue
+                        : ColorRGBA.Red;
+                addCube(cube.getId(), cube.getLocation(), cube.getSize(), color);
+            }
 
-        /* Add end indicator */
-        addTransparentCube(IdFactory.generateID(), gameStateManager.getLevel()
-                .getStart(), 1, new ColorRGBA(1, 0, 1, 0.15f));
+            /* Add checkpoints */
+            for (final Checkpoint cp : level.getCheckpoints().values()) {
+                addTransparentCube(cp.getId(), cp.getLocation(), 1,
+                        new ColorRGBA(0, 1, 0, 0.15f));
+            }
+
+            /* Add end indicator */
+            addTransparentCube(IdFactory.generateID(), level.getEnd(), 1,
+                    new ColorRGBA(1, 0, 1, 0.15f));
+        }
     }
 
     public Geometry geometryFromId(final long id) {
