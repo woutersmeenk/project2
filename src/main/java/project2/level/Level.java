@@ -33,7 +33,7 @@ import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
 
-import com.jme3.math.Vector3f;
+import com.jme.math.Vector3f;
 
 public class Level {
     private static final Log LOG = LogFactory.getLog(Level.class);

@@ -20,7 +20,8 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  */
 package project2;
 
-import com.jme3.math.Vector3f;
+import com.jme.math.Vector3f;
+
 
 public class LocationEvent {
     private final long id;

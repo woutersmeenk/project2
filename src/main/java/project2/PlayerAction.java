@@ -1,8 +1,7 @@
 package project2;
 
-import com.jme3.input.KeyInput;
-import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.Trigger;
+import com.jme.input.KeyInput;
+
 
 public enum PlayerAction {
     ACTION(new KeyTrigger(KeyInput.KEY_RETURN)), REVERT(new KeyTrigger(

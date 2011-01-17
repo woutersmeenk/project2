@@ -22,7 +22,7 @@ package project2.level.model;
 
 import project2.util.IdFactory;
 
-import com.jme3.math.Vector3f;
+import com.jme.math.Vector3f;
 
 public final class CubeFactory {
     private static CubeFactory instance;

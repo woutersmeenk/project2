@@ -1,28 +1,20 @@
 package project2;
 
-import com.jme3.app.Application;
-import com.jme3.app.StatsView;
-import com.jme3.font.BitmapFont;
-import com.jme3.font.BitmapText;
-import com.jme3.input.FlyByCamera;
-import com.jme3.input.KeyInput;
-import com.jme3.input.MouseInput;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
-import com.jme3.input.controls.MouseAxisTrigger;
-import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial.CullHint;
-import com.jme3.system.AppSettings;
-import com.jme3.system.JmeContext.Type;
-import com.jme3.system.JmeSystem;
-import com.jme3.util.BufferUtils;
+import java.awt.event.ActionListener;
 
-public abstract class GameApplication extends Application {
+import com.jme.app.BaseGame;
+import com.jme.bounding.BoundingVolume.Type;
+import com.jme.input.KeyInput;
+import com.jme.input.MouseInput;
+import com.jme.math.Quaternion;
+import com.jme.math.Vector3f;
+import com.jme.scene.Node;
+import com.jme.scene.Spatial.CullHint;
+import com.jme.util.geom.BufferUtils;
+import com.jmex.angelfont.BitmapFont;
+import com.jmex.angelfont.BitmapText;
+
+public abstract class GameApplication extends BaseGame {
 
     protected Node rootNode = new Node("Root Node");
     protected Node guiNode = new Node("Gui Node");

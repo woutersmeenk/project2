@@ -32,7 +32,7 @@ import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.CubeFactory;
 
-import com.jme3.math.Vector3f;
+import com.jme.math.Vector3f;
 
 public class GameStateManager {
     private static final Log LOG = LogFactory.getLog(GameStateManager.class);

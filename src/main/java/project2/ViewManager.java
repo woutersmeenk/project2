@@ -23,6 +23,8 @@ package project2;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Box;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,17 +33,13 @@ import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
 import project2.util.IdFactory;
 
-import com.jme3.asset.AssetManager;
-import com.jme3.light.PointLight;
-import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
+import com.jme.light.PointLight;
+import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Geometry;
+import com.jme.scene.Node;
+import com.jme.scene.Spatial;
+import com.jmex.model.ogrexml.Material;
 
 public class ViewManager implements EventListener<LocationEvent> {
     private static final Log LOG = LogFactory.getLog(ViewManager.class);

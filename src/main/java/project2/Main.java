@@ -20,6 +20,7 @@ Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  */
 package project2;
 
+import java.awt.event.ActionListener;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -28,9 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import project2.level.model.Cube;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
-import com.jme3.input.controls.ActionListener;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
+import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 
 /**
  * Main entry point for the application. Initializes everything.

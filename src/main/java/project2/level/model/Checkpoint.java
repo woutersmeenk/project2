@@ -1,6 +1,7 @@
 package project2.level.model;
 
-import com.jme3.math.Vector3f;
+import com.jme.math.Vector3f;
+
 
 public class Checkpoint {
     private final long id;

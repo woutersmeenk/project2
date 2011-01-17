@@ -39,7 +39,7 @@ import project2.util.IdFactory;
 import project2.util.XMLException;
 import project2.util.XMLUtils;
 
-import com.jme3.math.Vector3f;
+import com.jme.math.Vector3f;
 
 public class XMLLevelLoader implements LevelLoader {
     private static final Log LOG = LogFactory.getLog(XMLLevelLoader.class);
