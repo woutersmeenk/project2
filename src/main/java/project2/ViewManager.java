@@ -123,8 +123,16 @@ public class ViewManager implements EventListener<LocationEvent> {
         for (Level level : gameStateManager.getLevelSet()) {
             // add cubes to scene graph
             for (final Cube cube : level.getCubes().values()) {
-                final ColorRGBA color = cube.getSwitchCube() == null ? ColorRGBA.Blue
-                        : ColorRGBA.Red;
+                ColorRGBA color = ColorRGBA.Blue;
+
+                if (cube.getSwitchCube() != null) {
+                    color = ColorRGBA.Red;
+                } else {
+                    if (cube.isSubjectToSwitching()) {
+                        color = new ColorRGBA(0.2f, 0, 0.8f, 1);
+                    }
+                }
+
                 addCube(cube.getId(), cube.getLocation(), cube.getSize(), color);
             }
 
@@ -178,9 +186,10 @@ public class ViewManager implements EventListener<LocationEvent> {
             for (int j = 0; j < switchStates.size(); j++) {
                 for (final Cube cube : switches.get(j).getStates()
                         .get(switchStates.get(j))) {
-                    final ColorRGBA color = new ColorRGBA(0, 0, 1, (i + 1)
-                            / (float) gameStateManager.getHistory().size()
-                            * 0.40f);
+                    final ColorRGBA color = new ColorRGBA(0.2f, 0, 0.8f,
+                            (i + 1)
+                                    / (float) gameStateManager.getHistory()
+                                            .size() * 0.40f);
                     final Geometry geom = addTransparentCube(cube.getId(),
                             cube.getLocation(), 1, color);
 

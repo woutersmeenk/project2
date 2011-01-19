@@ -1,5 +1,8 @@
 package project2;
 
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+
 import com.jme3.app.Application;
 import com.jme3.app.StatsView;
 import com.jme3.font.BitmapFont;
@@ -43,6 +46,15 @@ public abstract class GameApplication extends Application {
                 final float tpf) {
             if (!value) {
                 return;
+            }
+
+            if (name.equals("FULL_SCREEN")) {
+                try {
+                    Display.setFullscreen(!settings.isFullscreen());
+                } catch (LWJGLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
 
             if (name.equals("SIMPLEAPP_Exit")) {
@@ -185,12 +197,16 @@ public abstract class GameApplication extends Application {
                         KeyInput.KEY_ESCAPE));
             }
 
+            // set full screen switch
+            inputManager.addMapping("FULL_SCREEN", new KeyTrigger(
+                    KeyInput.KEY_K));
             inputManager.addMapping("SIMPLEAPP_CameraPos", new KeyTrigger(
                     KeyInput.KEY_C));
             inputManager.addMapping("SIMPLEAPP_Memory", new KeyTrigger(
                     KeyInput.KEY_M));
             inputManager.addListener(actionListener, "SIMPLEAPP_Exit",
-                    "SIMPLEAPP_CameraPos", "SIMPLEAPP_Memory");
+                    "SIMPLEAPP_CameraPos", "SIMPLEAPP_Memory", "FULL_SCREEN");
+
         }
 
         init();

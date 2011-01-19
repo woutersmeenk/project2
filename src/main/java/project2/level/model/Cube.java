@@ -27,13 +27,15 @@ public class Cube {
     private final int size;
     private final SwitchCube switchCube;
     private final long id;
+    private final boolean subjectToSwitching;
 
     Cube(final long id, final Vector3f location2, final int size,
-            final SwitchCube switchCube) {
+            final SwitchCube switchCube, final boolean subjectToSwitching) {
         location = location2;
         this.id = id;
         this.size = size;
         this.switchCube = switchCube;
+        this.subjectToSwitching = subjectToSwitching;
     }
 
     public Vector3f getLocation() {
@@ -54,5 +56,9 @@ public class Cube {
 
     public long getId() {
         return id;
+    }
+
+    public boolean isSubjectToSwitching() {
+        return subjectToSwitching;
     }
 }

@@ -40,9 +40,9 @@ public class Level {
 
     private final Map<Vector3f, Cube> cubes;
     private final List<SwitchCube> switches;
-    private final Vector3f start;
-    private final Vector3f end;
-    private final SwitchCube endSwitch;
+    private Vector3f start;
+    private Vector3f end;
+    private SwitchCube endSwitch;
     private final Map<Vector3f, Checkpoint> checkpoints;
     private final List<EventListener<LocationEvent>> locationListeners;
 
@@ -67,6 +67,14 @@ public class Level {
         if (endSwitch != null) {
             endSwitch.setLevel(this);
         }
+    }
+
+    /**
+     * Merges the level with another one.
+     */
+    public void merge(Level level) {
+        cubes.putAll(level.getCubes());
+        switches.addAll(level.getSwitches());
     }
 
     public Map<Vector3f, Cube> getCubes() {

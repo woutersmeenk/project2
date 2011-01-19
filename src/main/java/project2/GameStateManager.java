@@ -41,6 +41,8 @@ public class GameStateManager {
     private final List<GameState> history;
     /** Current level. */
     private Level level;
+    /** Index of current level. */
+    private int levelIndex;
     /** Level list. */
     private List<Level> levelSet;
     /** Player. */
@@ -82,7 +84,19 @@ public class GameStateManager {
         // check if done
         if (level.getEnd().equals(newPos) && level.getEndSwitch() != null
                 && level.allCheckpointsVisited()) {
+            LOG.info("Level finished!");
+
             level.getEndSwitch().doSwitch(1, false); // switch up
+
+            if (levelIndex + 1 < levelSet.size()) {
+                levelIndex++;
+                Level newLevel = levelSet.get(levelIndex);
+                newLevel.merge(level); // merge so you can go back
+                level = newLevel;
+            }
+
+            currentState = new GameState(level);
+            history.clear();
         }
 
         player.setLocation(newPos);
@@ -100,9 +114,11 @@ public class GameStateManager {
             return;
         }
 
-        level = levelSet.get(0); // get first level
+        levelIndex = 0;
+        level = levelSet.get(levelIndex);
 
-        player = CubeFactory.getInstance().createCube(level.getStart(), 1);
+        player = CubeFactory.getInstance().createCube(level.getStart(), 1,
+                false);
 
         // generate a gamestate from the level
         currentState = new GameState(level);

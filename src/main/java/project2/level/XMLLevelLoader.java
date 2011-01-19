@@ -84,7 +84,7 @@ public class XMLLevelLoader implements LevelLoader {
         for (final SwitchCube switchCube : switches) {
             for (final Cube cube : switchCube.getCurrentState()) {
                 cubes.put(cube.getLocation(), CubeFactory.getInstance()
-                        .createCube(cube.getLocation(), cube.getSize()));
+                        .createCube(cube.getLocation(), cube.getSize(), true));
             }
         }
 
@@ -106,6 +106,15 @@ public class XMLLevelLoader implements LevelLoader {
         final Node switchNode = XMLUtils.findNode("switch", endNode);
         final SwitchCube endSwitch = parseSwitchCube(switchNode, null);
 
+        // Add clones for the end switch boxes
+
+        if (endSwitch != null) {
+            for (final Cube cube : endSwitch.getCurrentState()) {
+                cubes.put(cube.getLocation(), CubeFactory.getInstance()
+                        .createCube(cube.getLocation(), cube.getSize(), true));
+            }
+        }
+
         return new Level(cubes, switches, start, end, endSwitch, checkpoints);
     }
 
@@ -126,7 +135,8 @@ public class XMLLevelLoader implements LevelLoader {
         final int size = (int) XMLUtils.parseNumber("@size", node, 1);
         final Node switchNode = XMLUtils.findNode("switch", node);
         final SwitchCube switchCube = parseSwitchCube(switchNode, switches);
-        return CubeFactory.getInstance().createCube(location, size, switchCube);
+        return CubeFactory.getInstance().createCube(location, size, switchCube,
+                false);
     }
 
     private SwitchCube parseSwitchCube(final Node node,

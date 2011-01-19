@@ -71,15 +71,14 @@ public class SwitchCube {
             return;
         }
 
-        // increment state
-        final Cube[] oldPos = getCurrentState().toArray(new Cube[0]);
-        currentStateID = id;
-        final Cube[] newPos = getCurrentState().toArray(new Cube[0]);
-
         // move cubes
-        for (int i = 0; i < oldPos.length; i++) {
-            level.moveCube(oldPos[i].getLocation(), newPos[i].getLocation());
+        for (int i = 0; i < getStates().get(currentStateID).size(); i++) {
+            level.moveCube(
+                    getStates().get(currentStateID).get(i).getLocation(),
+                    getStates().get(id).get(i).getLocation());
         }
+
+        currentStateID = id;
 
         if (addToHistory) {
             gameStateManager.makeHistory(); // register the action
