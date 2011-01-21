@@ -45,168 +45,174 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 
 public class ViewManager implements EventListener<LocationEvent> {
-    private static final Log LOG = LogFactory.getLog(ViewManager.class);
-    private AssetManager assetManager;
-    private final Node rootNode;
+	private static final Log LOG = LogFactory.getLog(ViewManager.class);
+	private AssetManager assetManager;
+	private final Node rootNode;
 
-    /* The geometry of the historical positions. */
-    private final List<Geometry> historyGeometry;
+	/* The geometry of the historical positions. */
+	private final List<Geometry> historyGeometry;
 
-    public ViewManager(final Node root) {
-        super();
-        rootNode = root;
+	public ViewManager(final Node root) {
+		super();
+		rootNode = root;
 
-        historyGeometry = new ArrayList<Geometry>();
-    }
+		historyGeometry = new ArrayList<Geometry>();
+	}
 
-    public void initialize(final AssetManager assetManager) {
-        this.assetManager = assetManager;
-        /* Create a light. */
-        final PointLight pl = new PointLight();
-        pl.setPosition(new Vector3f(2, 2, 10));
-        pl.setColor(ColorRGBA.White);
-        pl.setRadius(30f);
-        rootNode.addLight(pl);
-    }
+	public void initialize(final AssetManager assetManager) {
+		this.assetManager = assetManager;
+		/* Create a light. */
+		final PointLight pl = new PointLight();
+		pl.setPosition(new Vector3f(2, 2, 10));
+		pl.setColor(ColorRGBA.White);
+		pl.setRadius(30f);
+		rootNode.addLight(pl);
+	}
 
-    public Geometry addCube(final long id, final Vector3f pos, final int size,
-            final ColorRGBA color) {
-        final Box box = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
-                0.5f * size);
-        final Geometry geom = new Geometry("Cube_" + id, box);
-        geom.setLocalTranslation(pos);
-        final Material mat = new Material(assetManager,
-                "Common/MatDefs/Light/Lighting.j3md");
+	public Geometry addCube(final long id, final Vector3f pos, final int size,
+			final ColorRGBA color) {
+		final Box box = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+				0.5f * size);
+		final Geometry geom = new Geometry("Cube_" + id, box);
+		geom.setLocalTranslation(pos);
+		final Material mat = new Material(assetManager,
+				"Common/MatDefs/Light/Lighting.j3md");
 
-        mat.setFloat("m_Shininess", 12);
-        mat.setBoolean("m_UseMaterialColors", true);
+		mat.setFloat("m_Shininess", 12);
+		mat.setBoolean("m_UseMaterialColors", true);
 
-        mat.setColor("m_Specular", ColorRGBA.Gray);
-        mat.setColor("m_Ambient", color);
-        mat.setColor("m_Diffuse", color);
+		mat.setColor("m_Specular", ColorRGBA.Gray);
+		mat.setColor("m_Ambient", color);
+		mat.setColor("m_Diffuse", color);
 
-        geom.setMaterial(mat);
-        geom.setUserData("id", (int) id);
+		geom.setMaterial(mat);
+		geom.setUserData("id", (int) id);
 
-        rootNode.attachChild(geom);
+		rootNode.attachChild(geom);
 
-        return geom;
-    }
+		return geom;
+	}
 
-    public Geometry addTransparentCube(final long id, final Vector3f pos,
-            final int size, final ColorRGBA color) {
-        final Box box = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
-                0.5f * size);
-        final Geometry geom = new Geometry("Cube_" + id, box);
-        geom.setLocalTranslation(pos);
+	public Geometry addTransparentCube(final long id, final Vector3f pos,
+			final int size, final ColorRGBA color) {
+		final Box box = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
+				0.5f * size);
+		final Geometry geom = new Geometry("Cube_" + id, box);
+		geom.setLocalTranslation(pos);
 
-        final Material mat2 = new Material(assetManager,
-                "Common/MatDefs/Misc/SolidColor.j3md");
-        mat2.setColor("m_Color", color);
-        mat2.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+		final Material mat2 = new Material(assetManager,
+				"Common/MatDefs/Misc/SolidColor.j3md");
+		mat2.setColor("m_Color", color);
+		mat2.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 
-        geom.setMaterial(mat2);
-        geom.setQueueBucket(Bucket.Transparent);
-        geom.setUserData("id", (int) id);
+		geom.setMaterial(mat2);
+		geom.setQueueBucket(Bucket.Transparent);
+		geom.setUserData("id", (int) id);
 
-        rootNode.attachChild(geom);
+		rootNode.attachChild(geom);
 
-        return geom;
-    }
+		return geom;
+	}
 
-    public void createViewFromGameState(final GameStateManager gameStateManager) {
-        /* Add player. */
-        final Cube player = gameStateManager.getPlayer();
-        addCube(player.getId(), player.getLocation(), player.getSize(),
-                ColorRGBA.Yellow);
+	public void createViewFromGameState(final GameStateManager gameStateManager) {
+		/* Add player. */
+		final Cube player = gameStateManager.getPlayer();
+		addCube(player.getId(), player.getLocation(), player.getSize(),
+				ColorRGBA.Yellow);
 
-        for (Level level : gameStateManager.getLevelSet()) {
-            // add cubes to scene graph
-            for (final Cube cube : level.getCubes().values()) {
-                ColorRGBA color = ColorRGBA.Blue;
+		for (Level level : gameStateManager.getLevelSet()) {
+			// add cubes to scene graph
+			for (final Cube cube : level.getCubes().values()) {
+				ColorRGBA color = ColorRGBA.Blue;
 
-                if (cube.getSwitchCube() != null) {
-                    color = ColorRGBA.Red;
-                } else {
-                    if (cube.isSubjectToSwitching()) {
-                        color = new ColorRGBA(0.2f, 0, 0.8f, 1);
-                    }
-                }
+				if (cube.getSwitchCube() != null) {
+					color = ColorRGBA.Red;
+				} else {
+					if (cube.isSubjectToSwitching()) {
+						color = new ColorRGBA(0.2f, 0, 0.8f, 1);
+					}
+				}
 
-                addCube(cube.getId(), cube.getLocation(), cube.getSize(), color);
-            }
+				addCube(cube.getId(), cube.getLocation(), cube.getSize(), color);
+			}
 
-            /* Add checkpoints */
-            for (final Checkpoint cp : level.getCheckpoints().values()) {
-                addTransparentCube(cp.getId(), cp.getLocation(), 1,
-                        new ColorRGBA(0, 1, 0, 0.15f));
-            }
+			/* Add checkpoints */
+			for (final Checkpoint cp : level.getCheckpoints().values()) {
+				addTransparentCube(cp.getId(), cp.getLocation(), 1,
+						new ColorRGBA(0, 1, 0, 0.15f));
+			}
 
-            /* Add end indicator */
-            addTransparentCube(IdFactory.generateID(), level.getEnd(), 1,
-                    new ColorRGBA(1, 0, 1, 0.15f));
-        }
-    }
+			/* Add end indicator */
+			addTransparentCube(IdFactory.generateID(), level.getEnd(), 1,
+					new ColorRGBA(1, 0, 1, 0.15f));
+		}
+	}
 
-    public Geometry geometryFromId(final long id) {
-        final Integer idObject = (int) id; // make a cast to int, to circumvent
-        // an
-        // error in jme3
+	public Geometry geometryFromId(final long id) {
+		// make a cast to int, to circumvent an error in jme3
+		final Integer idObject = (int) id;
 
-        for (final Spatial spatial : rootNode.getChildren()) {
-            if (idObject.equals(spatial.getUserData("id"))) {
-                return (Geometry) spatial;
-            }
-        }
+		for (final Spatial spatial : rootNode.getChildren()) {
+			if (idObject.equals(spatial.getUserData("id"))) {
+				LOG.info("Found object " + spatial.getName() + ", "
+						+ spatial.getUserData("id"));
+			}
+		}
 
-        LOG.info("Could not find ID " + id);
-        return null;
-    }
+		for (final Spatial spatial : rootNode.getChildren()) {
+			if (idObject.equals(spatial.getUserData("id"))) {
+				return (Geometry) spatial;
+			}
+		}
 
-    public void deleteById(final long id) {
-        final Geometry geom = geometryFromId(id);
-        if (geom != null) {
-            geom.removeFromParent();
-        }
-    }
+		LOG.info("Could not find ID " + id);
+		return null;
+	}
 
-    public void showHistory(final GameStateManager gameStateManager) {
-        // remove all
-        for (final Geometry geom : historyGeometry) {
-            rootNode.detachChild(geom);
-        }
+	public void deleteById(final long id) {
+		final Geometry geom = geometryFromId(id);
+		if (geom != null) {
+			geom.removeFromParent();
+		}
+	}
 
-        final List<SwitchCube> switches = gameStateManager.getLevel()
-                .getSwitches();
+	public void showHistory(final GameStateManager gameStateManager) {
+		// remove all
+		for (final Geometry geom : historyGeometry) {
+			rootNode.detachChild(geom);
+		}
 
-        for (int i = 0; i < gameStateManager.getHistory().size(); i++) {
-            final List<Integer> switchStates = gameStateManager.getHistory()
-                    .get(i).getSwitchStates();
+		final List<SwitchCube> switches = gameStateManager.getLevel()
+				.getSwitches();
 
-            for (int j = 0; j < switchStates.size(); j++) {
-                for (final Cube cube : switches.get(j).getStates()
-                        .get(switchStates.get(j))) {
-                    final ColorRGBA color = new ColorRGBA(0.2f, 0, 0.8f,
-                            (i + 1)
-                                    / (float) gameStateManager.getHistory()
-                                            .size() * 0.40f);
-                    final Geometry geom = addTransparentCube(cube.getId(),
-                            cube.getLocation(), 1, color);
+		for (int i = 0; i < gameStateManager.getHistory().size(); i++) {
+			final List<Integer> switchStates = gameStateManager.getHistory()
+					.get(i).getSwitchStates();
 
-                    historyGeometry.add(geom);
-                }
-            }
-        }
-    }
+			for (int j = 0; j < switchStates.size(); j++) {
+				for (final Cube cube : switches.get(j).getStates()
+						.get(switchStates.get(j))) {
+					final ColorRGBA color = new ColorRGBA(0.2f, 0, 0.8f,
+							(i + 1)
+									/ (float) gameStateManager.getHistory()
+											.size() * 0.40f);
+					final Geometry geom = addTransparentCube(cube.getId(),
+							cube.getLocation(), 1, color);
 
-    @Override
-    public void onEvent(final LocationEvent event) {
-        final Geometry geom = geometryFromId(event.getId());
+					historyGeometry.add(geom);
+				}
+			}
+		}
+	}
 
-        if (geom != null) {
-            geom.setLocalTranslation(event.getNewPos());
-        } else {
-            LOG.error("No matching geometry found for id " + event.getId());
-        }
-    }
+	@Override
+	public void onEvent(final LocationEvent event) {
+		final Geometry geom = geometryFromId(event.getId());
+
+		if (geom != null) {
+			geom.setLocalTranslation(event.getNewPos());
+		} else {
+			LOG.error("No matching geometry found for id " + event.getId());
+		}
+	}
 }
