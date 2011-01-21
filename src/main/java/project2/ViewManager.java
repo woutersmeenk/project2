@@ -154,13 +154,6 @@ public class ViewManager implements EventListener<LocationEvent> {
 
 		for (final Spatial spatial : rootNode.getChildren()) {
 			if (idObject.equals(spatial.getUserData("id"))) {
-				LOG.info("Found object " + spatial.getName() + ", "
-						+ spatial.getUserData("id"));
-			}
-		}
-
-		for (final Spatial spatial : rootNode.getChildren()) {
-			if (idObject.equals(spatial.getUserData("id"))) {
 				return (Geometry) spatial;
 			}
 		}
