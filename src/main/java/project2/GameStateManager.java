@@ -90,7 +90,7 @@ public class GameStateManager {
 
             if (levelIndex + 1 < levelSet.size()) {
                 levelIndex++;
-                Level newLevel = levelSet.get(levelIndex);
+                final Level newLevel = levelSet.get(levelIndex);
                 newLevel.merge(level); // merge so you can go back
                 level = newLevel;
             }

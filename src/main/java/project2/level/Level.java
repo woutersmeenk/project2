@@ -36,119 +36,119 @@ import project2.level.model.SwitchCube;
 import com.jme3.math.Vector3f;
 
 public class Level {
-	private static final Log LOG = LogFactory.getLog(Level.class);
+    private static final Log LOG = LogFactory.getLog(Level.class);
 
-	private final Map<Vector3f, Cube> cubes;
-	private final List<SwitchCube> switches;
-	private Vector3f start;
-	private Vector3f end;
-	private SwitchCube endSwitch;
-	private final Map<Vector3f, Checkpoint> checkpoints;
-	private final List<EventListener<LocationEvent>> locationListeners;
+    private final Map<Vector3f, Cube> cubes;
+    private final List<SwitchCube> switches;
+    private final Vector3f start;
+    private final Vector3f end;
+    private final SwitchCube endSwitch;
+    private final Map<Vector3f, Checkpoint> checkpoints;
+    private final List<EventListener<LocationEvent>> locationListeners;
 
-	public Level(final Map<Vector3f, Cube> cubes,
-			final List<SwitchCube> switches, final Vector3f start,
-			final Vector3f end, final SwitchCube endSwitch,
-			final Map<Vector3f, Checkpoint> checkpoints) {
-		this.cubes = cubes;
-		this.switches = switches;
-		this.start = start;
-		this.end = end;
-		this.endSwitch = endSwitch;
-		this.checkpoints = checkpoints;
+    public Level(final Map<Vector3f, Cube> cubes,
+            final List<SwitchCube> switches, final Vector3f start,
+            final Vector3f end, final SwitchCube endSwitch,
+            final Map<Vector3f, Checkpoint> checkpoints) {
+        this.cubes = cubes;
+        this.switches = switches;
+        this.start = start;
+        this.end = end;
+        this.endSwitch = endSwitch;
+        this.checkpoints = checkpoints;
 
-		locationListeners = new ArrayList<EventListener<LocationEvent>>();
+        locationListeners = new ArrayList<EventListener<LocationEvent>>();
 
-		// register the level with the switches
-		for (final SwitchCube switchCube : switches) {
-			switchCube.setLevel(this);
-		}
+        // register the level with the switches
+        for (final SwitchCube switchCube : switches) {
+            switchCube.setLevel(this);
+        }
 
-		if (endSwitch != null) {
-			endSwitch.setLevel(this);
-		}
-	}
+        if (endSwitch != null) {
+            endSwitch.setLevel(this);
+        }
+    }
 
-	/**
-	 * Merges the level with another one.
-	 */
-	public void merge(Level level) {
-		cubes.putAll(level.getCubes());
-		switches.addAll(level.getSwitches());
+    /**
+     * Merges the level with another one.
+     */
+    public void merge(final Level level) {
+        cubes.putAll(level.getCubes());
+        switches.addAll(level.getSwitches());
 
-		// merge listeners. TODO: check if this never gives doubles
-		locationListeners.addAll(level.getLocationListeners());
-	}
+        // merge listeners. TODO: check if this never gives doubles
+        locationListeners.addAll(level.getLocationListeners());
+    }
 
-	public Map<Vector3f, Cube> getCubes() {
-		return cubes;
-	}
+    public Map<Vector3f, Cube> getCubes() {
+        return cubes;
+    }
 
-	public List<SwitchCube> getSwitches() {
-		return switches;
-	}
+    public List<SwitchCube> getSwitches() {
+        return switches;
+    }
 
-	public Vector3f getStart() {
-		return start;
-	}
+    public Vector3f getStart() {
+        return start;
+    }
 
-	public Vector3f getEnd() {
-		return end;
-	}
+    public Vector3f getEnd() {
+        return end;
+    }
 
-	public SwitchCube getEndSwitch() {
-		return endSwitch;
-	}
+    public SwitchCube getEndSwitch() {
+        return endSwitch;
+    }
 
-	public Map<Vector3f, Checkpoint> getCheckpoints() {
-		return checkpoints;
-	}
+    public Map<Vector3f, Checkpoint> getCheckpoints() {
+        return checkpoints;
+    }
 
-	public boolean allCheckpointsVisited() {
-		for (Checkpoint cp : checkpoints.values()) {
-			if (!cp.isVisited()) {
-				return false;
-			}
-		}
+    public boolean allCheckpointsVisited() {
+        for (final Checkpoint cp : checkpoints.values()) {
+            if (!cp.isVisited()) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public Cube cubeFromId(final long id) {
-		for (final Cube cube : cubes.values()) {
-			if (id == cube.getId()) {
-				return cube;
-			}
-		}
+    public Cube cubeFromId(final long id) {
+        for (final Cube cube : cubes.values()) {
+            if (id == cube.getId()) {
+                return cube;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	// TODO: maybe do with id instead of current position?
-	public void moveCube(final Vector3f curPos, final Vector3f newPos) {
-		// move the cube
-		final Cube cube = cubes.get(curPos);
+    // TODO: maybe do with id instead of current position?
+    public void moveCube(final Vector3f curPos, final Vector3f newPos) {
+        // move the cube
+        final Cube cube = cubes.get(curPos);
 
-		if (cube == null) {
-			LOG.warn("No cube found at" + curPos);
-			return;
-		}
+        if (cube == null) {
+            LOG.warn("No cube found at" + curPos);
+            return;
+        }
 
-		// replace the cube in the map and set the new position
-		cubes.put(newPos, cubes.remove(curPos));
-		cube.setLocation(newPos);
+        // replace the cube in the map and set the new position
+        cubes.put(newPos, cubes.remove(curPos));
+        cube.setLocation(newPos);
 
-		for (final EventListener<LocationEvent> listener : locationListeners) {
-			listener.onEvent(new LocationEvent(cube.getId(), newPos));
-		}
-	}
+        for (final EventListener<LocationEvent> listener : locationListeners) {
+            listener.onEvent(new LocationEvent(cube.getId(), newPos));
+        }
+    }
 
-	public boolean addLocationListener(
-			final EventListener<LocationEvent> listener) {
-		return locationListeners.add(listener);
-	}
+    public boolean addLocationListener(
+            final EventListener<LocationEvent> listener) {
+        return locationListeners.add(listener);
+    }
 
-	public List<EventListener<LocationEvent>> getLocationListeners() {
-		return locationListeners;
-	}
+    public List<EventListener<LocationEvent>> getLocationListeners() {
+        return locationListeners;
+    }
 }

@@ -51,7 +51,7 @@ public abstract class GameApplication extends Application {
             if (name.equals("FULL_SCREEN")) {
                 try {
                     Display.setFullscreen(!settings.isFullscreen());
-                } catch (LWJGLException e) {
+                } catch (final LWJGLException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -134,7 +134,7 @@ public abstract class GameApplication extends Application {
     }
 
     public void registerCameraControls() {
-        String[] mappings = new String[] { "FLYCAM_Left", "FLYCAM_Right",
+        final String[] mappings = new String[] { "FLYCAM_Left", "FLYCAM_Right",
                 "FLYCAM_Up", "FLYCAM_Down",
 
                 "FLYCAM_StrafeLeft", "FLYCAM_StrafeRight", "FLYCAM_Forward",

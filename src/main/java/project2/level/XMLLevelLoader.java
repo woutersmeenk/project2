@@ -48,9 +48,10 @@ public class XMLLevelLoader implements LevelLoader {
     private Vector3f currentOffset;
 
     @Override
-    public List<Level> loadLevelSet(URL url, GameStateManager gameStateManager) {
+    public List<Level> loadLevelSet(final URL url,
+            final GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
-        List<Level> levelSet = new ArrayList<Level>();
+        final List<Level> levelSet = new ArrayList<Level>();
 
         try {
             final Node node = XMLUtils.load(url);
