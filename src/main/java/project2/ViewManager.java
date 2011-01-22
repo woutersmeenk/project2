@@ -214,20 +214,6 @@ public class ViewManager implements EventListener<LocationEvent> {
             }
 
         }
-
-        /*
-         * for (int i = 0; i < gameStateManager.getHistory().size(); i++) {
-         * final List<Integer> switchStates = gameStateManager.getHistory()
-         * .get(i).getSwitchStates();
-         * 
-         * for (int j = 0; j < switchStates.size(); j++) { for (final Cube cube
-         * : switches.get(j).getStates() .get(switchStates.get(j))) { final
-         * ColorRGBA color = new ColorRGBA(0.2f, 0, 0.8f, (i + 1) / (float)
-         * gameStateManager.getHistory() .size() * 0.40f); final Geometry geom =
-         * addTransparentCube(cube.getId(), cube.getLocation(), 1, color);
-         * 
-         * historyGeometry.add(geom); } } }
-         */
     }
 
     @Override
