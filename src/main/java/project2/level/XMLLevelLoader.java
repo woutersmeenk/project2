@@ -145,6 +145,7 @@ public class XMLLevelLoader implements LevelLoader {
         if (node == null) {
             return null;
         }
+
         final List<List<Cube>> states = new ArrayList<List<Cube>>();
         for (final Node stateNode : XMLUtils.findNodes("state", node)) {
             final List<Cube> state = new ArrayList<Cube>();
@@ -154,9 +155,8 @@ public class XMLLevelLoader implements LevelLoader {
             states.add(state);
         }
 
-        // TODO: add loop property
         final SwitchCube result = new SwitchCube(gameStateManager, states,
-                false);
+                XMLUtils.parseBoolean("@loop", node, false));
 
         if (switches != null) {
             switches.add(result);
