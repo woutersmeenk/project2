@@ -72,8 +72,13 @@ public class ViewManager implements EventListener<LocationEvent> {
 
     public Geometry addCube(final long id, final Vector3f pos, final int size,
             final ColorRGBA color) {
-        final Box box = new Box(new Vector3f(), 0.5f * size, 0.5f * size,
-                0.5f * size);
+        return addCube(id, pos, new Vector3f(size, size, size), color);
+    }
+
+    public Geometry addCube(final long id, final Vector3f pos,
+            final Vector3f outline, final ColorRGBA color) {
+        final Box box = new Box(outline.x * 0.5f, outline.y * 0.5f,
+                outline.z * 0.5f);
         final Geometry geom = new Geometry("Cube_" + id, box);
         geom.setLocalTranslation(pos);
         final Material mat = new Material(assetManager,
@@ -115,6 +120,24 @@ public class ViewManager implements EventListener<LocationEvent> {
         return geom;
     }
 
+    public void drawSwitchPath(List<List<Cube>> states) {
+        for (int i = 0; i < states.size() - 1; i++) {
+            for (int j = 0; j < states.get(i).size(); j++) {
+                LOG.info(states.size());
+                final Vector3f dir = states.get(i + 1).get(j).getLocation()
+                        .subtract(states.get(i).get(j).getLocation());
+                final Vector3f center = states.get(i).get(j).getLocation()
+                        .add(dir.mult(0.5f));
+                final Vector3f up = new Vector3f(0, 0, 1);
+                // Cross product with up vector
+                final Vector3f perp = dir.cross(up).normalize();
+
+                addCube(0, center, dir.add(perp.mult(0.02f))
+                        .add(up.mult(0.02f)), ColorRGBA.Red);
+            }
+        }
+    }
+
     public void createViewFromGameState(final GameStateManager gameStateManager) {
         /* Add player. */
         final Cube player = gameStateManager.getPlayer();
@@ -146,6 +169,11 @@ public class ViewManager implements EventListener<LocationEvent> {
             /* Add end indicator */
             addTransparentCube(IdFactory.generateID(), level.getEnd(), 1,
                     new ColorRGBA(1, 0, 1, 0.15f));
+
+            /* Draw switch paths */
+            for (SwitchCube switchCube : level.getSwitches()) {
+                drawSwitchPath(switchCube.getStates());
+            }
         }
     }
 
