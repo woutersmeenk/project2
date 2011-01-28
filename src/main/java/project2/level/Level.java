@@ -151,4 +151,10 @@ public class Level {
     public List<EventListener<LocationEvent>> getLocationListeners() {
         return locationListeners;
     }
+
+    public Vector3f roundToGridPoint(Vector3f position) {
+        // FIXME: assumes grid size is 1
+        return new Vector3f(Math.round(position.x), Math.round(position.y),
+                Math.round(position.z));
+    }
 }

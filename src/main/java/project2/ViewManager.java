@@ -140,9 +140,9 @@ public class ViewManager implements EventListener<LocationEvent> {
 
     public void createViewFromGameState(final GameStateManager gameStateManager) {
         /* Add player. */
-        final Cube player = gameStateManager.getPlayer();
-        addCube(player.getId(), player.getLocation(), player.getSize(),
-                ColorRGBA.Yellow);
+        final Player player = gameStateManager.getPlayer();
+        addCube(player.getModel().getId(), player.getWorldLocation(), player
+                .getModel().getSize(), ColorRGBA.Yellow);
 
         for (final Level level : gameStateManager.getLevelSet()) {
             // add cubes to scene graph

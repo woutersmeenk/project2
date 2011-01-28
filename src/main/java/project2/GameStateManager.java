@@ -46,7 +46,7 @@ public class GameStateManager {
     /** Level list. */
     private List<Level> levelSet;
     /** Player. */
-    private Cube player;
+    private Player player;
     private ViewManager viewManager;
 
     public GameStateManager() {
@@ -65,12 +65,28 @@ public class GameStateManager {
         return levelSet;
     }
 
-    public Cube getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 
+    public void update() {
+        /* Get the location below the player. */
+        final Cube below = level.getCubes().get(
+                level.roundToGridPoint(player.getWorldLocation()).add(
+                        new Vector3f(0, 0, -1)));
+
+        /* Fall! */
+        if (below == null) {
+            player.setWorldLocation(player.getWorldLocation()
+                    .add(0, 0, -0.005f));
+            viewManager.onEvent(new LocationEvent(player.getModel().getId(),
+                    player.getWorldLocation()));
+        }
+    }
+
     public void movePlayer(final Vector3f displacement) {
-        final Vector3f newPos = player.getLocation().add(displacement);
+        final Vector3f newPos = player.getModel().getLocation()
+                .add(displacement);
 
         final Checkpoint checkpoint = level.getCheckpoints().get(newPos);
 
@@ -82,25 +98,29 @@ public class GameStateManager {
         }
 
         // check if done
-        if (level.getEnd().equals(newPos) && level.getEndSwitch() != null
-                && level.allCheckpointsVisited()) {
+        if (level.getEnd().equals(newPos) && level.allCheckpointsVisited()) {
             LOG.info("Level finished!");
 
-            level.getEndSwitch().doSwitch(1, false); // switch up
+            if (level.getEndSwitch() != null) {
+                level.getEndSwitch().doSwitch(1, false); // switch up
 
-            if (levelIndex + 1 < levelSet.size()) {
-                levelIndex++;
-                final Level newLevel = levelSet.get(levelIndex);
-                newLevel.merge(level); // merge so you can go back
-                level = newLevel;
+                if (levelIndex + 1 < levelSet.size()) {
+                    levelIndex++;
+                    final Level newLevel = levelSet.get(levelIndex);
+                    newLevel.merge(level); // merge so you can go back
+                    level = newLevel;
+                }
+
+                currentState = new GameState(level);
+                history.clear();
             }
-
-            currentState = new GameState(level);
-            history.clear();
         }
 
-        player.setLocation(newPos);
-        viewManager.onEvent(new LocationEvent(player.getId(), newPos));
+        player.getModel().setLocation(newPos);
+        player.setWorldLocation(newPos); // set the world location too!
+        viewManager
+                .onEvent(new LocationEvent(player.getModel().getId(), newPos));
+
     }
 
     public void buildInitialGameState(final String levelFile) {
@@ -117,8 +137,8 @@ public class GameStateManager {
         levelIndex = 0;
         level = levelSet.get(levelIndex);
 
-        player = CubeFactory.getInstance().createCube(level.getStart(), 1,
-                false);
+        player = new Player(CubeFactory.getInstance().createCube(
+                level.getStart(), 1, false));
 
         // generate a gamestate from the level
         currentState = new GameState(level);

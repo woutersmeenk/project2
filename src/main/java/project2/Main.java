@@ -66,6 +66,7 @@ public class Main extends GameApplication implements ActionListener {
 
     @Override
     public void update() {
+        gameStateManager.update();
         super.update();
     }
 
@@ -124,7 +125,8 @@ public class Main extends GameApplication implements ActionListener {
         if (isPressed) {
             return;
         }
-        final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
+        final Vector3f playerPos = gameStateManager.getPlayer().getModel()
+                .getLocation();
         final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
                 .getCubes();
         // check if there is a switch below the player
@@ -139,7 +141,8 @@ public class Main extends GameApplication implements ActionListener {
         if (isPressed) {
             return;
         }
-        final Vector3f playerPos = gameStateManager.getPlayer().getLocation();
+        final Vector3f playerPos = gameStateManager.getPlayer().getModel()
+                .getLocation();
         final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
                 .getCubes();
         final Cube beside = levelMap.get(playerPos.add(direction));
