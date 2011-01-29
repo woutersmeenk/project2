@@ -108,7 +108,6 @@ public class XMLLevelLoader implements LevelLoader {
         final SwitchCube endSwitch = parseSwitchCube(switchNode, null);
 
         // Add clones for the end switch boxes
-
         if (endSwitch != null) {
             for (final Cube cube : endSwitch.getCurrentState()) {
                 cubes.put(cube.getLocation(), CubeFactory.getInstance()
@@ -116,7 +115,11 @@ public class XMLLevelLoader implements LevelLoader {
             }
         }
 
-        return new Level(cubes, switches, start, end, endSwitch, checkpoints);
+        final float maxFall = (float) XMLUtils.parseNumber("@maxfall", node)
+                + currentOffset.getZ();
+
+        return new Level(cubes, switches, start, end, endSwitch, maxFall,
+                checkpoints);
     }
 
     private Vector3f parseVector3f(final Node node) throws XMLException {

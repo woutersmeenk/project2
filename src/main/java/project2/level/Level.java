@@ -45,16 +45,18 @@ public class Level {
     private final SwitchCube endSwitch;
     private final Map<Vector3f, Checkpoint> checkpoints;
     private final List<EventListener<LocationEvent>> locationListeners;
+    private float maxFall;
 
     public Level(final Map<Vector3f, Cube> cubes,
             final List<SwitchCube> switches, final Vector3f start,
             final Vector3f end, final SwitchCube endSwitch,
-            final Map<Vector3f, Checkpoint> checkpoints) {
+            final float maxFall, final Map<Vector3f, Checkpoint> checkpoints) {
         this.cubes = cubes;
         this.switches = switches;
         this.start = start;
         this.end = end;
         this.endSwitch = endSwitch;
+        this.maxFall = maxFall;
         this.checkpoints = checkpoints;
 
         locationListeners = new ArrayList<EventListener<LocationEvent>>();
@@ -75,6 +77,7 @@ public class Level {
     public void merge(final Level level) {
         cubes.putAll(level.getCubes());
         switches.addAll(level.getSwitches());
+        maxFall = Math.min(level.maxFall, maxFall);
 
         // merge listeners. TODO: check if this never gives doubles
         locationListeners.addAll(level.getLocationListeners());
@@ -98,6 +101,10 @@ public class Level {
 
     public SwitchCube getEndSwitch() {
         return endSwitch;
+    }
+
+    public float getMaxFall() {
+        return maxFall;
     }
 
     public Map<Vector3f, Checkpoint> getCheckpoints() {

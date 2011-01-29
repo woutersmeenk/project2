@@ -79,9 +79,25 @@ public class GameStateManager {
         if (below == null) {
             player.setWorldLocation(player.getWorldLocation()
                     .add(0, 0, -0.005f));
+            player.setFalling(true);
             viewManager.onEvent(new LocationEvent(player.getModel().getId(),
                     player.getWorldLocation()));
+
+            /* Does the player fall off the map? */
+            if (player.getWorldLocation().getZ() < getLevel().getMaxFall()) {
+                LOG.info("Player died.");
+                reset();
+            }
         }
+    }
+
+    /**
+     * Resets the gamestate to the start.
+     */
+    // FIXME: this will also revert changes in completed levels
+    public void reset() {
+        revertTo(0);
+        movePlayer(level.getStart().subtract(player.getModel().getLocation()));
     }
 
     public void movePlayer(final Vector3f displacement) {
@@ -118,6 +134,7 @@ public class GameStateManager {
 
         player.getModel().setLocation(newPos);
         player.setWorldLocation(newPos); // set the world location too!
+        player.setFalling(false);
         viewManager
                 .onEvent(new LocationEvent(player.getModel().getId(), newPos));
 
@@ -160,13 +177,21 @@ public class GameStateManager {
      * Goes one step back into history.
      */
     public void revert() {
-        if (history.size() == 0) {
+        if (history.size() > 0) {
+            revertTo(history.size() - 1);
+        }
+    }
+
+    public void revertTo(int index) {
+        if (index < 0 || index >= history.size()) {
+            LOG.info(index + " is within history bounds of 0 - "
+                    + history.size());
             return;
         }
 
         LOG.info("Going back in time...");
 
-        final GameState old = history.get(history.size() - 1);
+        final GameState old = history.get(index);
         currentState = old;
 
         for (int i = 0; i < old.getSwitchStates().size(); i++) {
@@ -174,7 +199,9 @@ public class GameStateManager {
                     .doSwitch(old.getSwitchStates().get(i), false);
         }
 
-        history.remove(history.size() - 1); // remove it
+        for (int i = history.size() - 1; i >= index; i--) {
+            history.remove(i);
+        }
 
         viewManager.showHistory(this);
     }

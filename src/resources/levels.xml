@@ -1,5 +1,5 @@
 <levels>
-    <level x="0" y="0" z="0">
+    <level x="0" y="0" z="0" maxfall="-5">
         <cubes>
             <cube x="1" y="-1" z="0" />
             <cube x="0" y="1" z="0" />
@@ -35,47 +35,46 @@
     </level>
 
 <!-- level 2 -->
-    <level x="3" y="-2" z="0">
-        <cubes>
-            <cube x="2" y="2" z="0" />
-            <cube x="3" y="2" z="0" />
-            <cube x="3" y="0" z="0" />
-            <cube x="4" y="0" z="0" />
-            <cube x="5" y="1" z="0" >
-                <switch loop="true">
-                    <state>
-                        <cube x="5" y="2" z="0" />
-                    </state>
-                    <state>
-                        <cube x="5" y="3" z="0" />
-                    </state>
-                </switch>
-            </cube>
-            <cube x="5" y="4" z="0" />
-            <cube x="6" y="2" z="0" />
-            <cube x="6" y="3" z="0" />
-            <cube x="0" y="1" z="0" />
-            <cube x="1" y="1" z="0" />
-            <cube x="1" y="1" z="0">
-                <switch loop="true">
-                    <state>
-                        <cube x="2" y="1" z="0" />
-                    </state>
-                    <state>
-                        <cube x="3" y="1" z="0" />
-                    </state>
-                    <state>
-                        <cube x="4" y="1" z="0" />
-                    </state>
-                </switch>
-            </cube>
-        </cubes>
-        <checkpoints>
-            <checkpoint x="5" y="1" z="1" />
-            <checkpoint x="5" y="4" z="1" />
-        </checkpoints>
-        <start x="1" y="1" z="1" />
-        <end   x="1" y="1" z="1" >
-        </end>
+    <level x="3" y="-2" z="0" maxfall="-5">
+    	<cubes>
+    		<cube x="2" y="2" z="0" />
+    		<cube x="3" y="2" z="0" />
+    		<cube x="3" y="0" z="0" />
+    		<cube x="4" y="0" z="0" />
+    		<cube x="5" y="1" z="0">
+    			<switch loop="true">
+    				<state>
+    					<cube x="5" y="2" z="0" />
+    				</state>
+    				<state>
+    					<cube x="5" y="3" z="0" />
+    				</state>
+    			</switch>
+    		</cube>
+    		<cube x="5" y="4" z="0" />
+    		<cube x="6" y="2" z="0" />
+    		<cube x="6" y="3" z="0" />
+    		<cube x="0" y="1" z="0" />
+    		<cube x="1" y="1" z="0" />
+    		<cube x="1" y="1" z="0">
+    			<switch loop="true">
+    				<state>
+    					<cube x="2" y="1" z="0" />
+    				</state>
+    				<state>
+    					<cube x="3" y="1" z="0" />
+    				</state>
+    				<state>
+    					<cube x="4" y="1" z="0" />
+    				</state>
+    			</switch>
+    		</cube>
+    	</cubes>
+    	<checkpoints>
+    		<checkpoint x="5" y="1" z="1" />
+    		<checkpoint x="5" y="4" z="1" />
+    	</checkpoints>
+    	<start x="1" y="1" z="1" />
+    	<end x="1" y="1" z="1"></end>
     </level>
 </levels>
