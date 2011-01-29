@@ -138,6 +138,11 @@ public class ViewManager implements EventListener<LocationEvent> {
         }
     }
 
+    public void addCheckpoint(Checkpoint checkpoint) {
+        addTransparentCube(checkpoint.getId(), checkpoint.getLocation(), 1,
+                new ColorRGBA(0, 1, 0, 0.15f));
+    }
+
     public void createViewFromGameState(final GameStateManager gameStateManager) {
         /* Add player. */
         final Player player = gameStateManager.getPlayer();
@@ -162,8 +167,7 @@ public class ViewManager implements EventListener<LocationEvent> {
 
             /* Add checkpoints */
             for (final Checkpoint cp : level.getCheckpoints().values()) {
-                addTransparentCube(cp.getId(), cp.getLocation(), 1,
-                        new ColorRGBA(0, 1, 0, 0.15f));
+                addCheckpoint(cp);
             }
 
             /* Add end indicator */

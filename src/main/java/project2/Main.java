@@ -116,6 +116,9 @@ public class Main extends GameApplication implements ActionListener {
         case ACTION:
             processSwitch(isPressed);
             break;
+        case RESET:
+            gameStateManager.reset();
+            break;
         default:
             break;
         }

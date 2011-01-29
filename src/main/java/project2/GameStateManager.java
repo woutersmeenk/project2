@@ -96,7 +96,17 @@ public class GameStateManager {
      */
     // FIXME: this will also revert changes in completed levels
     public void reset() {
-        revertTo(0);
+        if (history.size() > 0) {
+            revertTo(0);
+        }
+
+        for (Checkpoint cp : level.getCheckpoints().values()) {
+            if (cp.isVisited()) {
+                viewManager.addCheckpoint(cp);
+                cp.setVisited(false);
+            }
+        }
+
         movePlayer(level.getStart().subtract(player.getModel().getLocation()));
     }
 
@@ -184,8 +194,8 @@ public class GameStateManager {
 
     public void revertTo(int index) {
         if (index < 0 || index >= history.size()) {
-            LOG.info(index + " is within history bounds of 0 - "
-                    + history.size());
+            LOG.info("Error: " + index + " is not within history bounds (0/"
+                    + history.size() + ")");
             return;
         }
 
