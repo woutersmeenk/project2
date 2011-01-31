@@ -116,7 +116,7 @@ public class GameStateManager {
 
         final Checkpoint checkpoint = level.getCheckpoints().get(newPos);
 
-        if (checkpoint != null) {
+        if (checkpoint != null && !checkpoint.isVisited()) {
             checkpoint.setVisited(true);
             viewManager.deleteById(checkpoint.getId());
 
@@ -130,7 +130,7 @@ public class GameStateManager {
             if (level.getEndSwitch() != null) {
                 level.getEndSwitch().doSwitch(1, false); // switch up
             }
-            
+
             if (levelIndex + 1 < levelSet.size()) {
                 levelIndex++;
                 final Level newLevel = levelSet.get(levelIndex);
