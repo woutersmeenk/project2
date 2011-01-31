@@ -129,17 +129,17 @@ public class GameStateManager {
 
             if (level.getEndSwitch() != null) {
                 level.getEndSwitch().doSwitch(1, false); // switch up
-
-                if (levelIndex + 1 < levelSet.size()) {
-                    levelIndex++;
-                    final Level newLevel = levelSet.get(levelIndex);
-                    newLevel.merge(level); // merge so you can go back
-                    level = newLevel;
-                }
-
-                currentState = new GameState(level);
-                history.clear();
             }
+            
+            if (levelIndex + 1 < levelSet.size()) {
+                levelIndex++;
+                final Level newLevel = levelSet.get(levelIndex);
+                newLevel.merge(level); // merge so you can go back
+                level = newLevel;
+            }
+
+            currentState = new GameState(level);
+            history.clear();
         }
 
         player.getModel().setLocation(newPos);

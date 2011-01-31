@@ -159,6 +159,10 @@ public class ViewManager implements EventListener<LocationEvent> {
                 } else {
                     if (cube.isSubjectToSwitching()) {
                         color = new ColorRGBA(0.2f, 0, 0.8f, 1);
+                    } else {
+                        if (cube.isTeleporter()) {
+                            color = new ColorRGBA(0.2f, 0.5f, 0.2f, 1);
+                        }
                     }
                 }
 

@@ -114,7 +114,7 @@ public class Main extends GameApplication implements ActionListener {
             gameStateManager.revert();
             break;
         case ACTION:
-            processSwitch(isPressed);
+            processAction(isPressed);
             break;
         case RESET:
             gameStateManager.reset();
@@ -124,7 +124,7 @@ public class Main extends GameApplication implements ActionListener {
         }
     }
 
-    private void processSwitch(final boolean isPressed) {
+    private void processAction(final boolean isPressed) {
         if (isPressed) {
             return;
         }
@@ -132,10 +132,19 @@ public class Main extends GameApplication implements ActionListener {
                 .getLocation();
         final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
                 .getCubes();
-        // check if there is a switch below the player
+
+        // check if there is a switch or teleporter below the player
         final Cube below = levelMap.get(playerPos.add(0, 0, -1));
-        if (below != null && below.getSwitchCube() != null) {
-            below.getSwitchCube().doSwitch();
+
+        if (below != null) {
+            if (below.getSwitchCube() != null) {
+                below.getSwitchCube().doSwitch();
+            } else {
+                if (below.isTeleporter()) {
+                    gameStateManager.movePlayer(below.getTeleportDestination()
+                            .subtract(playerPos));
+                }
+            }
         }
     }
 

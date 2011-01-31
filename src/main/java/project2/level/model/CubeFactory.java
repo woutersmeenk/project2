@@ -44,13 +44,14 @@ public final class CubeFactory {
 
     public Cube createCube(final Vector3f location, final int size,
             final boolean subjectToSwitching) {
-        return createCube(location, size, null, subjectToSwitching);
+        return createCube(location, size, null, null, subjectToSwitching);
     }
 
     public Cube createCube(final Vector3f location, final int size,
-            final SwitchCube switchCube, final boolean subjectToSwitching) {
+            final SwitchCube switchCube, final Vector3f teleportDestination,
+            final boolean subjectToSwitching) {
         return new Cube(IdFactory.generateID(), location, size, switchCube,
-                subjectToSwitching);
+                teleportDestination, subjectToSwitching);
 
     }
 }

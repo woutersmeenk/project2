@@ -104,8 +104,7 @@ public class XMLLevelLoader implements LevelLoader {
         // End
         final Node endNode = XMLUtils.findNode("end", node);
         final Vector3f end = parseVector3f(endNode);
-        final Node switchNode = XMLUtils.findNode("switch", endNode);
-        final SwitchCube endSwitch = parseSwitchCube(switchNode, null);
+        final SwitchCube endSwitch = parseSwitchCube(endNode, null);
 
         // Add clones for the end switch boxes
         if (endSwitch != null) {
@@ -137,20 +136,33 @@ public class XMLLevelLoader implements LevelLoader {
         }
         final Vector3f location = parseVector3f(node);
         final int size = (int) XMLUtils.parseNumber("@size", node, 1);
-        final Node switchNode = XMLUtils.findNode("switch", node);
-        final SwitchCube switchCube = parseSwitchCube(switchNode, switches);
+
+        final SwitchCube switchCube = parseSwitchCube(node, switches);
+        final Vector3f teleporter = parseTeleporter(node);
         return CubeFactory.getInstance().createCube(location, size, switchCube,
-                false);
+                teleporter, false);
+    }
+
+    private Vector3f parseTeleporter(final Node node) throws XMLException {
+        final Node teleportNode = XMLUtils.findNode("teleport", node);
+
+        if (teleportNode == null) {
+            return null;
+        }
+
+        return parseVector3f(teleportNode);
     }
 
     private SwitchCube parseSwitchCube(final Node node,
             final List<SwitchCube> switches) throws XMLException {
-        if (node == null) {
+        final Node switchNode = XMLUtils.findNode("switch", node);
+
+        if (switchNode == null) {
             return null;
         }
 
         final List<List<Cube>> states = new ArrayList<List<Cube>>();
-        for (final Node stateNode : XMLUtils.findNodes("state", node)) {
+        for (final Node stateNode : XMLUtils.findNodes("state", switchNode)) {
             final List<Cube> state = new ArrayList<Cube>();
             for (final Node cubeNode : XMLUtils.findNodes("cube", stateNode)) {
                 state.add(parseCube(cubeNode, switches));
@@ -159,7 +171,7 @@ public class XMLLevelLoader implements LevelLoader {
         }
 
         final SwitchCube result = new SwitchCube(gameStateManager, states,
-                XMLUtils.parseBoolean("@loop", node, false));
+                XMLUtils.parseBoolean("@loop", switchNode, false));
 
         if (switches != null) {
             switches.add(result);
