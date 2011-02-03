@@ -124,10 +124,12 @@ public class Main extends GameApplication implements ActionListener {
             gameStateManager.reset();
             break;
         case CHANGE_CAM:
-            if (isFlyByCam()) {
-                setChaseCamera(viewManager.getPlayerGeometry());
-            } else {
-                setFlyByCamera();
+            if (!isPressed) {
+                if (isFlyByCam()) {
+                    setChaseCamera(viewManager.getPlayerGeometry());
+                } else {
+                    setFlyByCamera();
+                }
             }
             break;
         default:

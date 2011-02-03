@@ -25,22 +25,38 @@ import com.jme3.scene.control.Control;
 
 public class ThirdPersonCamera implements ActionListener, AnalogListener,
         Control {
+    private boolean enabled;
     private final Camera cam;
     private Spatial target;
     private final Vector3f initialUpVec;
 
+    private final float rotationZSpeed = 10.0f;
+    private final float rotationXYSpeed = 10.0f;
     private float rotationZ;
     private float rotationXY;
     private float distance;
 
-    // private final float rotationSpeed;
+    private final String[] inputs = { "toggleRotate", "Down", "Up",
+            "mouseLeft", "mouseRight", "ZoomIn", "ZoomOut" };
 
     public ThirdPersonCamera(final Camera cam, Spatial target,
             InputManager inputManager) {
         this.cam = cam;
         this.target = target;
         initialUpVec = new Vector3f(0, 0, 1);
-        distance = 10.0f;
+        enabled = true;
+
+        /* Start from the current position. */
+        distance = cam.getLocation().distance(target.getWorldTranslation());
+
+        /*
+         * Vector3f dir2D = new Vector3f(cam.getLocation().x -
+         * target.getWorldTranslation().x, cam.getLocation().y -
+         * target.getWorldTranslation().y, 0);
+         * 
+         * rotationZ = FastMath.acos(dir2D.normalize().dot(new Vector3f(0, -1,
+         * 0)));
+         */
 
         target.addControl(this);
         registerWithInput(inputManager);
@@ -52,8 +68,6 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
      * @param inputManager
      */
     public void registerWithInput(InputManager inputManager) {
-        String[] inputs = { "toggleRotate", "Down", "Up", "mouseLeft",
-                "mouseRight", "ZoomIn", "ZoomOut" };
 
         inputManager.addMapping("Down", new MouseAxisTrigger(1, true));
         inputManager.addMapping("Up", new MouseAxisTrigger(1, false));
@@ -69,16 +83,26 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
         inputManager.addListener(this, inputs);
     }
 
+    public void unregisterWithInput(InputManager inputManager) {
+        inputManager.removeListener(this);
+
+        for (String input : inputs) {
+            inputManager.deleteMapping(input);
+        }
+
+        target.removeControl(this);
+    }
+
     @Override
     public void onAction(String name, boolean isPressed, float tpf) {
     }
 
     private void rotateCamera(float value) {
-        rotationZ += value * 10.0f;
+        rotationZ += value * rotationZSpeed;
     }
 
     private void vRotateCamera(float value) {
-        rotationXY += value * 10.0f;
+        rotationXY += value * rotationXYSpeed;
 
         if (rotationXY > FastMath.HALF_PI) {
             rotationXY = FastMath.HALF_PI - 0.001f;
@@ -131,18 +155,27 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
 
     @Override
     public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enabled;
+    }
+
+    public Spatial getTarget() {
+        return target;
     }
 
     @Override
     public void update(float tpf) {
+        if (!enabled) {
+            return;
+        }
+
         Quaternion b = new Quaternion().fromAngleAxis(rotationZ, new Vector3f(
                 0, 0, 1));
-        Vector3f afterZ = b.mult(new Vector3f(0, 1, 0).multLocal(distance));
+        Vector3f afterZ = b.mult(new Vector3f(0, -1, 0).multLocal(distance));
 
         final Vector3f left = afterZ.cross(initialUpVec);
 

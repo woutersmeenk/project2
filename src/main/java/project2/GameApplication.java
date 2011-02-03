@@ -48,6 +48,12 @@ public abstract class GameApplication extends Application {
     protected boolean showSettings = false;
     private boolean isFlyByCam = true;
 
+    private final String[] mappings = new String[] { "FLYCAM_Left",
+            "FLYCAM_Right", "FLYCAM_Up", "FLYCAM_Down", "FLYCAM_StrafeLeft",
+            "FLYCAM_StrafeRight", "FLYCAM_Forward", "FLYCAM_Backward",
+            "FLYCAM_ZoomIn", "FLYCAM_ZoomOut", "FLYCAM_RotateDrag",
+            "FLYCAM_Rise", "FLYCAM_Lower" };
+
     private final AppActionListener actionListener = new AppActionListener();
 
     private class AppActionListener implements ActionListener {
@@ -96,6 +102,10 @@ public abstract class GameApplication extends Application {
         if (settings == null) {
             setSettings(new AppSettings(true));
         }
+        
+        /* Set some settings. */
+        settings.setResolution(800, 600);
+        settings.setTitle("project2");
 
         // show settings dialog
         if (showSettings) {
@@ -108,28 +118,27 @@ public abstract class GameApplication extends Application {
     }
 
     public void setChaseCamera(final Spatial target) {
+        if (flyCam != null) {
+            unregisterCameraControls(flyCam);
+        }
 
-        this.cam.setAxes(new Vector3f(-1, 0, 0), new Vector3f(0, 0, 1),
+        /* Set up vector. */
+        cam.setAxes(new Vector3f(-1, 0, 0), new Vector3f(0, 0, 1),
                 new Vector3f(0, 1, 0));
-        // cam.update();
-        LOG.info(cam.getUp());
 
-        // ChaseCamera chaseCamera = new ChaseCamera(cam, target, inputManager);
-        // chaseCamera.setDragToRotate(false);
-
-       // inputManager.deleteMapping(mappingName)
         tpCamera = new ThirdPersonCamera(cam, target, inputManager);
         isFlyByCam = false;
     }
 
     public void setFlyByCamera() {
+        if (tpCamera != null) {
+            tpCamera.unregisterWithInput(inputManager);
+        }
+
         flyCam = new FlyByCamera(cam);
+        flyCam.setUpVector(new Vector3f(0, 0, 1));
         flyCam.setMoveSpeed(5f);
         registerCameraControls(flyCam);
-
-        if (tpCamera != null) {
-            inputManager.removeListener(tpCamera);
-        }
 
         isFlyByCam = true;
     }
@@ -178,19 +187,18 @@ public abstract class GameApplication extends Application {
         guiNode.attachChild(statsView);
     }
 
+    public void unregisterCameraControls(InputListener listener) {
+        inputManager.removeListener(listener);
+
+        for (String map : mappings) {
+            inputManager.deleteMapping(map);
+        }
+    }
+
     public void registerCameraControls(InputListener listener) {
-        final String[] mappings = new String[] { "FLYCAM_Left", "FLYCAM_Right",
-                "FLYCAM_Up", "FLYCAM_Down", "FLYCAM_StrafeLeft",
-                "FLYCAM_StrafeRight", "FLYCAM_Forward", "FLYCAM_Backward",
-                "FLYCAM_ZoomIn", "FLYCAM_ZoomOut", "FLYCAM_RotateDrag",
-                "FLYCAM_Rise", "FLYCAM_Lower" };
-
         inputManager.addMapping("FLYCAM_Left", new MouseAxisTrigger(0, true));
-
         inputManager.addMapping("FLYCAM_Right", new MouseAxisTrigger(0, false));
-
         inputManager.addMapping("FLYCAM_Up", new MouseAxisTrigger(1, false));
-
         inputManager.addMapping("FLYCAM_Down", new MouseAxisTrigger(1, true));
 
         // mouse only - zoom in/out with wheel, and rotate drag
@@ -238,8 +246,6 @@ public abstract class GameApplication extends Application {
             // set full screen switch
             inputManager.addMapping("FULL_SCREEN", new KeyTrigger(
                     KeyInput.KEY_K));
-            // inputManager.addMapping("SIMPLEAPP_CameraPos", new KeyTrigger(
-            // KeyInput.KEY_C));
             inputManager.addMapping("SIMPLEAPP_Memory", new KeyTrigger(
                     KeyInput.KEY_M));
             inputManager.addListener(actionListener, "SIMPLEAPP_Exit",
