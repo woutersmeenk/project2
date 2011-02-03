@@ -159,34 +159,6 @@ public class Main extends GameApplication implements ActionListener {
         }
     }
 
-    /**
-     * Rounds a 2D vector to the main axis.
-     * 
-     * @param vec
-     *            Input vector
-     * @return Rounded vector, i.e. one of the main axis vectors
-     */
-    public Vector3f roundToAxis(Vector3f vec) {
-        final Vector3f dirs[] = { new Vector3f(-1, 0, 0),
-                new Vector3f(0, 1, 0), new Vector3f(1, 0, 0),
-                new Vector3f(0, -1, 0) };
-        final float[] cont = new float[dirs.length];
-
-        for (int i = 0; i < dirs.length; i++) {
-            cont[i] = dirs[i].dot(vec);
-        }
-
-        int max = 0;
-
-        for (int i = 1; i < dirs.length; i++) {
-            if (cont[i] > cont[max]) {
-                max = i;
-            }
-        }
-
-        return dirs[max];
-    }
-
     private void processMoveAction(final int direction, final boolean isPressed) {
         if (isPressed) {
             return;
@@ -200,8 +172,8 @@ public class Main extends GameApplication implements ActionListener {
          * Adjust the direction by taking into account the rotations of the
          * camera.
          */
-        float angle = FastMath
-                .atan2(cam.getDirection().y, cam.getDirection().x);
+        final float angle = FastMath.atan2(cam.getDirection().y,
+                cam.getDirection().x);
 
         int startIndex = 1;
 
@@ -212,7 +184,7 @@ public class Main extends GameApplication implements ActionListener {
         }
 
         startIndex %= 4;
-        Vector3f finalDir = dirs[(startIndex + direction) % 4];
+        final Vector3f finalDir = dirs[(startIndex + direction) % 4];
 
         final Vector3f playerPos = gameStateManager.getPlayer().getModel()
                 .getLocation();

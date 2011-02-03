@@ -31,7 +31,6 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
 
     private float rotationZ;
     private float rotationXY;
-    private float zoom;
     private float distance;
 
     // private final float rotationSpeed;
@@ -41,7 +40,7 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
         this.cam = cam;
         this.target = target;
         initialUpVec = new Vector3f(0, 0, 1);
-        zoom = 1.0f;
+        distance = 10.0f;
 
         target.addControl(this);
         registerWithInput(inputManager);
@@ -68,7 +67,6 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
                 MouseInput.BUTTON_RIGHT));
 
         inputManager.addListener(this, inputs);
-
     }
 
     @Override
@@ -76,15 +74,23 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
     }
 
     private void rotateCamera(float value) {
-        rotationZ = value * 10.0f;
+        rotationZ += value * 10.0f;
     }
 
     private void vRotateCamera(float value) {
-        rotationXY = value * 10.0f;
+        rotationXY += value * 10.0f;
+
+        if (rotationXY > FastMath.HALF_PI) {
+            rotationXY = FastMath.HALF_PI - 0.001f;
+        }
+
+        if (rotationXY < -FastMath.HALF_PI) {
+            rotationXY = -FastMath.HALF_PI + 0.001f;
+        }
     }
 
     private void zoomCamera(float value) {
-        zoom = value;
+        distance += value;
     }
 
     @Override
@@ -100,7 +106,7 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
         } else if (name.equals("ZoomIn")) {
             zoomCamera(value);
         } else if (name.equals("ZoomOut")) {
-            zoomCamera(1.0f / value);
+            zoomCamera(-value);
         }
 
     }
@@ -134,39 +140,18 @@ public class ThirdPersonCamera implements ActionListener, AnalogListener,
 
     @Override
     public void update(float tpf) {
-        Vector3f oldDir = cam.getLocation().subtract(
-                target.getWorldTranslation());
-        
-        oldDir.multLocal(zoom);
-
         Quaternion b = new Quaternion().fromAngleAxis(rotationZ, new Vector3f(
                 0, 0, 1));
-        Vector3f afterZ = b.mult(oldDir);
+        Vector3f afterZ = b.mult(new Vector3f(0, 1, 0).multLocal(distance));
 
         final Vector3f left = afterZ.cross(initialUpVec);
 
         Quaternion a = new Quaternion().fromAngleAxis(rotationXY, left);
-        final Vector3f newDir = a.mult(afterZ)
-                .add(target.getWorldTranslation());
+        final Vector3f newDir = a.mult(afterZ);
 
-        rotationZ = 0;
-        rotationXY = 0;
-        zoom = 1.0f;
-
-        cam.setLocation(newDir);
+        Vector3f pos = newDir.add(target.getWorldTranslation());
+        cam.setLocation(pos);
         cam.lookAt(target.getWorldTranslation(), initialUpVec);
-    }
-
-    public Vector3f projectWithCamera(Vector3f dir) {
-        /* Calculate the deviation of the camera from the original path. */
-        Vector3f dir2d = new Vector3f(cam.getDirection().x,
-                cam.getDirection().y, 0).normalize();
-        Vector3f dev = dir2d.cross(new Vector3f(0, 1, 0));
-        System.out.print(cam.getDirection());
-        final Quaternion rot = new Quaternion().fromAngleAxis(
-                FastMath.asin(dev.length()), dev);
-
-        return rot.mult(dir);
     }
 
     @Override
