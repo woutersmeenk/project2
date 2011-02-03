@@ -1,5 +1,7 @@
 package project2;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 
@@ -7,18 +9,23 @@ import com.jme3.app.Application;
 import com.jme3.app.StatsView;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+import com.jme3.input.ChaseCamera;
 import com.jme3.input.FlyByCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.InputListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext.Type;
@@ -26,6 +33,7 @@ import com.jme3.system.JmeSystem;
 import com.jme3.util.BufferUtils;
 
 public abstract class GameApplication extends Application {
+    private static final Log LOG = LogFactory.getLog(GameApplication.class);
 
     protected Node rootNode = new Node("Root Node");
     protected Node guiNode = new Node("Gui Node");
@@ -36,7 +44,9 @@ public abstract class GameApplication extends Application {
     protected StatsView statsView;
 
     protected FlyByCamera flyCam;
+    protected ThirdPersonCamera tpCamera;
     protected boolean showSettings = false;
+    private boolean isFlyByCam = true;
 
     private final AppActionListener actionListener = new AppActionListener();
 
@@ -97,6 +107,41 @@ public abstract class GameApplication extends Application {
         super.start();
     }
 
+    public void setChaseCamera(final Spatial target) {
+
+        this.cam.setAxes(new Vector3f(-1, 0, 0), new Vector3f(0, 0, 1),
+                new Vector3f(0, 1, 0));
+        // cam.update();
+        LOG.info(cam.getUp());
+
+        // ChaseCamera chaseCamera = new ChaseCamera(cam, target, inputManager);
+        // chaseCamera.setDragToRotate(false);
+
+       // inputManager.deleteMapping(mappingName)
+        tpCamera = new ThirdPersonCamera(cam, target, inputManager);
+        isFlyByCam = false;
+    }
+
+    public void setFlyByCamera() {
+        flyCam = new FlyByCamera(cam);
+        flyCam.setMoveSpeed(5f);
+        registerCameraControls(flyCam);
+
+        if (tpCamera != null) {
+            inputManager.removeListener(tpCamera);
+        }
+
+        isFlyByCam = true;
+    }
+
+    public boolean isFlyByCam() {
+        return isFlyByCam;
+    }
+
+    public ThirdPersonCamera getActiveCamera() {
+        return tpCamera;
+    }
+
     public FlyByCamera getFlyByCamera() {
         return flyCam;
     }
@@ -133,15 +178,11 @@ public abstract class GameApplication extends Application {
         guiNode.attachChild(statsView);
     }
 
-    public void registerCameraControls() {
+    public void registerCameraControls(InputListener listener) {
         final String[] mappings = new String[] { "FLYCAM_Left", "FLYCAM_Right",
-                "FLYCAM_Up", "FLYCAM_Down",
-
-                "FLYCAM_StrafeLeft", "FLYCAM_StrafeRight", "FLYCAM_Forward",
-                "FLYCAM_Backward",
-
+                "FLYCAM_Up", "FLYCAM_Down", "FLYCAM_StrafeLeft",
+                "FLYCAM_StrafeRight", "FLYCAM_Forward", "FLYCAM_Backward",
                 "FLYCAM_ZoomIn", "FLYCAM_ZoomOut", "FLYCAM_RotateDrag",
-
                 "FLYCAM_Rise", "FLYCAM_Lower" };
 
         inputManager.addMapping("FLYCAM_Left", new MouseAxisTrigger(0, true));
@@ -172,8 +213,7 @@ public abstract class GameApplication extends Application {
         inputManager.addMapping("FLYCAM_Rise", new KeyTrigger(KeyInput.KEY_Q));
         inputManager.addMapping("FLYCAM_Lower", new KeyTrigger(KeyInput.KEY_Z));
 
-        inputManager.addListener(flyCam, mappings);
-        inputManager.setCursorVisible(false);
+        inputManager.addListener(listener, mappings);
     }
 
     @Override
@@ -188,9 +228,7 @@ public abstract class GameApplication extends Application {
         guiViewPort.attachScene(guiNode);
 
         if (inputManager != null) {
-            flyCam = new FlyByCamera(cam);
-            flyCam.setMoveSpeed(5f);
-            registerCameraControls();
+            inputManager.setCursorVisible(false);
 
             if (context.getType() == Type.Display) {
                 inputManager.addMapping("SIMPLEAPP_Exit", new KeyTrigger(
@@ -200,8 +238,8 @@ public abstract class GameApplication extends Application {
             // set full screen switch
             inputManager.addMapping("FULL_SCREEN", new KeyTrigger(
                     KeyInput.KEY_K));
-            inputManager.addMapping("SIMPLEAPP_CameraPos", new KeyTrigger(
-                    KeyInput.KEY_C));
+            // inputManager.addMapping("SIMPLEAPP_CameraPos", new KeyTrigger(
+            // KeyInput.KEY_C));
             inputManager.addMapping("SIMPLEAPP_Memory", new KeyTrigger(
                     KeyInput.KEY_M));
             inputManager.addListener(actionListener, "SIMPLEAPP_Exit",

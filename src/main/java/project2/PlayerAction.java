@@ -9,7 +9,8 @@ public enum PlayerAction {
             KeyInput.KEY_LSHIFT)), LEFT(new KeyTrigger(KeyInput.KEY_LEFT)), RIGHT(
             new KeyTrigger(KeyInput.KEY_RIGHT)), UP(new KeyTrigger(
             KeyInput.KEY_UP)), DOWN(new KeyTrigger(KeyInput.KEY_DOWN)), RESET(
-            new KeyTrigger(KeyInput.KEY_R));
+            new KeyTrigger(KeyInput.KEY_R)), CHANGE_CAM(new KeyTrigger(
+            KeyInput.KEY_C));
 
     public final Trigger trigger;
 

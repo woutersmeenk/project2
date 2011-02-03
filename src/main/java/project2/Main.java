@@ -28,8 +28,11 @@ import org.apache.commons.logging.LogFactory;
 import project2.level.model.Cube;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
+import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 
 /**
@@ -77,9 +80,10 @@ public class Main extends GameApplication implements ActionListener {
 
         gameStateManager.buildInitialGameState("levels.xml");
 
-        viewManager.initialize(assetManager);
+        viewManager.initialize(this, assetManager);
         viewManager.createViewFromGameState(gameStateManager);
         gameStateManager.registerViewManager(viewManager);
+        setChaseCamera(viewManager.getPlayerGeometry());
 
         gameStateManager.getLevel().addLocationListener(viewManager);
 
@@ -96,16 +100,16 @@ public class Main extends GameApplication implements ActionListener {
 
         switch (action) {
         case LEFT:
-            processMoveAction(new Vector3f(-1, 0, 0), isPressed);
+            processMoveAction(1, isPressed);
             break;
         case UP:
-            processMoveAction(new Vector3f(0, 1, 0), isPressed);
+            processMoveAction(0, isPressed);
             break;
         case RIGHT:
-            processMoveAction(new Vector3f(1, 0, 0), isPressed);
+            processMoveAction(3, isPressed);
             break;
         case DOWN:
-            processMoveAction(new Vector3f(0, -1, 0), isPressed);
+            processMoveAction(2, isPressed);
             break;
         case REVERT:
             if (isPressed) {
@@ -118,6 +122,13 @@ public class Main extends GameApplication implements ActionListener {
             break;
         case RESET:
             gameStateManager.reset();
+            break;
+        case CHANGE_CAM:
+            if (isFlyByCam()) {
+                setChaseCamera(viewManager.getPlayerGeometry());
+            } else {
+                setFlyByCamera();
+            }
             break;
         default:
             break;
@@ -148,21 +159,71 @@ public class Main extends GameApplication implements ActionListener {
         }
     }
 
-    private void processMoveAction(final Vector3f direction,
-            final boolean isPressed) {
+    /**
+     * Rounds a 2D vector to the main axis.
+     * 
+     * @param vec
+     *            Input vector
+     * @return Rounded vector, i.e. one of the main axis vectors
+     */
+    public Vector3f roundToAxis(Vector3f vec) {
+        final Vector3f dirs[] = { new Vector3f(-1, 0, 0),
+                new Vector3f(0, 1, 0), new Vector3f(1, 0, 0),
+                new Vector3f(0, -1, 0) };
+        final float[] cont = new float[dirs.length];
+
+        for (int i = 0; i < dirs.length; i++) {
+            cont[i] = dirs[i].dot(vec);
+        }
+
+        int max = 0;
+
+        for (int i = 1; i < dirs.length; i++) {
+            if (cont[i] > cont[max]) {
+                max = i;
+            }
+        }
+
+        return dirs[max];
+    }
+
+    private void processMoveAction(final int direction, final boolean isPressed) {
         if (isPressed) {
             return;
         }
+
+        final Vector3f[] dirs = { new Vector3f(0, 1, 0),
+                new Vector3f(-1, 0, 0), new Vector3f(0, -1, 0),
+                new Vector3f(1, 0, 0) };
+
+        /*
+         * Adjust the direction by taking into account the rotations of the
+         * camera.
+         */
+        float angle = FastMath
+                .atan2(cam.getDirection().y, cam.getDirection().x);
+
+        int startIndex = 1;
+
+        for (int i = 0; i < 4; i++) {
+            if (angle > -FastMath.PI + (i * 2 + 1) / 4.0f * FastMath.PI) {
+                startIndex++;
+            }
+        }
+
+        startIndex %= 4;
+        Vector3f finalDir = dirs[(startIndex + direction) % 4];
+
         final Vector3f playerPos = gameStateManager.getPlayer().getModel()
                 .getLocation();
         final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
                 .getCubes();
-        final Cube beside = levelMap.get(playerPos.add(direction));
-        final Cube below = levelMap.get(playerPos.add(direction).add(
+        final Cube beside = levelMap.get(playerPos.add(finalDir));
+        final Cube below = levelMap.get(playerPos.add(finalDir).add(
                 new Vector3f(0, 0, -1)));
 
         if (below != null && beside == null) {
-            gameStateManager.movePlayer(direction);
+            gameStateManager.movePlayer(finalDir);
         }
     }
 }

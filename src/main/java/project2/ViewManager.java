@@ -34,6 +34,7 @@ import project2.util.IdFactory;
 import project2.util.Utils;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.input.controls.AnalogListener;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
@@ -47,20 +48,25 @@ import com.jme3.scene.shape.Box;
 
 public class ViewManager implements EventListener<LocationEvent> {
     private static final Log LOG = LogFactory.getLog(ViewManager.class);
+    private GameApplication gameApplication;
     private AssetManager assetManager;
     private final Node rootNode;
 
     /* The geometry of the historical positions. */
     private final List<Geometry> historyGeometry;
+    private Geometry playerGeometry;
 
     public ViewManager(final Node root) {
         super();
         rootNode = root;
 
+        playerGeometry = null;
         historyGeometry = new ArrayList<Geometry>();
     }
 
-    public void initialize(final AssetManager assetManager) {
+    public void initialize(final GameApplication gameApplication,
+            final AssetManager assetManager) {
+        this.gameApplication = gameApplication;
         this.assetManager = assetManager;
         /* Create a light. */
         final PointLight pl = new PointLight();
@@ -70,8 +76,8 @@ public class ViewManager implements EventListener<LocationEvent> {
         rootNode.addLight(pl);
     }
 
-    public Geometry addCube(final long id, final Vector3f pos, final int size,
-            final ColorRGBA color) {
+    public Geometry addCube(final long id, final Vector3f pos,
+            final float size, final ColorRGBA color) {
         return addCube(id, pos, new Vector3f(size, size, size), color);
     }
 
@@ -123,7 +129,9 @@ public class ViewManager implements EventListener<LocationEvent> {
     public void drawSwitchPath(List<List<Cube>> states) {
         for (int i = 0; i < states.size() - 1; i++) {
             for (int j = 0; j < states.get(i).size(); j++) {
-                LOG.info(states.size());
+
+                addCube(0, states.get(i).get(j).getLocation(), 0.06f,
+                        ColorRGBA.Red);
                 final Vector3f dir = states.get(i + 1).get(j).getLocation()
                         .subtract(states.get(i).get(j).getLocation());
                 final Vector3f center = states.get(i).get(j).getLocation()
@@ -134,6 +142,11 @@ public class ViewManager implements EventListener<LocationEvent> {
 
                 addCube(0, center, dir.add(perp.mult(0.02f))
                         .add(up.mult(0.02f)), ColorRGBA.Red);
+
+                if (i == states.size() - 2) {
+                    addCube(0, states.get(i + 1).get(j).getLocation(), 0.06f,
+                            ColorRGBA.Red);
+                }
             }
         }
     }
@@ -144,10 +157,11 @@ public class ViewManager implements EventListener<LocationEvent> {
     }
 
     public void createViewFromGameState(final GameStateManager gameStateManager) {
-        /* Add player. */
+        /* Add player and register chase camera. */
         final Player player = gameStateManager.getPlayer();
-        addCube(player.getModel().getId(), player.getWorldLocation(), player
-                .getModel().getSize(), ColorRGBA.Yellow);
+        playerGeometry = addCube(player.getModel().getId(),
+                player.getWorldLocation(), player.getModel().getSize(),
+                ColorRGBA.Yellow);
 
         for (final Level level : gameStateManager.getLevelSet()) {
             // add cubes to scene graph
@@ -183,6 +197,10 @@ public class ViewManager implements EventListener<LocationEvent> {
                 drawSwitchPath(switchCube.getStates());
             }
         }
+    }
+    
+    public Geometry getPlayerGeometry() {
+        return playerGeometry;
     }
 
     public Geometry geometryFromId(final long id) {
