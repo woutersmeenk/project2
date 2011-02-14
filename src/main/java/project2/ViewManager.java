@@ -48,25 +48,25 @@ import com.jme3.scene.shape.Box;
 
 public class ViewManager implements EventListener<LocationEvent> {
     private static final Log LOG = LogFactory.getLog(ViewManager.class);
-    private GameApplication gameApplication;
     private AssetManager assetManager;
     private final Node rootNode;
 
     /* The geometry of the historical positions. */
     private final List<Geometry> historyGeometry;
     private Geometry playerGeometry;
+    private Geometry shadowPlayerGeometry;
 
     public ViewManager(final Node root) {
         super();
         rootNode = root;
 
         playerGeometry = null;
+        shadowPlayerGeometry = null;
         historyGeometry = new ArrayList<Geometry>();
     }
 
     public void initialize(final GameApplication gameApplication,
             final AssetManager assetManager) {
-        this.gameApplication = gameApplication;
         this.assetManager = assetManager;
         /* Create a light. */
         final PointLight pl = new PointLight();
@@ -156,6 +156,22 @@ public class ViewManager implements EventListener<LocationEvent> {
                 new ColorRGBA(0, 1, 0, 0.15f));
     }
 
+    public void createOrMoveShadowPlayer(Vector3f pos) {
+        if (shadowPlayerGeometry == null) {
+            shadowPlayerGeometry = addTransparentCube(IdFactory.generateID(),
+                    pos, 1, new ColorRGBA(1, 1, 0, 0.8f));
+        } else {
+            shadowPlayerGeometry.setLocalTranslation(pos);
+        }
+    }
+
+    public void deleteShadowPlayer() {
+        if (shadowPlayerGeometry == null) {
+            rootNode.detachChild(shadowPlayerGeometry);
+            shadowPlayerGeometry = null;
+        }
+    }
+
     public void createViewFromGameState(final GameStateManager gameStateManager) {
         /* Add player and register chase camera. */
         final Player player = gameStateManager.getPlayer();
@@ -198,7 +214,7 @@ public class ViewManager implements EventListener<LocationEvent> {
             }
         }
     }
-    
+
     public Geometry getPlayerGeometry() {
         return playerGeometry;
     }

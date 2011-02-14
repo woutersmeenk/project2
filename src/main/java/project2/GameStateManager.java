@@ -144,6 +144,7 @@ public class GameStateManager {
 
         player.getModel().setLocation(newPos);
         player.setWorldLocation(newPos); // set the world location too!
+        currentState.addPlayerMove(newPos); // add the pos to the state
         player.setFalling(false);
         viewManager
                 .onEvent(new LocationEvent(player.getModel().getId(), newPos));
@@ -187,7 +188,11 @@ public class GameStateManager {
      * Goes one step back into history.
      */
     public void revert() {
-        if (history.size() > 0) {
+        boolean done = currentState.revert();
+
+        viewManager.createOrMoveShadowPlayer(currentState.getOlderPlayerPos());
+
+        if (done && history.size() > 0) {
             revertTo(history.size() - 1);
         }
     }
@@ -202,6 +207,11 @@ public class GameStateManager {
         LOG.info("Going back in time...");
 
         final GameState old = history.get(index);
+
+        // copy the player moves to the old states
+        old.addPlayerMoves(currentState.getPlayerMoves());
+        viewManager.deleteShadowPlayer();
+
         currentState = old;
 
         for (int i = 0; i < old.getSwitchStates().size(); i++) {

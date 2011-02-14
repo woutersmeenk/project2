@@ -28,9 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import project2.level.model.Cube;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
-import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -115,6 +113,7 @@ public class Main extends GameApplication implements ActionListener {
             if (isPressed) {
                 break;
             }
+
             gameStateManager.revert();
             break;
         case ACTION:
