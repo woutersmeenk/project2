@@ -80,7 +80,7 @@ public class GameStateManager {
             player.setWorldLocation(player.getWorldLocation()
                     .add(0, 0, -0.005f));
             player.setFalling(true);
-            viewManager.onEvent(new LocationEvent(player.getModel().getId(),
+            viewManager.onEvent(new LocationEvent(player.getModel().getId(), player.getModel().getName(),
                     player.getWorldLocation()));
 
             /* Does the player fall off the map? */
@@ -145,8 +145,8 @@ public class GameStateManager {
         player.getModel().setLocation(newPos);
         player.setWorldLocation(newPos); // set the world location too!
         player.setFalling(false);
-        viewManager
-                .onEvent(new LocationEvent(player.getModel().getId(), newPos));
+        viewManager.onEvent(new LocationEvent(player.getModel().getId(), player
+                .getModel().getName(), newPos));
 
     }
 

@@ -23,6 +23,7 @@ package project2.level.model;
 import com.jme3.math.Vector3f;
 
 public class Cube {
+    private final String name;
     private Vector3f location;
     private final int size;
     private final SwitchCube switchCube;
@@ -32,13 +33,14 @@ public class Cube {
 
     Cube(final long id, final Vector3f location2, final int size,
             final SwitchCube switchCube, final Vector3f teleportDestination,
-            final boolean subjectToSwitching) {
+            final boolean subjectToSwitching, final String name) {
         location = location2;
         this.id = id;
         this.size = size;
         this.switchCube = switchCube;
         this.teleportDestination = teleportDestination;
         this.subjectToSwitching = subjectToSwitching;
+        this.name = name;
     }
 
     public Vector3f getLocation() {
@@ -75,5 +77,9 @@ public class Cube {
 
     public boolean isSubjectToSwitching() {
         return subjectToSwitching;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -46,6 +46,7 @@ public class Main extends GameApplication implements ActionListener {
 
     private final GameStateManager gameStateManager;
     private final ViewManager viewManager;
+    private final Menu menu;
 
     /**
      * Default Constructor
@@ -53,6 +54,7 @@ public class Main extends GameApplication implements ActionListener {
     public Main() {
         gameStateManager = new GameStateManager();
         viewManager = new ViewManager(rootNode);
+        menu = new Menu(gameStateManager);
     }
 
     /**

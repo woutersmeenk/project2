@@ -146,7 +146,7 @@ public class Level {
         cube.setLocation(newPos);
 
         for (final EventListener<LocationEvent> listener : locationListeners) {
-            listener.onEvent(new LocationEvent(cube.getId(), newPos));
+            listener.onEvent(new LocationEvent(cube.getId(), cube.getName(), newPos));
         }
     }
 

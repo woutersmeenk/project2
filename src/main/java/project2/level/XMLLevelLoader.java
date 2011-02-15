@@ -136,11 +136,12 @@ public class XMLLevelLoader implements LevelLoader {
         }
         final Vector3f location = parseVector3f(node);
         final int size = (int) XMLUtils.parseNumber("@size", node, 1);
+        final String name = XMLUtils.parseString("@name", node);
 
         final SwitchCube switchCube = parseSwitchCube(node, switches);
         final Vector3f teleporter = parseTeleporter(node);
         return CubeFactory.getInstance().createCube(location, size, switchCube,
-                teleporter, false);
+                teleporter, false, name);
     }
 
     private Vector3f parseTeleporter(final Node node) throws XMLException {

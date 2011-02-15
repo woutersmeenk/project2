@@ -24,10 +24,12 @@ import com.jme3.math.Vector3f;
 
 public class LocationEvent {
     private final long id;
+    private final String name;
     private final Vector3f newPos;
 
-    public LocationEvent(final long id, final Vector3f newPos) {
+    public LocationEvent(final long id, final String name, final Vector3f newPos) {
         this.id = id;
+        this.name = name;
         this.newPos = newPos;
     }
 

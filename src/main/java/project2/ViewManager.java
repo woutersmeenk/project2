@@ -34,7 +34,6 @@ import project2.util.IdFactory;
 import project2.util.Utils;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.input.controls.AnalogListener;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
