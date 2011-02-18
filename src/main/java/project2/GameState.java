@@ -58,12 +58,12 @@ public class GameState {
     public void addPlayerMove(Vector3f position) {
         playerMoves.add(position);
 
-        moveIndex = playerMoves.size() - 1;
+        //moveIndex = playerMoves.size() - 1;
     }
 
     public void addPlayerMoves(Collection<Vector3f> position) {
         playerMoves.addAll(position);
-        moveIndex = playerMoves.size() - 1;
+       // moveIndex = playerMoves.size() - 1;
     }
 
     /**

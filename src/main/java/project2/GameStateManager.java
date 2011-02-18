@@ -145,6 +145,7 @@ public class GameStateManager {
         player.getModel().setLocation(newPos);
         player.setWorldLocation(newPos); // set the world location too!
         currentState.addPlayerMove(newPos); // add the pos to the state
+        currentState.resetIndex();
         player.setFalling(false);
         viewManager
                 .onEvent(new LocationEvent(player.getModel().getId(), newPos));
