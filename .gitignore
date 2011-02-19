@@ -3,3 +3,4 @@ bin
 log
 liblwjgl64.so
 libopenal64.so
+build
