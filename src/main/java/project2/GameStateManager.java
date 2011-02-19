@@ -189,13 +189,17 @@ public class GameStateManager {
      * Goes one step back into history.
      */
     public void revert() {
-        boolean done = currentState.revert();
-
-        viewManager.createOrMoveShadowPlayer(currentState.getOlderPlayerPos());
+        final boolean done = currentState.revert();
 
         if (done && history.size() > 0) {
             revertTo(history.size() - 1);
         }
+        
+        if (currentState.hasOlderPlayerPos()) {
+            viewManager.createOrMoveShadowPlayer(currentState
+                    .getOlderPlayerPos());
+        }
+
     }
 
     public void revertTo(int index) {
@@ -210,8 +214,8 @@ public class GameStateManager {
         final GameState old = history.get(index);
 
         // copy the player moves to the old states
+        old.resetIndex();
         old.addPlayerMoves(currentState.getPlayerMoves());
-        viewManager.deleteShadowPlayer();
 
         currentState = old;
 
