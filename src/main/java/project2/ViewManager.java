@@ -34,7 +34,6 @@ import project2.util.IdFactory;
 import project2.util.Utils;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.input.controls.AnalogListener;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
@@ -45,6 +44,9 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.texture.Texture;
+import com.jme3.texture.TextureCubeMap;
+import com.jme3.util.SkyFactory;
 
 public class ViewManager implements EventListener<LocationEvent> {
     private static final Log LOG = LogFactory.getLog(ViewManager.class);
@@ -74,6 +76,14 @@ public class ViewManager implements EventListener<LocationEvent> {
         pl.setColor(ColorRGBA.White);
         pl.setRadius(30f);
         rootNode.addLight(pl);
+        // TODO make our own sky map
+        final Texture skyTexture = assetManager
+                .loadTexture("blue-glow-1024.dds");
+        final TextureCubeMap skyCubeMap = new TextureCubeMap(
+                skyTexture.getImage());
+        final Spatial sky = SkyFactory.createSky(assetManager, skyCubeMap,
+                false);
+        rootNode.attachChild(sky);
     }
 
     public Geometry addCube(final long id, final Vector3f pos,
@@ -198,7 +208,7 @@ public class ViewManager implements EventListener<LocationEvent> {
             }
         }
     }
-    
+
     public Geometry getPlayerGeometry() {
         return playerGeometry;
     }
