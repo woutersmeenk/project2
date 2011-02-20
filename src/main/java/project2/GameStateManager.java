@@ -195,6 +195,7 @@ public class GameStateManager {
             revertTo(history.size() - 1);
         }
         
+        LOG.info(currentState.getMoveIndex());
         if (currentState.hasOlderPlayerPos()) {
             viewManager.createOrMoveShadowPlayer(currentState
                     .getOlderPlayerPos());

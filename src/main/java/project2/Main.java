@@ -150,6 +150,10 @@ public class Main extends GameApplication implements ActionListener {
 
         if (below != null) {
             if (below.getSwitchCube() != null) {
+                gameStateManager.movePlayer(new Vector3f()); // register the
+                                                             // player pos in
+                                                             // the current
+                                                             // gamestate
                 below.getSwitchCube().doSwitch();
             } else {
                 if (below.isTeleporter()) {
