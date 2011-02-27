@@ -9,12 +9,10 @@ import com.jme3.app.Application;
 import com.jme3.app.StatsView;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
-import com.jme3.input.ChaseCamera;
 import com.jme3.input.FlyByCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.InputListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
@@ -22,7 +20,9 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -102,7 +102,7 @@ public abstract class GameApplication extends Application {
         if (settings == null) {
             setSettings(new AppSettings(true));
         }
-        
+
         /* Set some settings. */
         settings.setResolution(800, 600);
         settings.setTitle("project2");
@@ -235,8 +235,41 @@ public abstract class GameApplication extends Application {
         viewPort.attachScene(rootNode);
         guiViewPort.attachScene(guiNode);
 
+        // Setup perspective view
+        cam.setViewPort(0f, .5f, .5f, 1f);
+
+        Camera cam2 = cam.clone();
+        cam2.setViewPort(0f, 0.5f, 0f, 0.5f);
+        cam2.setLocation(new Vector3f(-10, 0, 0));
+        cam2.setAxes(new Vector3f(0, 1, 0), new Vector3f(0, 0, 1),
+                new Vector3f(1, 0, 0));
+
+        ViewPort view2 = renderManager.createMainView("Side view", cam2);
+        view2.setClearEnabled(true);
+        view2.attachScene(rootNode);
+
+        Camera cam3 = cam.clone();
+        cam3.setViewPort(.5f, 1f, 0.f, .5f);
+        cam3.setLocation(new Vector3f(1, -10, 0));
+        cam3.setAxes(new Vector3f(-1, 0, 0), new Vector3f(0, 0, 1),
+                new Vector3f(0, 1, 0));
+
+        ViewPort view3 = renderManager.createMainView("Front view", cam3);
+        view3.setClearEnabled(true);
+        view3.attachScene(rootNode);
+
+        Camera cam4 = cam.clone();
+        cam4.setViewPort(.5f, 1f, .5f, 1f);
+        cam4.setLocation(new Vector3f(0, 0, 10));
+        cam4.setAxes(new Vector3f(-1, 0, 0), new Vector3f(0, 1, 0),
+                new Vector3f(0, 0, -1));
+
+        ViewPort view4 = renderManager.createMainView("Top view", cam4);
+        view4.setClearEnabled(true);
+        view4.attachScene(rootNode);
+
         if (inputManager != null) {
-            inputManager.setCursorVisible(false);
+            // inputManager.setCursorVisible(false);
 
             if (context.getType() == Type.Display) {
                 inputManager.addMapping("SIMPLEAPP_Exit", new KeyTrigger(
