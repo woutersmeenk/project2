@@ -30,19 +30,25 @@ import project2.level.Level;
 import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
+import project2.level.model.Text;
 import project2.util.IdFactory;
 import project2.util.Utils;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
+import com.jme3.font.Rectangle;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.TextureCubeMap;
@@ -51,6 +57,7 @@ import com.jme3.util.SkyFactory;
 public class ViewManager implements EventListener<LocationEvent> {
     private static final Log LOG = LogFactory.getLog(ViewManager.class);
     private GameApplication gameApplication;
+    private BitmapFont font;
     private AssetManager assetManager;
     private final Node rootNode;
 
@@ -61,7 +68,6 @@ public class ViewManager implements EventListener<LocationEvent> {
     public ViewManager(final Node root) {
         super();
         rootNode = root;
-
         playerGeometry = null;
         historyGeometry = new ArrayList<Geometry>();
     }
@@ -70,6 +76,7 @@ public class ViewManager implements EventListener<LocationEvent> {
             final AssetManager assetManager) {
         this.gameApplication = gameApplication;
         this.assetManager = assetManager;
+        font = assetManager.loadFont("Interface/Fonts/Default.fnt");
         /* Create a light. */
         final PointLight pl = new PointLight();
         pl.setPosition(new Vector3f(2, 2, 10));
@@ -161,6 +168,23 @@ public class ViewManager implements EventListener<LocationEvent> {
         }
     }
 
+    public void addText(Vector3f pos, Vector3f rotation, String text) {
+        BitmapText textGeom = new BitmapText(font, false);
+        //textGeom.setBox(new Rectangle(0, 0, 6, 3));
+        float[] rotations = rotation.toArray(null);
+        for (int i = 0; i < 3; i++) {
+            rotations[i] = (float) Math.toRadians(rotations[i]);
+        }
+        final Quaternion dir = new Quaternion(rotations);
+        textGeom.setLocalRotation(dir);
+        textGeom.setLocalTranslation(pos);
+        textGeom.setCullHint(CullHint.Never);
+        textGeom.setQueueBucket(Bucket.Transparent);
+        textGeom.setSize(0.5f);
+        textGeom.setText(text);
+        rootNode.attachChild(textGeom);
+    }
+
     public void addCheckpoint(Checkpoint checkpoint) {
         addTransparentCube(checkpoint.getId(), checkpoint.getLocation(), 1,
                 new ColorRGBA(0, 1, 0, 0.15f));
@@ -205,6 +229,11 @@ public class ViewManager implements EventListener<LocationEvent> {
             /* Draw switch paths */
             for (SwitchCube switchCube : level.getSwitches()) {
                 drawSwitchPath(switchCube.getStates());
+            }
+
+            /* add text */
+            for (Text text : level.getTexts()) {
+                addText(text.getPosition(), text.getRotation(), text.getText());
             }
         }
     }
