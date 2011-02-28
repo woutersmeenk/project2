@@ -23,8 +23,10 @@ package project2.level;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,6 +37,7 @@ import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.CubeFactory;
 import project2.level.model.SwitchCube;
+import project2.level.model.Text;
 import project2.util.IdFactory;
 import project2.util.XMLException;
 import project2.util.XMLUtils;
@@ -117,8 +120,23 @@ public class XMLLevelLoader implements LevelLoader {
         final float maxFall = (float) XMLUtils.parseNumber("@maxfall", node)
                 + currentOffset.getZ();
 
+        Set<Text> texts = new HashSet<Text>();
+        // Parse the text for the level
+        for (final Node textNode : XMLUtils.findNodes("text", node)) {
+            texts.add(parseText(textNode));
+        }
+
         return new Level(cubes, switches, start, end, endSwitch, maxFall,
-                checkpoints);
+                checkpoints,texts);
+    }
+
+    private Text parseText(Node node) throws XMLException {
+        final String text = XMLUtils.parseString("@text", node);
+        final Node positionNode = XMLUtils.findNode("position", node);
+        final Vector3f position = parseVector3f(positionNode);
+        final Node rotationNode = XMLUtils.findNode("rotation", node);
+        final Vector3f rotation = parseVector3f(rotationNode);
+        return new Text(position, rotation, text);
     }
 
     private Vector3f parseVector3f(final Node node) throws XMLException {
