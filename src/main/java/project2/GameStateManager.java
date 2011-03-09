@@ -71,9 +71,10 @@ public class GameStateManager {
 
     public void update() {
         /* Get the location below the player. */
+        Vector3f currentGridPos = level.roundToGridPoint(player
+                .getWorldLocation());
         final Cube below = level.getCubes().get(
-                level.roundToGridPoint(player.getWorldLocation()).add(
-                        new Vector3f(0, 0, -1)));
+                currentGridPos.add(new Vector3f(0, 0, -1)));
 
         /* Fall! */
         if (below == null) {
@@ -88,6 +89,10 @@ public class GameStateManager {
                 LOG.info("Player died.");
                 reset();
             }
+        } else {
+            player.getModel().setLocation(currentGridPos);
+            player.setWorldLocation(currentGridPos);
+            player.setFalling(false);
         }
     }
 
@@ -214,6 +219,23 @@ public class GameStateManager {
         }
 
         viewManager.showHistory(this);
+    }
+
+    public void forwardToLevel(int index) {
+        final Level newLevel = levelSet.get(index);
+        newLevel.merge(level); // merge so you can go back
+        level = newLevel;
+        currentState = new GameState(level);
+        history.clear();
+        reset();
+
+        // open up the level, FIXME: not working yet
+        if (index > 0) {
+            // level.merge(levelSet.get(index - 1));
+            if (levelSet.get(index - 1).getEndSwitch() != null) {
+                levelSet.get(index - 1).getEndSwitch().doSwitch(1, false);
+            }
+        }
     }
 
     public GameState getCurrentState() {

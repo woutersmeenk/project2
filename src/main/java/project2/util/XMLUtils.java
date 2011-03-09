@@ -105,6 +105,7 @@ public final class XMLUtils {
         }
     }
 
+    /** FIXME: does not work. Always returns true when the expression exists. */
     public static boolean parseBoolean(final String expression,
             final Node node, final boolean defaultValue) throws XMLException {
         try {

@@ -91,6 +91,28 @@ public class ViewManager implements EventListener<LocationEvent> {
         return addCube(id, pos, new Vector3f(size, size, size), color);
     }
 
+    public Geometry addTexturedCube(final long id, final Vector3f pos,
+            final Vector3f outline, final String texture) {
+        final Box box = new Box(outline.x * 0.5f, outline.y * 0.5f,
+                outline.z * 0.5f);
+        final Geometry geom = new Geometry("Cube_" + id, box);
+        geom.setLocalTranslation(pos);
+        final Material mat = new Material(assetManager,
+                "Common/MatDefs/Light/Lighting.j3md");
+
+        Material mat_brick = new Material(assetManager,
+                "Common/MatDefs/Misc/SimpleTextured.j3md");
+        mat_brick.setTexture("m_ColorMap",
+                assetManager.loadTexture("block.jpg"));
+        geom.setMaterial(mat_brick);
+
+        geom.setUserData("id", (int) id);
+
+        rootNode.attachChild(geom);
+
+        return geom;
+    }
+
     public Geometry addCube(final long id, final Vector3f pos,
             final Vector3f outline, final ColorRGBA color) {
         final Box box = new Box(outline.x * 0.5f, outline.y * 0.5f,
@@ -100,14 +122,20 @@ public class ViewManager implements EventListener<LocationEvent> {
         final Material mat = new Material(assetManager,
                 "Common/MatDefs/Light/Lighting.j3md");
 
+        Material mat_brick = new Material(assetManager,
+                "Common/MatDefs/Misc/SimpleTextured.j3md");
+        mat_brick.setTexture("m_ColorMap",
+                assetManager.loadTexture("block.jpg"));
+        geom.setMaterial(mat_brick);
+
         mat.setFloat("m_Shininess", 12);
         mat.setBoolean("m_UseMaterialColors", true);
-
         mat.setColor("m_Specular", ColorRGBA.Gray);
         mat.setColor("m_Ambient", color);
         mat.setColor("m_Diffuse", color);
 
         geom.setMaterial(mat);
+
         geom.setUserData("id", (int) id);
 
         rootNode.attachChild(geom);
