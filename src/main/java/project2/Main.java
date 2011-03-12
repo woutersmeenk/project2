@@ -91,6 +91,8 @@ public class Main extends GameApplication implements ActionListener {
             inputManager.addMapping(action.toString(), action.trigger);
             inputManager.addListener(this, action.toString());
         }
+        
+        gameStateManager.forwardToLevel(2);
     }
 
     @Override
