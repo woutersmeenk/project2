@@ -28,9 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import project2.level.model.Cube;
 import project2.util.JavaLoggingToCommonLoggingRedirector;
 
-import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
@@ -82,7 +80,7 @@ public class Main extends GameApplication implements ActionListener {
 
         gameStateManager.buildInitialGameState("levels.xml");
 
-        viewManager.initialize(this, assetManager);
+        viewManager.initialize(assetManager);
         viewManager.createViewFromGameState(gameStateManager);
         gameStateManager.registerViewManager(viewManager);
         setChaseCamera(viewManager.getPlayerGeometry());
@@ -94,7 +92,7 @@ public class Main extends GameApplication implements ActionListener {
             inputManager.addListener(this, action.toString());
         }
         
-        gameStateManager.forwardToLevel(2);
+        menu.initialize();
     }
 
     @Override
@@ -158,8 +156,11 @@ public class Main extends GameApplication implements ActionListener {
                 below.getSwitchCube().doSwitch();
             } else {
                 if (below.isTeleporter()) {
+                    // hacked. create listener stuff
+                    menu.onEvent(new TeleportEvent(below));
                     gameStateManager.movePlayer(below.getTeleportDestination()
                             .subtract(playerPos));
+                    LOG.info(below.getTeleportDestination());
                 }
             }
         }

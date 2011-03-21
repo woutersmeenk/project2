@@ -88,7 +88,7 @@ public class XMLLevelLoader implements LevelLoader {
         for (final SwitchCube switchCube : switches) {
             for (final Cube cube : switchCube.getCurrentState()) {
                 cubes.put(cube.getLocation(), CubeFactory.getInstance()
-                        .createCube(cube.getLocation(), cube.getSize(), true));
+                        .createCube(cube.getLocation(), cube.getSize(), true, cube.getName()));
             }
         }
 
@@ -113,7 +113,7 @@ public class XMLLevelLoader implements LevelLoader {
         if (endSwitch != null) {
             for (final Cube cube : endSwitch.getCurrentState()) {
                 cubes.put(cube.getLocation(), CubeFactory.getInstance()
-                        .createCube(cube.getLocation(), cube.getSize(), true));
+                        .createCube(cube.getLocation(), cube.getSize(), true, cube.getName()));
             }
         }
 

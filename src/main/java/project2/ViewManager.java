@@ -55,7 +55,6 @@ import com.jme3.util.SkyFactory;
 
 public class ViewManager implements EventListener<LocationEvent> {
     private static final Log LOG = LogFactory.getLog(ViewManager.class);
-    private GameApplication gameApplication;
     private BitmapFont font;
     private AssetManager assetManager;
     private final Node rootNode;
@@ -71,9 +70,7 @@ public class ViewManager implements EventListener<LocationEvent> {
         historyGeometry = new ArrayList<Geometry>();
     }
 
-    public void initialize(final GameApplication gameApplication,
-            final AssetManager assetManager) {
-        this.gameApplication = gameApplication;
+    public void initialize(final AssetManager assetManager) {
         this.assetManager = assetManager;
         font = assetManager.loadFont("Interface/Fonts/Default.fnt");
         /* Create a light. */

@@ -27,7 +27,7 @@ public class Cube {
     private Vector3f location;
     private final int size;
     private final SwitchCube switchCube;
-    private final Vector3f teleportDestination;
+    private Vector3f teleportDestination;
     private final long id;
     private final boolean subjectToSwitching;
 
@@ -57,6 +57,10 @@ public class Cube {
 
     public Vector3f getTeleportDestination() {
         return teleportDestination;
+    }
+    
+    public void setTeleportDestination(Vector3f teleportDestination) {
+        this.teleportDestination = teleportDestination;
     }
 
     public boolean hasSwitchCube() {

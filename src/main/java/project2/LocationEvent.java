@@ -40,5 +40,9 @@ public class LocationEvent {
     public Vector3f getNewPos() {
         return newPos;
     }
+    
+    public String getName() {
+        return name;
+    }
 
 }

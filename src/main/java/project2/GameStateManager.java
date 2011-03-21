@@ -170,7 +170,7 @@ public class GameStateManager {
         level = levelSet.get(levelIndex);
 
         player = new Player(CubeFactory.getInstance().createCube(
-                level.getStart(), 1, false));
+                level.getStart(), 1, false, "player"));
 
         // generate a gamestate from the level
         currentState = new GameState(level);

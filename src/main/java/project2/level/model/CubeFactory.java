@@ -43,8 +43,8 @@ public final class CubeFactory {
     }
 
     public Cube createCube(final Vector3f location, final int size,
-            final boolean subjectToSwitching) {
-        return createCube(location, size, null, null, subjectToSwitching, null);
+            final boolean subjectToSwitching, final String name) {
+        return createCube(location, size, null, null, subjectToSwitching, name);
     }
 
     public Cube createCube(final Vector3f location, final int size,
