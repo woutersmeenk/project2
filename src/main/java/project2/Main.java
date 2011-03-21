@@ -92,7 +92,7 @@ public class Main extends GameApplication implements ActionListener {
             inputManager.addListener(this, action.toString());
         }
         
-        gameStateManager.forwardToLevel(2);
+        //gameStateManager.forwardToLevel(2);
     }
 
     @Override
