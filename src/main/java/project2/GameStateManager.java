@@ -36,6 +36,7 @@ import com.jme3.math.Vector3f;
 
 public class GameStateManager {
     private static final Log LOG = LogFactory.getLog(GameStateManager.class);
+    private static final float FALL_SPEED = 0.005f;
 
     private GameState currentState;
     private final List<GameState> history;
@@ -77,9 +78,10 @@ public class GameStateManager {
                 currentGridPos.add(new Vector3f(0, 0, -1)));
 
         /* Fall! */
-        if (below == null) {
-            player.setWorldLocation(player.getWorldLocation()
-                    .add(0, 0, -0.005f));
+        if (below == null
+                || player.getWorldLocation().getZ() - currentGridPos.getZ() > FALL_SPEED) {
+            player.setWorldLocation(player.getWorldLocation().add(0, 0,
+                    -FALL_SPEED));
             player.setFalling(true);
             viewManager.onEvent(new LocationEvent(player.getModel().getId(),
                     player.getWorldLocation()));
