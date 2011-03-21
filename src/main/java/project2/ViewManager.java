@@ -42,6 +42,7 @@ import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
@@ -50,6 +51,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Cylinder;
 import com.jme3.texture.Texture;
 import com.jme3.texture.TextureCubeMap;
 import com.jme3.util.SkyFactory;
@@ -171,6 +173,37 @@ public class ViewManager implements EventListener<LocationEvent> {
         return geom;
     }
 
+    public Geometry addCylinder(long id, Vector3f pos, Vector3f dir,
+            float radius, float height, ColorRGBA color) {
+        final Cylinder cyl = new Cylinder(8, 8, radius, height);
+        final Geometry geom = new Geometry("Cylinder_" + id, cyl);
+        geom.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.HALF_PI,
+                dir.cross(new Vector3f(0, 0, 1))));
+        geom.setLocalTranslation(pos);
+        final Material mat = new Material(assetManager,
+                "Common/MatDefs/Light/Lighting.j3md");
+
+        Material mat_brick = new Material(assetManager,
+                "Common/MatDefs/Misc/SimpleTextured.j3md");
+        mat_brick.setTexture("m_ColorMap",
+                assetManager.loadTexture("block.jpg"));
+        geom.setMaterial(mat_brick);
+
+        mat.setFloat("m_Shininess", 12);
+        mat.setBoolean("m_UseMaterialColors", true);
+        mat.setColor("m_Specular", ColorRGBA.Gray);
+        mat.setColor("m_Ambient", color);
+        mat.setColor("m_Diffuse", color);
+
+        geom.setMaterial(mat);
+
+        geom.setUserData("id", (int) id);
+
+        rootNode.attachChild(geom);
+
+        return geom;
+    }
+
     public void drawSwitchPath(List<List<Cube>> states) {
         for (int i = 0; i < states.size() - 1; i++) {
             for (int j = 0; j < states.get(i).size(); j++) {
@@ -181,12 +214,9 @@ public class ViewManager implements EventListener<LocationEvent> {
                         .subtract(states.get(i).get(j).getLocation());
                 final Vector3f center = states.get(i).get(j).getLocation()
                         .add(dir.mult(0.5f));
-                final Vector3f up = new Vector3f(0, 0, 1);
-                // Cross product with up vector
-                final Vector3f perp = dir.cross(up).normalize();
 
-                addCube(0, center, dir.add(perp.mult(0.02f))
-                        .add(up.mult(0.02f)), ColorRGBA.Red);
+                addCylinder(0, center, dir.normalize(), 0.02f, dir.length(),
+                        ColorRGBA.Red);
 
                 if (i == states.size() - 2) {
                     addCube(0, states.get(i + 1).get(j).getLocation(), 0.06f,
@@ -198,7 +228,7 @@ public class ViewManager implements EventListener<LocationEvent> {
 
     public void addText(Vector3f pos, Vector3f rotation, String text) {
         BitmapText textGeom = new BitmapText(font, false);
-        //textGeom.setBox(new Rectangle(0, 0, 6, 3));
+        // textGeom.setBox(new Rectangle(0, 0, 6, 3));
         float[] rotations = rotation.toArray(null);
         for (int i = 0; i < 3; i++) {
             rotations[i] = (float) Math.toRadians(rotations[i]);
