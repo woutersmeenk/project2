@@ -35,216 +35,224 @@ import project2.level.model.CubeFactory;
 import com.jme3.math.Vector3f;
 
 public class GameStateManager {
-    private static final Log LOG = LogFactory.getLog(GameStateManager.class);
-    private static final float FALL_SPEED = 0.005f;
+	private static final Log LOG = LogFactory.getLog(GameStateManager.class);
+	private static final float FALL_SPEED = 0.005f;
 
-    private GameState currentState;
-    private final List<GameState> history;
-    /** Current level. */
-    private Level level;
-    /** Index of current level. */
-    private int levelIndex;
-    /** Level list. */
-    private List<Level> levelSet;
-    /** Player. */
-    private Player player;
-    private ViewManager viewManager;
+	private GameState currentState;
+	private final List<GameState> history;
+	/** Current level. */
+	private Level level;
+	/** Index of current level. */
+	private int levelIndex;
+	/** Level list. */
+	private List<Level> levelSet;
+	/** Player. */
+	private Player player;
+	private ViewManager viewManager;
 
-    public GameStateManager() {
-        history = new ArrayList<GameState>();
-    }
+	public GameStateManager() {
+		history = new ArrayList<GameState>();
+	}
 
-    public void registerViewManager(final ViewManager viewManager) {
-        this.viewManager = viewManager;
-    }
+	public void registerViewManager(final ViewManager viewManager) {
+		this.viewManager = viewManager;
+	}
 
-    public Level getLevel() {
-        return level;
-    }
+	public Level getLevel() {
+		return level;
+	}
 
-    public List<Level> getLevelSet() {
-        return levelSet;
-    }
+	public List<Level> getLevelSet() {
+		return levelSet;
+	}
 
-    public Player getPlayer() {
-        return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    public void update() {
-        /* Get the location below the player. */
-        Vector3f currentGridPos = level.roundToGridPoint(player
-                .getWorldLocation());
-        final Cube below = level.getCubes().get(
-                currentGridPos.add(new Vector3f(0, 0, -1)));
+	public void update() {
+		/* Get the location below the player. */
+		Vector3f currentGridPos = level.roundToGridPoint(player
+				.getWorldLocation());
+		final Cube below = level.getCubes().get(
+				currentGridPos.add(new Vector3f(0, 0, -1)));
 
-        /* Fall! */
-        if (below == null
-                || player.getWorldLocation().getZ() - currentGridPos.getZ() > FALL_SPEED) {
-            player.setWorldLocation(player.getWorldLocation().add(0, 0,
-                    -FALL_SPEED));
-            player.setFalling(true);
-            viewManager.onEvent(new LocationEvent(player.getModel().getId(),
-                    player.getWorldLocation()));
+		/* Fall! */
+		if (below == null
+				|| player.getWorldLocation().getZ() - currentGridPos.getZ() > FALL_SPEED) {
+			player.setWorldLocation(player.getWorldLocation().add(0, 0,
+					-FALL_SPEED));
+			player.setFalling(true);
+			viewManager.onEvent(new LocationEvent(player.getModel().getId(),
+					player.getWorldLocation()));
 
-            /* Does the player fall off the map? */
-            if (player.getWorldLocation().getZ() < getLevel().getMaxFall()) {
-                LOG.info("Player died.");
-                reset();
-            }
-        } else {
-            player.getModel().setLocation(currentGridPos);
-            player.setWorldLocation(currentGridPos);
-            player.setFalling(false);
-        }
-    }
+			/* Does the player fall off the map? */
+			if (player.getWorldLocation().getZ() < getLevel().getMaxFall()) {
+				LOG.info("Player died.");
+				reset();
+			}
+		} else {
+			player.getModel().setLocation(currentGridPos);
+			player.setWorldLocation(currentGridPos);
+			player.setFalling(false);
+		}
+	}
 
-    /**
-     * Resets the gamestate to the start.
-     */
-    // FIXME: this will also revert changes in completed levels
-    public void reset() {
-        if (history.size() > 0) {
-            revertTo(0);
-        }
+	/**
+	 * Resets the gamestate to the start.
+	 */
+	// FIXME: this will also revert changes in completed levels
+	public void reset() {
+		if (history.size() > 0) {
+			revertTo(0);
+		}
 
-        for (Checkpoint cp : level.getCheckpoints().values()) {
-            if (cp.isVisited()) {
-                viewManager.addCheckpoint(cp);
-                cp.setVisited(false);
-            }
-        }
+		for (Checkpoint cp : level.getCheckpoints().values()) {
+			if (cp.isVisited()) {
+				viewManager.addCheckpoint(cp);
+				cp.setVisited(false);
+			}
+		}
 
-        movePlayer(level.getStart().subtract(player.getModel().getLocation()));
-    }
+		movePlayer(level.getStart().subtract(player.getModel().getLocation()));
+	}
 
-    public void movePlayer(final Vector3f displacement) {
-        final Vector3f newPos = player.getModel().getLocation()
-                .add(displacement);
+	public void movePlayer(final Vector3f displacement) {
+		final Vector3f newPos = player.getModel().getLocation()
+				.add(displacement);
 
-        final Checkpoint checkpoint = level.getCheckpoints().get(newPos);
+		final Checkpoint checkpoint = level.getCheckpoints().get(newPos);
 
-        if (checkpoint != null && !checkpoint.isVisited()) {
-            checkpoint.setVisited(true);
-            viewManager.deleteById(checkpoint.getId());
+		if (checkpoint != null && !checkpoint.isVisited()) {
+			checkpoint.setVisited(true);
+			viewManager.deleteById(checkpoint.getId());
 
-            LOG.info("Checkpoint reached.");
-        }
+			LOG.info("Checkpoint reached.");
+		}
 
-        // check if done
-        if (level.getEnd().equals(newPos) && level.allCheckpointsVisited()) {
-            LOG.info("Level finished!");
+		/* Check if player is standing on teleporter */
+		final Cube below = level.getCubes().get(newPos.add(0, 0, -1));
+		if (below != null && below.isTeleporter()) {
+			viewManager.drawTeleportGeometry(below.getTeleportDestination());
+		} else {
+			viewManager.removeTeleportGeometry();
+		}
 
-            if (level.getEndSwitch() != null) {
-                level.getEndSwitch().doSwitch(1, false); // switch up
-            }
+		// check if done
+		if (level.getEnd().equals(newPos) && level.allCheckpointsVisited()) {
+			LOG.info("Level finished!");
 
-            if (levelIndex + 1 < levelSet.size()) {
-                levelIndex++;
-                final Level newLevel = levelSet.get(levelIndex);
-                newLevel.merge(level); // merge so you can go back
-                level = newLevel;
-            }
+			if (level.getEndSwitch() != null) {
+				level.getEndSwitch().doSwitch(1, false); // switch up
+			}
 
-            currentState = new GameState(level);
-            history.clear();
-        }
+			if (levelIndex + 1 < levelSet.size()) {
+				levelIndex++;
+				final Level newLevel = levelSet.get(levelIndex);
+				newLevel.merge(level); // merge so you can go back
+				level = newLevel;
+			}
 
-        player.getModel().setLocation(newPos);
-        player.setWorldLocation(newPos); // set the world location too!
-        player.setFalling(false);
-        viewManager
-                .onEvent(new LocationEvent(player.getModel().getId(), newPos));
+			currentState = new GameState(level);
+			history.clear();
+		}
 
-    }
+		player.getModel().setLocation(newPos);
+		player.setWorldLocation(newPos); // set the world location too!
+		player.setFalling(false);
+		viewManager
+				.onEvent(new LocationEvent(player.getModel().getId(), newPos));
 
-    public void buildInitialGameState(final String levelFile) {
-        final XMLLevelLoader loader = new XMLLevelLoader();
+	}
 
-        levelSet = loader.loadLevelSet(
-                ClassLoader.getSystemResource(levelFile), this);
+	public void buildInitialGameState(final String levelFile) {
+		final XMLLevelLoader loader = new XMLLevelLoader();
 
-        if (levelSet.size() == 0) {
-            LOG.info("Could not load level 0 from the levelset.");
-            return;
-        }
+		levelSet = loader.loadLevelSet(
+				ClassLoader.getSystemResource(levelFile), this);
 
-        levelIndex = 0;
-        level = levelSet.get(levelIndex);
+		if (levelSet.size() == 0) {
+			LOG.info("Could not load level 0 from the levelset.");
+			return;
+		}
 
-        player = new Player(CubeFactory.getInstance().createCube(
-                level.getStart(), 1, false));
+		levelIndex = 0;
+		level = levelSet.get(levelIndex);
 
-        // generate a gamestate from the level
-        currentState = new GameState(level);
-        history.clear();
-    }
+		player = new Player(CubeFactory.getInstance().createCube(
+				level.getStart(), 1, false));
 
-    /**
-     * Saves a state to history and creates a new state. This function should be
-     * called every time a switchCube state is switched.
-     */
-    public void makeHistory() {
-        history.add(currentState);
-        currentState = new GameState(level);
+		// generate a gamestate from the level
+		currentState = new GameState(level);
+		history.clear();
+	}
 
-        viewManager.showHistory(this);
-    }
+	/**
+	 * Saves a state to history and creates a new state. This function should be
+	 * called every time a switchCube state is switched.
+	 */
+	public void makeHistory() {
+		history.add(currentState);
+		currentState = new GameState(level);
 
-    /**
-     * Goes one step back into history.
-     */
-    public void revert() {
-        if (history.size() > 0) {
-            revertTo(history.size() - 1);
-        }
-    }
+		viewManager.showHistory(this);
+	}
 
-    public void revertTo(int index) {
-        if (index < 0 || index >= history.size()) {
-            LOG.info("Error: " + index + " is not within history bounds (0/"
-                    + history.size() + ")");
-            return;
-        }
+	/**
+	 * Goes one step back into history.
+	 */
+	public void revert() {
+		if (history.size() > 0) {
+			revertTo(history.size() - 1);
+		}
+	}
 
-        LOG.info("Going back in time...");
+	public void revertTo(int index) {
+		if (index < 0 || index >= history.size()) {
+			LOG.info("Error: " + index + " is not within history bounds (0/"
+					+ history.size() + ")");
+			return;
+		}
 
-        final GameState old = history.get(index);
-        currentState = old;
+		LOG.info("Going back in time...");
 
-        for (int i = 0; i < old.getSwitchStates().size(); i++) {
-            level.getSwitches().get(i)
-                    .doSwitch(old.getSwitchStates().get(i), false);
-        }
+		final GameState old = history.get(index);
+		currentState = old;
 
-        for (int i = history.size() - 1; i >= index; i--) {
-            history.remove(i);
-        }
+		for (int i = 0; i < old.getSwitchStates().size(); i++) {
+			level.getSwitches().get(i)
+					.doSwitch(old.getSwitchStates().get(i), false);
+		}
 
-        viewManager.showHistory(this);
-    }
+		for (int i = history.size() - 1; i >= index; i--) {
+			history.remove(i);
+		}
 
-    public void forwardToLevel(int index) {
-        final Level newLevel = levelSet.get(index);
-        newLevel.merge(level); // merge so you can go back
-        level = newLevel;
-        currentState = new GameState(level);
-        history.clear();
-        reset();
+		viewManager.showHistory(this);
+	}
 
-        // open up the level, FIXME: not working yet
-        if (index > 0) {
-            // level.merge(levelSet.get(index - 1));
-            if (levelSet.get(index - 1).getEndSwitch() != null) {
-                levelSet.get(index - 1).getEndSwitch().doSwitch(1, false);
-            }
-        }
-    }
+	public void forwardToLevel(int index) {
+		final Level newLevel = levelSet.get(index);
+		newLevel.merge(level); // merge so you can go back
+		level = newLevel;
+		currentState = new GameState(level);
+		history.clear();
+		reset();
 
-    public GameState getCurrentState() {
-        return currentState;
-    }
+		// open up the level, FIXME: not working yet
+		if (index > 0) {
+			// level.merge(levelSet.get(index - 1));
+			if (levelSet.get(index - 1).getEndSwitch() != null) {
+				levelSet.get(index - 1).getEndSwitch().doSwitch(1, false);
+			}
+		}
+	}
 
-    public List<GameState> getHistory() {
-        return history;
-    }
+	public GameState getCurrentState() {
+		return currentState;
+	}
+
+	public List<GameState> getHistory() {
+		return history;
+	}
 }
