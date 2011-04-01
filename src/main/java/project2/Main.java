@@ -40,164 +40,164 @@ import com.jme3.math.Vector3f;
  * 
  */
 public class Main extends GameApplication implements ActionListener {
-    private static final Log LOG = LogFactory.getLog(Main.class);
+	private static final Log LOG = LogFactory.getLog(Main.class);
 
-    private final GameStateManager gameStateManager;
-    private final ViewManager viewManager;
+	private final GameStateManager gameStateManager;
+	private final ViewManager viewManager;
 
-    /**
-     * Default Constructor
-     * */
-    public Main() {
-        gameStateManager = new GameStateManager();
-        viewManager = new ViewManager(rootNode);
-    }
+	/**
+	 * Default Constructor
+	 * */
+	public Main() {
+		gameStateManager = new GameStateManager();
+		viewManager = new ViewManager(rootNode);
+	}
 
-    /**
-     * main method
-     * 
-     * @param args
-     *            The command line arguments. These are not used currently.
-     */
-    public static void main(final String[] args) {
-        JavaLoggingToCommonLoggingRedirector.activate();
-        final Main app = new Main();
-        app.start();
-    }
+	/**
+	 * main method
+	 * 
+	 * @param args
+	 *            The command line arguments. These are not used currently.
+	 */
+	public static void main(final String[] args) {
+		JavaLoggingToCommonLoggingRedirector.activate();
+		final Main app = new Main();
+		app.start();
+	}
 
-    @Override
-    public void update() {
-        gameStateManager.update();
-        super.update();
-    }
+	@Override
+	public void update() {
+		gameStateManager.update();
+		super.update();
+	}
 
-    @Override
-    public void init() {
-        viewPort.setBackgroundColor(ColorRGBA.Black);
-        cam.setLocation(new Vector3f(1, 1, 10));
+	@Override
+	public void init() {
+		viewPort.setBackgroundColor(ColorRGBA.Black);
+		cam.setLocation(new Vector3f(1, 1, 10));
 
-        gameStateManager.buildInitialGameState("levels.xml");
+		gameStateManager.buildInitialGameState("levels.xml");
 
-        viewManager.initialize(this, assetManager);
-        viewManager.createViewFromGameState(gameStateManager);
-        gameStateManager.registerViewManager(viewManager);
-        setChaseCamera(viewManager.getPlayerGeometry());
+		viewManager.initialize(this, assetManager);
+		viewManager.createViewFromGameState(gameStateManager);
+		gameStateManager.registerViewManager(viewManager);
+		setChaseCamera(viewManager.getPlayerGeometry());
 
-        gameStateManager.getLevel().addLocationListener(viewManager);
+		gameStateManager.getLevel().addLocationListener(viewManager);
 
-        for (final PlayerAction action : PlayerAction.values()) {
-            inputManager.addMapping(action.toString(), action.trigger);
-            inputManager.addListener(this, action.toString());
-        }
-        
-        gameStateManager.forwardToLevel(2);
-    }
+		for (final PlayerAction action : PlayerAction.values()) {
+			inputManager.addMapping(action.toString(), action.trigger);
+			inputManager.addListener(this, action.toString());
+		}
 
-    @Override
-    public void onAction(final String name, final boolean isPressed,
-            final float tpf) {
-        final PlayerAction action = PlayerAction.valueOf(name);
+		gameStateManager.forwardToLevel(2);
+	}
 
-        switch (action) {
-        case LEFT:
-            processMoveAction(1, isPressed);
-            break;
-        case UP:
-            processMoveAction(0, isPressed);
-            break;
-        case RIGHT:
-            processMoveAction(3, isPressed);
-            break;
-        case DOWN:
-            processMoveAction(2, isPressed);
-            break;
-        case REVERT:
-            if (isPressed) {
-                break;
-            }
-            gameStateManager.revert();
-            break;
-        case ACTION:
-            processAction(isPressed);
-            break;
-        case RESET:
-            gameStateManager.reset();
-            break;
-        case CHANGE_CAM:
-            if (!isPressed) {
-                if (isFlyByCam()) {
-                    setChaseCamera(viewManager.getPlayerGeometry());
-                } else {
-                    setFlyByCamera();
-                }
-            }
-            break;
-        default:
-            break;
-        }
-    }
+	@Override
+	public void onAction(final String name, final boolean isPressed,
+			final float tpf) {
+		final PlayerAction action = PlayerAction.valueOf(name);
 
-    private void processAction(final boolean isPressed) {
-        if (isPressed) {
-            return;
-        }
-        final Vector3f playerPos = gameStateManager.getPlayer().getModel()
-                .getLocation();
-        final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
-                .getCubes();
+		switch (action) {
+		case LEFT:
+			processMoveAction(1, isPressed);
+			break;
+		case UP:
+			processMoveAction(0, isPressed);
+			break;
+		case RIGHT:
+			processMoveAction(3, isPressed);
+			break;
+		case DOWN:
+			processMoveAction(2, isPressed);
+			break;
+		case REVERT:
+			if (isPressed) {
+				break;
+			}
+			gameStateManager.revert();
+			break;
+		case ACTION:
+			processAction(isPressed);
+			break;
+		case RESET:
+			gameStateManager.reset();
+			break;
+		case CHANGE_CAM:
+			if (!isPressed) {
+				if (isFlyByCam()) {
+					setChaseCamera(viewManager.getPlayerGeometry());
+				} else {
+					setFlyByCamera();
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
 
-        // check if there is a switch or teleporter below the player
-        final Cube below = levelMap.get(playerPos.add(0, 0, -1));
+	private void processAction(final boolean isPressed) {
+		if (isPressed) {
+			return;
+		}
+		final Vector3f playerPos = gameStateManager.getPlayer().getModel()
+				.getLocation();
+		final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
+				.getCubes();
 
-        if (below != null) {
-            if (below.getSwitchCube() != null) {
-                below.getSwitchCube().doSwitch();
-            } else {
-                if (below.isTeleporter()) {
-                    gameStateManager.movePlayer(below.getTeleportDestination()
-                            .subtract(playerPos));
-                }
-            }
-        }
-    }
+		// check if there is a switch or teleporter below the player
+		final Cube below = levelMap.get(playerPos.add(0, 0, -1));
 
-    private void processMoveAction(final int direction, final boolean isPressed) {
-        if (isPressed) {
-            return;
-        }
+		if (below != null) {
+			if (below.getSwitchCube() != null) {
+				below.getSwitchCube().doSwitch();
+			} else {
+				if (below.isTeleporter()) {
+					gameStateManager.movePlayer(below.getTeleportDestination()
+							.subtract(playerPos));
+				}
+			}
+		}
+	}
 
-        final Vector3f[] dirs = { new Vector3f(0, 1, 0),
-                new Vector3f(-1, 0, 0), new Vector3f(0, -1, 0),
-                new Vector3f(1, 0, 0) };
+	private void processMoveAction(final int direction, final boolean isPressed) {
+		if (isPressed) {
+			return;
+		}
 
-        /*
-         * Adjust the direction by taking into account the rotations of the
-         * camera.
-         */
-        final float angle = FastMath.atan2(cam.getDirection().y,
-                cam.getDirection().x);
+		final Vector3f[] dirs = { new Vector3f(0, 1, 0),
+				new Vector3f(-1, 0, 0), new Vector3f(0, -1, 0),
+				new Vector3f(1, 0, 0) };
 
-        int startIndex = 1;
+		/*
+		 * Adjust the direction by taking into account the rotations of the
+		 * camera.
+		 */
+		final float angle = FastMath.atan2(cam.getDirection().y,
+				cam.getDirection().x);
 
-        for (int i = 0; i < 4; i++) {
-            if (angle > -FastMath.PI + (i * 2 + 1) / 4.0f * FastMath.PI) {
-                startIndex++;
-            }
-        }
+		int startIndex = 1;
 
-        startIndex %= 4;
-        final Vector3f finalDir = dirs[(startIndex + direction) % 4];
+		for (int i = 0; i < 4; i++) {
+			if (angle > -FastMath.PI + (i * 2 + 1) / 4.0f * FastMath.PI) {
+				startIndex++;
+			}
+		}
 
-        final Vector3f playerPos = gameStateManager.getPlayer().getModel()
-                .getLocation();
-        final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
-                .getCubes();
-        final Cube beside = levelMap.get(playerPos.add(finalDir));
-        final Cube below = levelMap.get(playerPos.add(finalDir).add(
-                new Vector3f(0, 0, -1)));
+		startIndex %= 4;
+		final Vector3f finalDir = dirs[(startIndex + direction) % 4];
 
-        if (below != null && beside == null) {
-            gameStateManager.movePlayer(finalDir);
-        }
-    }
+		final Vector3f playerPos = gameStateManager.getPlayer().getModel()
+				.getLocation();
+		final Map<Vector3f, Cube> levelMap = gameStateManager.getLevel()
+				.getCubes();
+		final Cube beside = levelMap.get(playerPos.add(finalDir));
+		final Cube below = levelMap.get(playerPos.add(finalDir).add(
+				new Vector3f(0, 0, -1)));
+
+		if (below != null && beside == null) {
+			gameStateManager.movePlayer(finalDir);
+		}
+	}
 }

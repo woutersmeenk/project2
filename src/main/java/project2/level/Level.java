@@ -23,6 +23,7 @@ package project2.level;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +33,7 @@ import project2.LocationEvent;
 import project2.level.model.Checkpoint;
 import project2.level.model.Cube;
 import project2.level.model.SwitchCube;
+import project2.level.model.Text;
 
 import com.jme3.math.Vector3f;
 
@@ -45,12 +47,14 @@ public class Level {
     private final SwitchCube endSwitch;
     private final Map<Vector3f, Checkpoint> checkpoints;
     private final List<EventListener<LocationEvent>> locationListeners;
+    private final Set<Text> texts;
     private float maxFall;
 
     public Level(final Map<Vector3f, Cube> cubes,
             final List<SwitchCube> switches, final Vector3f start,
             final Vector3f end, final SwitchCube endSwitch,
-            final float maxFall, final Map<Vector3f, Checkpoint> checkpoints) {
+            final float maxFall, final Map<Vector3f, Checkpoint> checkpoints,
+            final Set<Text> texts) {
         this.cubes = cubes;
         this.switches = switches;
         this.start = start;
@@ -58,7 +62,8 @@ public class Level {
         this.endSwitch = endSwitch;
         this.maxFall = maxFall;
         this.checkpoints = checkpoints;
-
+        this.texts = texts;
+        
         locationListeners = new ArrayList<EventListener<LocationEvent>>();
 
         // register the level with the switches
@@ -109,6 +114,10 @@ public class Level {
 
     public Map<Vector3f, Checkpoint> getCheckpoints() {
         return checkpoints;
+    }
+
+    public Set<Text> getTexts() {
+        return texts;
     }
 
     public boolean allCheckpointsVisited() {
