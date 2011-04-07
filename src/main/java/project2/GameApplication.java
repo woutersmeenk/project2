@@ -109,7 +109,7 @@ public abstract class GameApplication extends Application {
 
         // show settings dialog
         if (showSettings) {
-            if (!JmeSystem.showSettingsDialog(settings)) {
+            if (!JmeSystem.showSettingsDialog(settings, false)) {
                 return;
             }
         }
@@ -236,7 +236,7 @@ public abstract class GameApplication extends Application {
         guiViewPort.attachScene(guiNode);
 
         // Setup perspective view
-        cam.setViewPort(0f, .5f, .5f, 1f);
+        /* cam.setViewPort(0f, .5f, .5f, 1f);
 
         Camera cam2 = cam.clone();
         cam2.setViewPort(0f, 0.5f, 0f, 0.5f);
@@ -266,7 +266,7 @@ public abstract class GameApplication extends Application {
 
         ViewPort view4 = renderManager.createMainView("Top view", cam4);
         view4.setClearEnabled(true);
-        view4.attachScene(rootNode);
+        view4.attachScene(rootNode);*/
 
         if (inputManager != null) {
             // inputManager.setCursorVisible(false);

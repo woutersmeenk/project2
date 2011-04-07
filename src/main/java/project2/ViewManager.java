@@ -112,7 +112,7 @@ public class ViewManager implements EventListener<LocationEvent> {
 
 		Material mat_brick = new Material(assetManager,
 				"Common/MatDefs/Misc/SimpleTextured.j3md");
-		mat_brick.setTexture("m_ColorMap",
+		mat_brick.setTexture("ColorMap",
 				assetManager.loadTexture("block.jpg"));
 		geom.setMaterial(mat_brick);
 
@@ -134,15 +134,15 @@ public class ViewManager implements EventListener<LocationEvent> {
 
 		Material mat_brick = new Material(assetManager,
 				"Common/MatDefs/Misc/SimpleTextured.j3md");
-		mat_brick.setTexture("m_ColorMap",
+		mat_brick.setTexture("ColorMap",
 				assetManager.loadTexture("block.jpg"));
 		geom.setMaterial(mat_brick);
 
-		mat.setFloat("m_Shininess", 12);
-		mat.setBoolean("m_UseMaterialColors", true);
-		mat.setColor("m_Specular", ColorRGBA.Gray);
-		mat.setColor("m_Ambient", color);
-		mat.setColor("m_Diffuse", color);
+		mat.setFloat("Shininess", 12);
+		mat.setBoolean("UseMaterialColors", true);
+		mat.setColor("Specular", ColorRGBA.Gray);
+		mat.setColor("Ambient", color);
+		mat.setColor("Diffuse", color);
 
 		geom.setMaterial(mat);
 
@@ -162,7 +162,7 @@ public class ViewManager implements EventListener<LocationEvent> {
 
 		final Material mat2 = new Material(assetManager,
 				"Common/MatDefs/Misc/SolidColor.j3md");
-		mat2.setColor("m_Color", color);
+		mat2.setColor("Color", color);
 		mat2.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 
 		geom.setMaterial(mat2);
@@ -186,15 +186,15 @@ public class ViewManager implements EventListener<LocationEvent> {
 
 		Material mat_brick = new Material(assetManager,
 				"Common/MatDefs/Misc/SimpleTextured.j3md");
-		mat_brick.setTexture("m_ColorMap",
+		mat_brick.setTexture("ColorMap",
 				assetManager.loadTexture("block.jpg"));
 		geom.setMaterial(mat_brick);
 
-		mat.setFloat("m_Shininess", 12);
-		mat.setBoolean("m_UseMaterialColors", true);
-		mat.setColor("m_Specular", ColorRGBA.Gray);
-		mat.setColor("m_Ambient", color);
-		mat.setColor("m_Diffuse", color);
+		mat.setFloat("Shininess", 12);
+		mat.setBoolean("UseMaterialColors", true);
+		mat.setColor("Specular", ColorRGBA.Gray);
+		mat.setColor("Ambient", color);
+		mat.setColor("Diffuse", color);
 
 		geom.setMaterial(mat);
 
